@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - FirePoint
+  - Critical
+  - Weapons
+  - Ramp
+  - BodyShot
+  - Ladder
   layers:
   - Default
   - TransparentFX
@@ -11,17 +18,17 @@ TagManager:
   - Ground
   - Water
   - UI
-  - player
-  - PickupLayer
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Weapons
+  - Enemy
+  - Object
+  - Interactable
+  - Grass
+  - Metal
+  - Mud
+  - Wood
+  - UITop
+  - PostProcessing
+  - Effects
   - 
   - 
   - 
