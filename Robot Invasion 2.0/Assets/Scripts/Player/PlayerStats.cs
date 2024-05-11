@@ -20,9 +20,9 @@ public class PlayerStats : CharacterStats
     }
 
 
-    public override void CheakHealth()
+    public override void CheckHealth()
     {
-        base.CheakHealth();
+        base.CheckHealth();
         hud.UpdateHealth(health, maxHealth);
     }
 }

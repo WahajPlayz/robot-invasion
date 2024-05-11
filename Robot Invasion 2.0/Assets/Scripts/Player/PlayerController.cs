@@ -1,19 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
+/*
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-using UnityEngine.Rendering;
-using Vector3 = UnityEngine.Vector3;
+using UnityEngine.InputSystem;
+using PlayerSet = PlayerInputs.PlayerActions;
+
 
 public class PlayerController : MonoBehaviour
 {
+	
+     
     [Header("Movements")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float jumpForce;
-    private UnityEngine.Vector3 moveDirection = UnityEngine.Vector3.zero;
+    private Vector3 moveDirection = Vector3.zero;
 
     private CharacterController controller;
     [Header("Gravity")]
@@ -21,53 +22,74 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float groundDistance;
     [SerializeField] private LayerMask GroundMask;
-    [SerializeField] private bool isCharacterGrounded = false;
+    bool isCharacterGrounded = false;
     private Vector3 velocity = Vector3.zero;
 
     [Header("Animations")]
-    private Animator anim;
+    Animator anim;
 
-    private void Start()
-    {
+    
+    bool isMoving;
+
+	#region Inputs Variable
+    	PlayerInputs playerInputs;
         
+	    PlayerSet PlayerControlSet;
+	    InputAction _move, _run,_jump, _look;
+
+	#endregion
+
+
+	void Awake() {
+        InitAwakeVariables();
         GetRefereces();
+	}
+
+	void Start() {
         InitVariables();
     }
 
-    private void Update()
-    {
-        HandleIsGrounded();
-        HandleJumping();
-        HandleGravity();
+	void OnDisable() {
+        TurnOffPlayerControlSet();
+	}
 
-        HandleRunning();
-        HandleMovement();
-        HandleAnimations();
+	void OnDestroy() {
+        TurnOffPlayerControlSet();	
+	}
+
+	void Update() {
+        isMoving = false;
+        Vector2 _moveDirection = PlayerControlSet.Move.ReadValue<Vector2>();
+
+        if (WasThisTriggered(_move)) Move(_moveDirection);
+
+        if (_run.WasReleasedThisFrame()) SetWalkSpeed();
+
+        if (WasThisTriggered(_run) && IsMoving() && isCharacterGrounded) SetRunSpeed();
+
+        if (WasThisTriggered(_jump)) Jump();
+
+        UpdateValues();
     }
 
-    private void HandleMovement()
-    {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+	void UpdateValues() {
+		HandleIsGrounded();
+		HandleGravity();
+		HandleAnimations();
+	}
 
-        moveDirection = new Vector3(moveX, 0, moveZ);
-        moveDirection = moveDirection.normalized;
-        moveDirection = transform.TransformDirection(moveDirection);
-
+	void Move(Vector2 inputMoveDir) {
+        isMoving = true;
+        moveDirection = transform.TransformDirection(new Vector3(inputMoveDir.x, 0, inputMoveDir.y).normalized);
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
     }
 
-    private void HandleRunning()
-    {
-        if(Input.GetKeyDown(KeyCode.LeftShift))
-        {
+    void SetRunSpeed() {
             moveSpeed = runSpeed;
-        }
-        if(Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            moveSpeed = walkSpeed;
-        }
     }
+    void SetWalkSpeed() {
+		moveSpeed = walkSpeed;
+	}
     
     private void HandleAnimations()
     {
@@ -84,12 +106,12 @@ public class PlayerController : MonoBehaviour
             anim.SetFloat("Speed", 1f, 0.2f, Time.deltaTime);
         }
     }
-    private void HandleIsGrounded()
+    void HandleIsGrounded()
     {
         isCharacterGrounded = Physics.CheckSphere(transform.position, groundDistance);
     }
 
-    private void HandleGravity()
+    void HandleGravity()
     {
         if(isCharacterGrounded && velocity.y < 0)
         {
@@ -100,25 +122,40 @@ public class PlayerController : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
-    private void HandleJumping()
-    {
-        if(Input.GetKeyDown(KeyCode.Space) && isCharacterGrounded)
-        {
-            velocity.y += Mathf.Sqrt(jumpForce * -2f * gravity);
-        }
+    void Jump() {
+        //controller.
+        
+        velocity.y += Mathf.Sqrt(jumpForce * -2f * gravity) ;
     }
 
     
 
 
-    private void GetRefereces()
-    {
-      controller = GetComponent<CharacterController>();
-      anim = GetComponentInChildren<Animator>();
+    void GetRefereces() {
+        controller = GetComponent<CharacterController>();
+        anim = GetComponentInChildren<Animator>();
+        playerInputs = GetComponentInChildren<PlayerInputs>();
     }
 
-    private void InitVariables()
-    {
+    void InitVariables() { 
         moveSpeed = walkSpeed;
-    }
+		PlayerControlSet = playerInputs.Player;
+	}
+
+    void InitAwakeVariables() {
+        playerInputs = new PlayerInputs();
+		
+        _move = PlayerControlSet.Move;
+		_run = PlayerControlSet.Run;
+		_jump = PlayerControlSet.Jump;
+		_look = PlayerControlSet.Look;
+        TurnOnPlayerControlSet();
+	}
+
+    void TurnOnPlayerControlSet() => PlayerControlSet.Enable();
+    void TurnOffPlayerControlSet() => PlayerControlSet.Disable();
+    bool WasThisTriggered(InputAction action) => action.WasPerformedThisFrame();
+
+    bool IsMoving() => isMoving;
 }
+*/

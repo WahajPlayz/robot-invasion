@@ -18,7 +18,7 @@ public class CharacterStats : MonoBehaviour
         InitVariables();
     }
 
-    public virtual void CheakHealth()
+    public virtual void CheckHealth()
     {
         if(health <= 0)
         {
@@ -39,7 +39,7 @@ public class CharacterStats : MonoBehaviour
     private void SetHealthTo(int healthToSetTo)
     {
         health = healthToSetTo;
-        CheakHealth();
+        CheckHealth();
     }
 
     public void TakeDamage(int damage)
