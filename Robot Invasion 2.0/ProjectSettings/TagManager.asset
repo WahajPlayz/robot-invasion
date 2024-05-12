@@ -4,7 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-<<<<<<< HEAD
   - Enemy
   - FirePoint
   - Critical
@@ -12,9 +11,6 @@ TagManager:
   - Ramp
   - BodyShot
   - Ladder
-=======
-  - Ground
->>>>>>> e6e19325ea8a7d0c7f9c6f50453bec6efc7ade73
   layers:
   - Default
   - TransparentFX
