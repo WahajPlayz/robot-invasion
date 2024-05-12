@@ -85,6 +85,7 @@
       },
       "url": "https://packages.unity.com"
     },
+<<<<<<< HEAD
     "com.unity.ide.vscode": {
       "version": "1.2.5",
       "depth": 0,
@@ -94,6 +95,10 @@
     },
     "com.unity.inputsystem": {
       "version": "1.7.0",
+=======
+    "com.unity.inputsystem": {
+      "version": "1.8.2",
+>>>>>>> e6e19325ea8a7d0c7f9c6f50453bec6efc7ade73
       "depth": 0,
       "source": "registry",
       "dependencies": {
