@@ -17,7 +17,7 @@ MonoBehaviour:
   pickUpGraphics: {fileID: 2092819957812016947, guid: 8d1761b2a54f6bd41993764e9be34f9d, type: 3}
   icon: {fileID: 21300000, guid: 2c2f8b61c4f418e46bbc0385c3e252e7, type: 3}
   shootStyle: 0
-  shootMethod: 3
+  shootMethod: 0
   holdProgressSpeed: 700
   reloadStyle: 0
   projectile: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
@@ -159,6 +159,7 @@ MonoBehaviour:
     emptyMagReload: {fileID: 8300000, guid: 64f2c936c4a2e31499ea708df2383b01, type: 3}
     emptyMagShoot: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
   pitchVariationFiringSFX: 0.15
+  grapplesFromTip: 0
   camShakeAmount: 0.15
   camShakeAimMultiplier: 0.8
   camShakeCrouchMultiplier: 0.8
