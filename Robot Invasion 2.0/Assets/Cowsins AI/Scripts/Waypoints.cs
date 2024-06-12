@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Waypoints : MonoBehaviour
@@ -37,7 +35,7 @@ public class Waypoints : MonoBehaviour
                 waypoints.RemoveAt(waypoints.IndexOf(waypoint));
             }
         }
-        
+
         foreach (Transform t in waypoints)
         {
             Gizmos.color = Color.blue;
@@ -46,7 +44,7 @@ public class Waypoints : MonoBehaviour
 
         Gizmos.color = Color.red;
         for (int i = 0; i < waypoints.Count - 1; i++)
-        { 
+        {
             Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
         }
 

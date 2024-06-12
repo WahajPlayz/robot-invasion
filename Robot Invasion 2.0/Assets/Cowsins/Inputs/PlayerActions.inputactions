@@ -11,7 +11,8 @@
                     "id": "c205d408-8e62-4d90-a77b-d05df583228f",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Dashing",
@@ -19,7 +20,8 @@
                     "id": "2c1de3fe-73d2-4014-98eb-68157f225ff9",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Reloading",
@@ -27,7 +29,8 @@
                     "id": "5ba65d6e-b6c7-4e18-9ec8-3ac53040e708",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Melee",
@@ -35,7 +38,8 @@
                     "id": "12c0f474-d074-4b0b-b279-57c18046bdb1",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Crouching",
@@ -43,7 +47,8 @@
                     "id": "c23853d1-3e26-4f12-90a1-76b139bb2535",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Sprinting",
@@ -51,7 +56,8 @@
                     "id": "65cc1277-ad7a-46b9-b792-6a759ee0298f",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Firing",
@@ -59,7 +65,8 @@
                     "id": "6493f33d-9a7b-4aa6-bed8-73345df0ea63",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Grapple",
@@ -67,7 +74,8 @@
                     "id": "bb2cc8de-c6a2-45eb-8f85-07092b0195c7",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Scrolling",
@@ -75,7 +83,8 @@
                     "id": "279c14e4-77e2-4b8e-ad36-f39efa76af99",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Aiming",
@@ -83,7 +92,8 @@
                     "id": "e6e774e5-fe27-4964-abe6-f04848352a6f",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Interacting",
@@ -91,7 +101,8 @@
                     "id": "a4ccaad9-3483-4238-84da-c3be2b4096dd",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Inspect",
@@ -99,7 +110,8 @@
                     "id": "05022e04-8dd3-43ed-8084-21c6b0be1f27",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Drop",
@@ -107,7 +119,8 @@
                     "id": "9b6f98f8-19cb-4ffe-9fc4-9f07705f0d8b",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "ChangeWeapons",
@@ -115,7 +128,8 @@
                     "id": "e22ad45d-0997-4bf3-8439-55f3d7de3783",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Pause",
@@ -123,7 +137,8 @@
                     "id": "1ba852f7-4508-43ff-9a07-a27d5dc86af2",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Movement",
@@ -131,7 +146,8 @@
                     "id": "0059f214-490b-4648-a1f1-9acd1d4d3619",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "ToggleFlashLight",
@@ -139,7 +155,8 @@
                     "id": "9644d6f0-166c-4d52-979a-64280fa78be8",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -569,6 +586,34 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Grapple",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "SheildSpawner",
+            "id": "ba39e9d0-3df6-4224-a727-83c5e3eb7179",
+            "actions": [
+                {
+                    "name": "SpawnShield",
+                    "type": "Button",
+                    "id": "9a59a7b5-7e26-47fc-9c26-202c667356e3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "903a12ba-bf58-45ac-88b1-bccb848ced6e",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SpawnShield",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

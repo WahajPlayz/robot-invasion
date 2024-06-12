@@ -54,7 +54,7 @@ namespace cowsins
     [System.Serializable]
     public class BulletHoleImpact
     {
-        public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact;
+        public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact, sheildImpact;
     }
     #endregion
 

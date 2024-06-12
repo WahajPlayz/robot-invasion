@@ -291,7 +291,7 @@ public class CowsinsAICreator : EditorWindow
             
             EnemyAI enemyAI = ObjectToSetup.AddComponent<EnemyAI>();
 
-            enemyAI._name = AIName;
+            enemyAI.name = AIName;
             
             ObjectToSetup.AddComponent<NavMeshAgent>();
 
@@ -299,8 +299,8 @@ public class CowsinsAICreator : EditorWindow
 
             cowsinsAI.moveMode = (CowsinsAI.MoveMode) _movementType;
             cowsinsAI.aiType = (CowsinsAI.AIType) _aiType;
-            cowsinsAI._enemyType = (CowsinsAI.EnemyType) _enemyType;
-            cowsinsAI.type = (CowsinsAI.ShooterType) _shooterType;
+            cowsinsAI.enemyType = (CowsinsAI.EnemyType) _enemyType;
+            cowsinsAI.shooterType = (CowsinsAI.ShooterType)_shooterType;
             cowsinsAI.useRagdoll = useRagdoll;
         }
         else if (ObjectToSetup == null)

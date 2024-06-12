@@ -19,7 +19,7 @@ MonoBehaviour:
   searchRadius: 10
   increaseSightOnAttack: 1
   attackSearchAngle: 360
-  searchAngle: 60
+  searchAngle: 90
   targetMask:
     serializedVersion: 2
     m_Bits: 131072
@@ -32,7 +32,7 @@ MonoBehaviour:
   spreadAmount: 0
   hitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 131072
   shootDistance: 0
   inShootingDistance: 0
   timeBetweenShots: 0

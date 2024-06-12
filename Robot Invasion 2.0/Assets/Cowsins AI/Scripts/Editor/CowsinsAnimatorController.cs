@@ -375,7 +375,7 @@ public class CowsinsAnimatorController : EditorWindow
                 ".controller");
         
         //Parameters
-        controller.AddParameter("isWalking", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("isMoving", AnimatorControllerParameterType.Bool);
 
         var root = controller.layers[0].stateMachine;
         
@@ -389,11 +389,11 @@ public class CowsinsAnimatorController : EditorWindow
         
         //Add Transitions
         var walkTransitionTo = idleState.AddTransition(walkState);
-        walkTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isWalking");
+        walkTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isMoving");
         walkTransitionTo.duration = 0;
         
         var walkTransitionFrom = walkState.AddTransition(idleState);
-        walkTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "isWalking");
+        walkTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "isMoving");
         walkTransitionFrom.duration = 0;
 
         Selection.activeObject = controller;
@@ -404,7 +404,7 @@ public class CowsinsAnimatorController : EditorWindow
         var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(saveLocation + animatorName + ".controller");
         
         //Parameters
-        controller.AddParameter("isWalking", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("isMoving", AnimatorControllerParameterType.Bool);
         controller.AddParameter("attacking", AnimatorControllerParameterType.Bool);
     
         var root = controller.layers[0].stateMachine;
@@ -421,11 +421,11 @@ public class CowsinsAnimatorController : EditorWindow
 
         //Add Transitions
         var walkTransitionTo = idleState.AddTransition(walkState);
-        walkTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isWalking");
+        walkTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isMoving");
         walkTransitionTo.duration = 0;
 
         var walkTransitionFrom = walkState.AddTransition(idleState);
-        walkTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "isWalking");
+        walkTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "isMoving");
         walkTransitionFrom.duration = 0;
 
         var attackTransitionTo = walkState.AddTransition(attackState);
@@ -444,9 +444,9 @@ public class CowsinsAnimatorController : EditorWindow
         var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(saveLocation + animatorName + ".controller");
 
         //Parameters
-        controller.AddParameter("isWalking", AnimatorControllerParameterType.Bool);
-        controller.AddParameter("combatWalk", AnimatorControllerParameterType.Bool);
-        controller.AddParameter("combatIdle", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("isMoving", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("aimedWalking", AnimatorControllerParameterType.Bool);
+        controller.AddParameter("aimedIdle", AnimatorControllerParameterType.Bool);
         controller.AddParameter("firing", AnimatorControllerParameterType.Bool);
 
         var root = controller.layers[0].stateMachine;
@@ -466,41 +466,50 @@ public class CowsinsAnimatorController : EditorWindow
         firingState.motion = firingClip;
 
         //Add Transitions
+
         /// Walk
         var walkTransitionTo = idleState.AddTransition(walkState);
-        walkTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isWalking");
+        walkTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isMoving");
         walkTransitionTo.duration = 0;
 
         var walkTransitionFrom = walkState.AddTransition(idleState);
-        walkTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "isWalking");
+        walkTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "isMoving");
         walkTransitionFrom.duration = 0;
 
+        /// Combat Idle
+        var idleAimedTransitionToWalkingAimed = root.AddAnyStateTransition(aimedIdleState);
+        idleAimedTransitionToWalkingAimed.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "aimedIdle");
+        idleAimedTransitionToWalkingAimed.duration = 0;
+
+        var idleAimedTransitionToIdle = aimedIdleState.AddTransition(idleState);
+        idleAimedTransitionToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isMoving");
+        idleAimedTransitionToIdle.duration = 0;
+
+        /// Firing
+        var firingTransitionFromRoot = root.AddAnyStateTransition(firingState);
+        firingTransitionFromRoot.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "firing");
+        firingTransitionFromRoot.duration = 0;
+
+        var firingTransitionToWalkingAimed = firingState.AddTransition(walkingAimedState);
+        firingTransitionToWalkingAimed.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "firing");
+        firingTransitionToWalkingAimed.duration = 0;
+
+        var firingTransitionToIdle = firingState.AddTransition(idleState);
+        firingTransitionToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "isMoving");
+        firingTransitionToIdle.duration = 0;
+
         /// Combat Walk
-        var walkAimedTransitionTo = idleState.AddTransition(walkingAimedState);
-        walkAimedTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "combatWalk");
-        walkAimedTransitionTo.duration = 0;
+        var walkAimedTransitionToFromIdle = idleState.AddTransition(walkingAimedState);
+        walkAimedTransitionToFromIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "aimedWalking");
+        walkAimedTransitionToFromIdle.duration = 0;
 
-        var walkAimedTransitionFrom = walkingAimedState.AddTransition(idleState);
-        walkAimedTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "combatWalk");
-        walkAimedTransitionFrom.duration = 0;
+        var walkAimedTransitionToFromAimedIdle = aimedIdleState.AddTransition(walkingAimedState);
+        walkAimedTransitionToFromAimedIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "aimedWalking");
+        walkAimedTransitionToFromAimedIdle.duration = 0;
 
-        ///Firing
-        var firingTransitionTo = walkingAimedState.AddTransition(firingState);
-        firingTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "firing");
-        firingTransitionTo.duration = 0;
-
-        var firingTransitionFrom = firingState.AddTransition(walkingAimedState);
-        firingTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "firing");
-        firingTransitionFrom.duration = 0;
-
-        ///Aimed Idle
-        var aimedIdleTransitionTo = walkingAimedState.AddTransition(aimedIdleState);
-        aimedIdleTransitionTo.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "combatIdle");
-        aimedIdleTransitionTo.duration = 0;
-
-        var aimedIdleTransitionFrom = aimedIdleState.AddTransition(walkingAimedState);
-        aimedIdleTransitionFrom.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "combatIdle");
-        aimedIdleTransitionFrom.duration = 0;
+        var walkAimedTransitionToIdle = walkingAimedState.AddTransition(idleState);
+        walkAimedTransitionToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "aimedWalking");
+        walkAimedTransitionToIdle.duration = 0;
         
         Selection.activeObject = controller;
     }

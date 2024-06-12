@@ -1,249 +1,187 @@
-using System.Collections;
 using cowsins;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Color = System.Drawing.Color;
+using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(EnemyAI))]
+[RequireComponent(typeof(Animator))]
 public class CowsinsAI : MonoBehaviour
 {
-    #region Base Variables
-    [Tooltip("Displays Current State (WILL NOT SAVE CHANGES MADE IN EDITOR MODE WHEN ENTERING PLAY)")]
-    public States currentState;
+    public bool wandering;
+    public float waitTimeBetweenWander = 5f;
+    public float wanderRadius;
 
-    [Tooltip("Whether the AI should attack the player")]
-    public bool dumbAI = false;
+    #region FOV
 
-    [Tooltip("How long the AI should wait until going to the next waypoint")]
-    public float waypointWaitTime = 1f;
+    [Range(0, 360)] public float searchAngle;
+    [Range(0, 360)] public float attackSearchAngle;
 
-    [Tooltip("If the AI should use waypoints, randomly move around or stand idle")]
-    public MoveMode moveMode;
+    public float searchRadius;
 
-    public Waypoints _waypoints;
+    public LayerMask obstructionMasks;
+    public LayerMask targetMask;
 
-    [Tooltip("The animator the AI will use for Shooter Mode")]
-    public Animator shooterAnimator;
+    #endregion
 
-    [Tooltip("The animator the AI will use if AI Type is NPC")]
-    public Animator NPCAnimator;
+    public float attackRange;
+    public bool increaseSightOnAttack;
 
-    [Tooltip("The damage dealt to the player")]
+    private bool attackedMelee;
+    public float timeBetweenAttacks;
+    private bool inRange;
+
+    private Vector3 destination;
+    public bool canSeePlayer;
+    private float wanderWaitTimer;
+
+    #region Shooting Variables
+    public Transform firePoint;
+    public float spreadAmount;
+    public TrailRenderer bulletTrail;
     public float damageAmount;
+    public float timeBetweenShots;
+    private bool attackedShooter;
+    public GameObject projectile;
+    public AudioClip fireClip;
 
-    public enum States
+    [Serializable]
+    public class Effects
     {
-        Idle,
-        Attack,
-        Search
+        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, sheildImpact;
     }
 
-    public enum MoveMode
+    [Serializable]
+    public class ImpactEffects
     {
-        Waypoints,
-        Random,
-        Idle
+        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, sheildImpact;
     }
+
+    public Effects effects;
+
+    public ImpactEffects impactEffects;
+
+    #endregion
+
+    private NavMeshAgent agent;
+    private Animator animator;
+
+    [HideInInspector] public GameObject player;
 
     public bool useRagdoll;
 
     public bool useDeathAnimation;
-
-    public bool destroyAfterTime;
-
+    public bool destroyAfterTimer;
     public float destroyTimer;
     
-    #endregion
+    public bool dumbAI;
 
-    #region Wander Settings
+    public Waypoints _waypoints;
 
-    private Vector3 destination;
-
-    private bool wandering;
-    public float waitTimeBetweenWander = 2f;
-    private float wanderWaitTimer = 0f;
-    private float wanderWaitTime = 5f;
-
-    private Vector3 idleStartPos;
-    private Quaternion idleStartRot;
-
-    [Tooltip("How far the AI should wander until changing path")]
-    public float wanderRadius = 10f;
-
-    [Tooltip("Minimum distance it should go until moving again")]
-    public float minWanderDistance = 2f;
-
-    [Tooltip("Maximum distance it should go until moving again")]
-    public float maxWanderDistance = 5f;
-
-    #endregion
-
-    #region Location Variables
-
-    [Tooltip("The radius in what the AI can see")]
-    public float searchRadius;
-
-    [Range(0, 360)] [Tooltip("AI FOV (Field of View)")]
-    public float searchAngle;
-
-    public bool increaseSightOnAttack;
-
-    [Range(0, 360)] [Tooltip("What FOV the AI will have after attack")]
-    public float attackSearchAngle;
-
-    [HideInInspector] public GameObject player;
-
-    [Tooltip("The layer in which the AI will attack")]
-    public LayerMask targetMask;
-    
-    [Tooltip("What the raycast will hit")] public LayerMask hitMask;
-
-    [Tooltip("The layer in which the AI cannot see through")]
-    public LayerMask obstructionMask;
-
-    [Tooltip("Debug variable, changing will not make any difference in Edit Mode / Play Mode")]
-    public bool canSeePlayer;
-
-    [Tooltip("How long the AI will spend searching for the player after losing sight")]
-    public float searchWaitTime;
-
-    #endregion
-
-    #region Shooter Settings
-
-    public bool usingHitscan;
-
-    public bool usingProjectile;
-
-    public Transform weaponHolder;
-
-    [Tooltip("How far the AI should start shooting the target from")]
-    public float shootDistance;
-
-    [Tooltip("How long the AI should wait inbetween each shot")]
-    public float timeBetweenShots;
-
-    [Tooltip("The projectile prefab that the AI will use")]
-    public GameObject projectile;
-
-    [Tooltip("Where the bullet will shoot from")]
-    public Transform firePoint;
-
-    [Tooltip("Prefab that has a 'TrailRenderer' on. View the 'Prefabs' folder for example")]
-    public TrailRenderer bulletTrail;
-
-    [Tooltip("How much the bullets should spread")]
-    public float spreadAmount;
-    
-    [Tooltip("Shooting Method")] public ShooterType type;
-
-    [Tooltip("AI Type")] public AIType aiType;
-
-    public enum ShooterType
-    {
-        Projectile,
-        Hitscan
-    }
-
-    public enum AIType
-    {
-        Enemy,
-        NPC
-    }
-
-    public bool inShootingDistance;
-
-    private bool attackedShooterHitscan;
-    private bool attackedShooterProjectile;
-
-    #endregion
-
-    #region Melee Variables
-
-    [Tooltip("The animator that the AI will use for melee")]
-    public Animator meleeAnimator;
-
-    [Tooltip("How long the AI will wait inbetween attacks")]
-    public float waitBetweenAttack;
-
-    public float waitBetweenSwingDelay;
-
-    [Tooltip("How far the AI will stand from the player whilst attacking")]
-    public float meleeDistance;
-
-    private bool alreadyAttackedMelee;
-    public bool inMeleeDistance;
-
-    #endregion
-    
-    #region Hidden Variables
+    public float waypointWaitTime = 1f;
 
     private float waypointWaitTimer = 0f;
 
     private int currentWaypoint;
 
-    private NavMeshAgent agent;
+    private Vector3 idleStartPos;
+    private Quaternion idleStartRot;
 
-    private float searchTimer = 5;
-
-    private float currentSearchTime;
-    
     private bool searchTimerStarted = false;
+    public float searchTimer = 5;
+    private float currentSearchTime;
+
+    #region Enum References
+
+    public State aiState;
+
+    public MoveMode moveMode;
+
+    public ShooterType shooterType;
+
+    public AIType aiType;
+
+    public EnemyType enemyType;
 
     #endregion
 
-    #region Debug
+    #region Enum Logic
 
-    #region Bools
+    public enum State
+    {
+        Idle = 0,
+        Attack = 1,
+        Search = 2
+    }
 
-    public bool shootingDistanceDebug;
-    public bool meleeDistanceDebug;
-    public bool canSeePlayerDebug;
+    public enum MoveMode
+    {
+        Waypoints = 0,
+        Random = 1,
+        Idle = 2
+    }
+
+    public enum ShooterType
+    {
+        Projectile = 0,
+        Hitscan = 1
+    }
+
+    public enum AIType
+    {
+        Enemy = 0,
+        NPC = 1
+    }
+
+    public enum EnemyType
+    {
+        Shooter = 0,
+        Melee = 1
+    }
+
+    #endregion
 
     public bool searchRadiusDebug;
-    public bool attackRadiusDebug;
+    public bool attackRangeDebug;
+    public bool canSeePlayerDebug;
 
-    #endregion Bools
+    public SaveSettingSO saveSO;
 
-    #region Variables
-
-    public EnemyType _enemyType;
-    public enum EnemyType{Shooter, Melee}
-
-    /*public bool melee;
-    public bool shooter;*/
-
-    #endregion Variables
-
-    #endregion
-
-    private void Start()
+    private void Awake()
     {
-        currentState = States.Idle;
-        agent = gameObject.GetComponentInChildren<NavMeshAgent>();
+        aiState = State.Idle;
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+
+        wanderWaitTimer = waitTimeBetweenWander;
         player = GameObject.FindGameObjectWithTag("Player");
+
         StartCoroutine(FOVRoutine());
 
-        if (moveMode == MoveMode.Idle)
+        if(moveMode == MoveMode.Idle)
         {
             idleStartPos = transform.position;
             idleStartRot = transform.rotation;
+            agent.enabled = false;
         }
     }
 
-    #region FOV Manager
+    #region FOV
 
-    IEnumerator FOVRoutine()
+    private IEnumerator FOVRoutine()
     {
         WaitForSeconds wait = new WaitForSeconds(0.2f);
 
         while (true)
         {
             yield return wait;
-            FieldOfViewCheck();
+            FOVCheck();
         }
     }
 
-    void FieldOfViewCheck()
+    private void FOVCheck()
     {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, searchRadius, targetMask);
 
@@ -256,7 +194,7 @@ public class CowsinsAI : MonoBehaviour
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMasks))
                 {
                     canSeePlayer = true;
                 }
@@ -280,110 +218,82 @@ public class CowsinsAI : MonoBehaviour
 
     private void Update()
     {
-        if (aiType == AIType.NPC)
+        if(aiType == AIType.NPC)
         {
-            IdlePassiveState();
-        }
-        
-        if (currentState == States.Idle && aiType == AIType.Enemy)
-        {
-            IdleHostileState();
-        }
-        else if (currentState == States.Search && aiType == AIType.Enemy)
-        {
-            SearchHostileState();
-        }
-        else if (currentState == States.Attack && aiType == AIType.Enemy)
-        {
-            AttackState();
+            IdleNPCState();
         }
 
-        if (currentState == States.Attack && canSeePlayer == false)
+        if(aiType == AIType.Enemy)
         {
-            currentState = States.Search;
+            switch (aiState)
+            {
+                case State.Idle:
+                    EnemyIdleState();
+                    break;
+
+                case State.Search:
+                    EnemySearchState();
+                    break;
+
+                case State.Attack:
+                    EnemyAttackState();
+                    break;
+            }
+
+            if (aiState == State.Attack && !canSeePlayer)
+                aiState = State.Search;
         }
     }
 
-    void IdlePassiveState()
+    void IdleNPCState()
     {
-        if (moveMode == MoveMode.Waypoints)
+        switch (moveMode)
         {
-            WaypointsFunction();
-        }
-        else if (moveMode == MoveMode.Random)
-        {
-            RandomMove();
-        }
-        else if (moveMode == MoveMode.Idle)
-        {
-            Idle();
-        }
-        
-        if (agent.velocity != Vector3.zero)
-        {
-            NPCAnimator.SetBool("isWalking", true);
-        }
-        else if (agent.velocity == Vector3.zero)
-        {
-            NPCAnimator.SetBool("isWalking", false);
+            case MoveMode.Waypoints:
+                WaypointsFunction();
+                break;
+
+            case MoveMode.Random:
+                RandomMove();
+                break;
+
+            case MoveMode.Idle:
+                Idle();
+                break;
         }
     }
 
-    void Idle()
-    {
-        agent.destination = idleStartPos;
-        transform.rotation = idleStartRot;
-    }
+    #region AIType Functions
 
-    void IdleHostileState()
+    void EnemyIdleState()
     {
         if (!dumbAI)
         {
             agent.isStopped = false;
 
-            if (moveMode == MoveMode.Waypoints)
+            switch (moveMode)
             {
-                WaypointsFunction();
-            }
-            else if (moveMode == MoveMode.Random)
-            {
-                RandomMove();
-            }
-            
-            FieldOfViewCheck();
+                case MoveMode.Waypoints:
+                    WaypointsFunction();
+                    break;
 
-            if (canSeePlayer)
-            {
-                currentState = States.Attack;
+                case MoveMode.Random:
+                    RandomMove();
+                    break;
             }
 
-            if (_enemyType == EnemyType.Shooter)
-            {
-                if (agent.velocity != Vector3.zero)
-                {
-                    shooterAnimator.SetBool("isWalking", true);
-                }
-                else if (agent.velocity == Vector3.zero)
-                {
-                    shooterAnimator.SetBool("isWalking", false);
-                }
-            }
+            FOVCheck();
 
-            if (_enemyType == EnemyType.Melee)
+            if (canSeePlayer) aiState = State.Attack;
+
+            if (enemyType == EnemyType.Shooter || enemyType == EnemyType.Melee)
             {
-                if (agent.velocity != Vector3.zero)
-                {
-                    meleeAnimator.SetBool("isWalking", true);
-                }
-                else if (agent.velocity == Vector3.zero)
-                {
-                    meleeAnimator.SetBool("isWalking", false);
-                }
+                EnemyIdleStateVelocityCheck();
             }
         }
     }
 
-    void SearchHostileState()
+    void EnemySearchState()
     {
         agent.isStopped = false;
 
@@ -395,275 +305,232 @@ public class CowsinsAI : MonoBehaviour
             searchTimerStarted = true;
         }
 
-        if(_enemyType == EnemyType.Shooter)
+        EnemySearchStateVelocityCheck();
+
+        currentSearchTime -= Time.deltaTime;
+
+        if (currentSearchTime <= 0)
         {
-            if (agent.velocity != Vector3.zero)
+            aiState = State.Idle;
+            if (HasParameter("aimedWalking")) animator.SetBool("aimedWalking", false);
+            if (HasParameter("aimedIdle")) animator.SetBool("aimedIdle", false);
+
+            if(moveMode == MoveMode.Idle)
             {
-                shooterAnimator.SetBool("combatWalk", true);
-
-                if (shooterAnimator.GetBool("isWalking"))
-                {
-                    shooterAnimator.SetBool("isWalking", false);
-                }
-
-                shooterAnimator.SetBool("combatIdle", false);
-            }
-            else if (agent.velocity == Vector3.zero)
-            {
-                shooterAnimator.SetBool("combatWalk", false);
-                shooterAnimator.SetBool("combatIdle", true);
-            }
-
-            currentSearchTime -= Time.deltaTime;
-
-            if (currentSearchTime <= 0)
-            {
-                currentState = States.Idle;
-
-                shooterAnimator.SetBool("combatIdle", false);
-                shooterAnimator.SetBool("combatWalk", false);
-
-                shooterAnimator.SetBool("isWalking", false);
-
-                if (moveMode == MoveMode.Idle)
-                {
-                    agent.destination = idleStartPos;
-                    transform.rotation = idleStartRot;
-                }
-            }
-        }
-        
-        else if (_enemyType == EnemyType.Melee)
-        {
-            if (agent.velocity != Vector3.zero)
-            {
-                meleeAnimator.SetBool("isWalking", true);
-
-                if (meleeAnimator.GetBool("isWalking"))
-                {
-                    meleeAnimator.SetBool("isWalking", false);
-                }
-                
-                meleeAnimator.SetBool("isWalking", true);
-            }
-            else if (agent.velocity == Vector3.zero)
-            {
-                meleeAnimator.SetBool("isWalking", false);
-            }
-
-            currentSearchTime -= Time.deltaTime;
-
-            if (currentSearchTime <= 0)
-            {
-                currentState = States.Idle;
-                
-                meleeAnimator.SetBool("isWalking", false);
+                agent.destination = idleStartPos;
+                transform.rotation = idleStartRot;
             }
         }
 
-        if (canSeePlayer)
-        {
-            currentState = States.Attack;
-        }
+        if (canSeePlayer) aiState = State.Attack;
 
-        if (increaseSightOnAttack)
-        {
-            searchAngle = attackSearchAngle;
-        }
+        if (increaseSightOnAttack) searchAngle = attackSearchAngle;
     }
 
-    void WaypointsFunction()
+    void EnemyAttackState()
     {
-        if (agent.remainingDistance < 0.5f)
+        switch (enemyType)
         {
-            waypointWaitTimer += Time.deltaTime;
-            if (waypointWaitTimer >= waypointWaitTime)
-            {
-                currentWaypoint++;
-                
-                if (currentWaypoint >= _waypoints.waypoints.Count)
-                {
-                    currentWaypoint = 0;
-                }
-                
-                agent.destination = _waypoints.waypoints[currentWaypoint].position;
-                waypointWaitTimer = 0f;
-            }
-        }
-    }
+            case EnemyType.Shooter:
+                ShooterAttack();
+                break;
 
-    #region Wander Mechanics
-
-    void RandomMove()
-    {
-        if (!wandering)
-        {
-            wanderWaitTimer -= Time.deltaTime;
-
-            if (wanderWaitTimer <= 0f)
-            {
-                destination = RandomNavSphere(transform.position, wanderRadius, -1);
-                agent.SetDestination(destination);
-                wandering = true;
-                wanderWaitTimer = waitTimeBetweenWander;
-            }
-        }
-        
-        if (agent.remainingDistance <= minWanderDistance)
-        {
-            wandering = false;
+            case EnemyType.Melee:
+                MeleeAttack();
+                break;
         }
 
-    }
-
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layerMask)
-    {
-        Vector3 randDirection = Random.insideUnitSphere * dist;
-        randDirection += origin;
-
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randDirection, out navHit, dist, layerMask);
-
-        return navHit.position;
+        if (!canSeePlayer) aiState = State.Search;
+        if (increaseSightOnAttack) searchAngle = attackSearchAngle;
     }
 
     #endregion
 
-    #region Attack States
+    #region Velocity Checks
 
-    void AttackState()
+    void EnemyIdleStateVelocityCheck()
     {
-        if (_enemyType == EnemyType.Shooter)
+        if (agent.velocity.magnitude >= 0.1f)
         {
-            ShooterAttack();
-            CheckShooterBool();
-        }
-        
-        else if (_enemyType == EnemyType.Melee)
-        {
-            MeleeAttack();
-        }
+            animator.SetBool("isMoving", true);
 
-        if (!canSeePlayer)
-        {
-            currentState = States.Search;
+            if (HasParameter("aimedWalking")) animator.SetBool("aimedWalking", false);
         }
-
-        if (increaseSightOnAttack)
+        else
         {
-            searchAngle = attackSearchAngle;
-        }
-    }
-    
-    // Shooter Functions
-
-    void ResetAttack()
-    {
-        if (_enemyType == EnemyType.Shooter)
-        {
-            attackedShooterHitscan = false;
-
-            shooterAnimator.SetBool("firing", false);
-        }
-        
-        else if (_enemyType == EnemyType.Melee)
-        {
-            alreadyAttackedMelee = false;
-            
-            meleeAnimator.SetBool("attacking", false);
+            animator.SetBool("isMoving", false);
         }
     }
 
-    void CheckShooterBool()
+    void EnemySearchStateVelocityCheck()
     {
-        if (inShootingDistance)
+        if(agent.velocity.magnitude >= 0.1f)
         {
-            agent.SetDestination(transform.position);
-            transform.LookAt(
-                new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
+            if (HasParameter("aimedWalking")) animator.SetBool("aimedWalking", true);
+            if (HasParameter("aimedIdle")) animator.SetBool("aimedIdle", false);
 
-            if (!attackedShooterHitscan && type == ShooterType.Hitscan)
+            animator.SetBool("isMoving", false);
+        }
+        else
+        {
+            if (HasParameter("aimedWalking")) animator.SetBool("aimedWalking", false);
+            if (HasParameter("aimedIdle")) animator.SetBool("aimedIdle", true);
+        }
+    }
+
+    #endregion
+
+    #region Attack Functions
+
+    void MeleeAttack()
+    {
+        float distanceToPlayer = Vector3.Distance(player.transform.position, agent.transform.position);
+
+        agent.destination = player.transform.position;
+
+        if(distanceToPlayer <= attackRange)
+        {
+            agent.isStopped = true;
+
+            if(agent.velocity.magnitude >= 0.1f)
             {
-                Hitscan();
-                attackedShooterHitscan = true;
-                Invoke(nameof(ResetAttack), timeBetweenShots);
-                shooterAnimator.SetBool("firing", true);
-                shooterAnimator.SetBool("isWalking", false);
+                inRange = true;
+                animator.SetBool("isMoving", true);
+            }
+            else
+            {
+                inRange = false;
+                animator.SetBool("isMoving", false);
             }
 
-            if (!attackedShooterProjectile && type == ShooterType.Projectile)
-            {
-                ProjectileShoot();
-                attackedShooterProjectile = true;
-                Invoke(nameof(ResetAttack), timeBetweenShots);
-                shooterAnimator.SetBool("firing", true);
-                shooterAnimator.SetBool("isWalking", false);
-            }
+            CheckMeleeBool();
         }
         else
         {
             agent.isStopped = false;
-            shooterAnimator.SetBool("firing", false);
+
+            animator.SetBool("attacking", false);
         }
     }
-    
+
+    public void MeleeDamage()
+    {
+        if (enemyType == EnemyType.Melee && inRange)
+        {
+            player.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount);
+        }
+    }
+
     void ShooterAttack()
     {
-        if (!dumbAI)
-        {
-            if (agent.velocity != Vector3.zero)
-            {
-                shooterAnimator.SetBool("combatWalk", true);
-                shooterAnimator.SetBool("isWalking", false);
-                shooterAnimator.SetBool("combatIdle", false);
-            }
-            else if (agent.velocity == Vector3.zero)
-            {
-                shooterAnimator.SetBool("combatWalk", false);
-                shooterAnimator.SetBool("combatIdle", true);
-            }
+        agent.destination = player.transform.position;
 
-            agent.destination = player.transform.position;
-        }
+        transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
 
         float distanceToPlayer = Vector3.Distance(player.transform.position, agent.transform.position);
 
-        if (distanceToPlayer <= shootDistance)
+        if(distanceToPlayer <= attackRange)
         {
-            inShootingDistance = true;
+            animator.SetBool("firing", true);
+            animator.SetBool("aimedWalking", false);
+            CheckShooterBool();
+            agent.isStopped = true;
         }
-        else if (distanceToPlayer >= shootDistance)
+        else
         {
-            inShootingDistance = false;
+            animator.SetBool("firing", false);
+            animator.SetBool("aimedWalking", true);
+            agent.isStopped = false;
         }
+    }
+
+    void Projectile()
+    {
+        Rigidbody rb = Instantiate(projectile, firePoint.transform.position, Quaternion.identity)
+            .GetComponent<Rigidbody>();
+        rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+        rb.AddForce(transform.up * 2f, ForceMode.Impulse);
     }
 
     void Hitscan()
     {
-        Ray ray = new Ray(firePoint.position, GetSpreadDirection(spreadAmount, transform.forward));
+        Vector3 direction = CalculateSpread(transform.forward, spreadAmount);
+
+        Ray ray = new Ray(firePoint.position, direction);
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, shootDistance, hitMask))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
+            TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
+            StartCoroutine(SpawnTrail(trail, hit));
+
+            CheckLayer(hit.collider.gameObject.layer, hit);
+
             if (hit.transform.gameObject.CompareTag("Player"))
             {
-                TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
-
-                StartCoroutine(SpawnTrail(trail, hit));
-
                 hit.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount);
-                Debug.Log(hit.transform.name);
             }
         }
+        else
+        {
+            if (hit.collider != null)
+            {
+                TrailRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
+                
+                StartCoroutine(SpawnTrail(trail, ray.GetPoint(100)));
+            }
+        }
+
+        SoundManager.Instance.PlaySound(fireClip, 0, 0, true, 0);
     }
 
-    public static Vector3 GetSpreadDirection(float amount, Vector3 dir)
+    void CheckLayer(LayerMask layer, RaycastHit hit)
     {
-        float horSpread = Random.Range(-amount, amount);
-        float verSpread = Random.Range(-amount, amount);
-        Vector3 finalDir = new Vector3(dir.x * horSpread, dir.y * verSpread, dir.z);
+        GameObject impact = null, impactBullet = null;
 
-        return finalDir;
+        switch (layer)
+        {
+            case int l when layer == LayerMask.NameToLayer("Default"):
+                impactBullet = Instantiate(impactEffects.defaultImpact, hit.point, Quaternion.identity);
+                break;
+            case int l when layer == LayerMask.NameToLayer("Grass"):
+                impact = Instantiate(effects.grassImpact, hit.point, Quaternion.identity);
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.grassImpact, hit.point, Quaternion.identity);
+                break;
+            case int l when layer == LayerMask.NameToLayer("Metal"):
+                impact = Instantiate(effects.metalImpact, hit.point, Quaternion.identity); // Metal
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.metalImpact, hit.point, Quaternion.identity);
+                Debug.Log(true);
+                break;
+            case int l when layer == LayerMask.NameToLayer("Mud"):
+                impact = Instantiate(effects.mudImpact, hit.point, Quaternion.identity); // Mud
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.mudImpact, hit.point, Quaternion.identity);
+                break;
+            case int l when layer == LayerMask.NameToLayer("Wood"):
+                impact = Instantiate(effects.woodImpact, hit.point, Quaternion.identity); // Wood
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.woodImpact, hit.point, Quaternion.identity);
+                break;
+            case int l when layer == LayerMask.NameToLayer("Enemy"):
+                impact = Instantiate(effects.enemyImpact, hit.point, Quaternion.identity); // Enemy
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.enemyImpact, hit.point, Quaternion.identity);
+                break;
+                case int l when layer == LayerMask.NameToLayer("Sheild"):
+                impact = Instantiate(effects.sheildImpact, hit.point, Quaternion.identity); // sheild
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.sheildImpact, hit.point, Quaternion.identity);
+                break;
+        }
+
+        if(hit.collider != null && impactBullet != null)
+        {
+            impactBullet.transform.rotation = Quaternion.LookRotation(hit.normal);
+            impactBullet.transform.SetParent(hit.collider.transform);
+        }
     }
 
     IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit)
@@ -680,74 +547,161 @@ public class CowsinsAI : MonoBehaviour
         }
 
         trail.transform.position = hit.point;
-        
+
         Destroy(trail.gameObject, trail.time);
     }
 
-    void ProjectileShoot()
+    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPoint)
     {
-        Rigidbody rb = Instantiate(projectile, firePoint.transform.position, Quaternion.identity)
-            .GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-        rb.AddForce(transform.up * 2f, ForceMode.Impulse);
+        float distance = Vector3.Distance(trail.transform.position, endPoint);
+        float remainingDistance = distance;
+
+        while (remainingDistance > 0)
+        {
+            trail.transform.position = Vector3.Lerp(trail.transform.position, endPoint, Time.deltaTime / distance);
+            remainingDistance = Vector3.Distance(trail.transform.position, endPoint);
+            yield return null;
+        }
+
+        // Optionally, destroy the trail after it reaches the endpoint
+        Destroy(trail.gameObject, trail.time);
     }
-    
-    // Melee Functions
 
-    void MeleeAttack()
+    private Vector3 CalculateSpread(Vector3 direction, float angle)
     {
-        if (agent.velocity != Vector3.zero)
+        // Calculate random angles within the spread range
+        float spreadX = Random.Range(-angle, angle);
+        float spreadY = Random.Range(-angle, angle);
+
+        // Apply the spread to the direction
+        direction = Quaternion.Euler(spreadX, spreadY, 0) * direction;
+
+        return direction;
+    }
+
+    void ResetAttack()
+    {
+        switch (enemyType)
         {
-            meleeAnimator.SetBool("isWalking", true);
-        }
-        else if (agent.velocity == Vector3.zero)
-        {
-            meleeAnimator.SetBool("isWalking", false);
-        }
+            case EnemyType.Shooter:
+                attackedShooter = false;
+                break;
 
-        float distanceToPlayer = Vector3.Distance(player.transform.position, agent.transform.position);
-
-        agent.destination = player.transform.position;
-
-        if (distanceToPlayer <= meleeDistance)
-        {
-            inMeleeDistance = true;
-            agent.isStopped = true;
-
-            if (agent.velocity != Vector3.zero)
-            {
-                meleeAnimator.SetBool("isWalking", true);
-            }
-            else if (agent.velocity == Vector3.zero)
-            {
-                meleeAnimator.SetBool("isWalking", false);
-            }
-
-            if (!alreadyAttackedMelee)
-            {
-                alreadyAttackedMelee = true;
-                
-                meleeAnimator.SetBool("attacking", true);
-                Invoke(nameof(ResetAttack), waitBetweenAttack);
-            }
-        }
-        else if (distanceToPlayer >= meleeDistance)
-        {
-            inMeleeDistance = false;
-            agent.isStopped = false;
-            
-            meleeAnimator.SetBool("attacking", false);
+            case EnemyType.Melee:
+                attackedMelee = false;
+                break;
         }
     }
 
-    public void MeleeDamage()
+    #endregion
+
+    #region Enemy Type Checks
+
+    void CheckShooterBool()
     {
-        if (_enemyType == EnemyType.Melee && inMeleeDistance)
+        if (!attackedShooter)
         {
-            player.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount);
-            
-            Debug.Log("Damaging " + player.name);
+            switch (shooterType)
+            {
+                case ShooterType.Hitscan:
+                    Hitscan();
+                    attackedShooter = true;
+                    Invoke(nameof(ResetAttack), timeBetweenShots);
+                    break;
+                case ShooterType.Projectile:
+                    Projectile();
+                    attackedShooter = true;
+                    Invoke(nameof(ResetAttack), timeBetweenShots);
+                    break;
+            }
         }
+    }
+
+    void CheckMeleeBool()
+    {
+        if (!attackedMelee)
+        {
+            attackedMelee = true;
+
+            animator.SetBool("attacking", true);
+            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+        }
+    }
+
+    #endregion
+
+
+    #region Move Functions
+
+    void RandomMove()
+    {
+        if (!wandering)
+        {
+            wanderWaitTimer -= Time.deltaTime;
+            
+            if (wanderWaitTimer <= 0f)
+            {
+                destination = RandomNavSphere(transform.position, wanderRadius, -1);
+                agent.SetDestination(destination);
+                wanderWaitTimer = waitTimeBetweenWander;
+            }
+        }
+
+        if (agent.destination == destination)
+        {
+            wandering = false;
+        }
+    }
+
+    private Vector3 RandomNavSphere(Vector3 origin, float dist, int layerMask)
+    {
+        Vector3 randDirection = Random.insideUnitSphere * dist;
+        randDirection += origin;
+        wandering = true;
+
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(randDirection, out navHit, dist, layerMask);
+
+        return navHit.position;
+    }
+
+    void WaypointsFunction()
+    {
+        if (agent.remainingDistance < 0.5f)
+        {
+            waypointWaitTimer += Time.deltaTime;
+            if (waypointWaitTimer >= waypointWaitTime)
+            {
+                currentWaypoint++;
+
+                if (currentWaypoint >= _waypoints.waypoints.Count)
+                {
+                    currentWaypoint = 0;
+                }
+
+                agent.destination = _waypoints.waypoints[currentWaypoint].position;
+                waypointWaitTimer = 0f;
+            }
+        }
+    }
+
+    void Idle()
+    {
+        agent.destination = idleStartPos;
+        transform.rotation = idleStartRot;
+    }
+
+    #endregion
+
+    #region Misc Functions
+
+    bool HasParameter(string paramName)
+    {
+        foreach(AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 
     #endregion

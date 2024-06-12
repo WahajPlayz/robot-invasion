@@ -18,7 +18,7 @@ public class Events
 [System.Serializable]
 public class Effects
 {
-    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact;
+    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, sheildImpact;
 }
 [System.Serializable]
 public class CustomShotMethods
@@ -563,6 +563,11 @@ namespace cowsins
                     impact = Instantiate(effects.enemyImpact, h.point, Quaternion.identity); // Enemy
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
+                    break;
+                     case int l when l == LayerMask.NameToLayer("Sheild"):
+                    impact = Instantiate(effects.sheildImpact, h.point, Quaternion.identity); // Enemy
+                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.sheildImpact, h.point, Quaternion.identity);
                     break;
             }
 
