@@ -18,7 +18,7 @@ public class Events
 [System.Serializable]
 public class Effects
 {
-    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, sheildImpact;
+    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact, GreenSheildImpact;
 }
 [System.Serializable]
 public class CustomShotMethods
@@ -564,10 +564,15 @@ namespace cowsins
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
                     break;
-                     case int l when l == LayerMask.NameToLayer("Sheild"):
-                    impact = Instantiate(effects.sheildImpact, h.point, Quaternion.identity); // Enemy
+                case int l when l == LayerMask.NameToLayer("OrangeSheild"):
+                    impact = Instantiate(effects.OrangesheildImpact, h.point, Quaternion.identity); // OrangeSheild
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.sheildImpact, h.point, Quaternion.identity);
+                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.OrangesheildImpact, h.point, Quaternion.identity);
+                    break;
+                case int l when l == LayerMask.NameToLayer("GreenSheild"):
+                    impact = Instantiate(effects.GreenSheildImpact, h.point, Quaternion.identity); // OrangeSheild
+                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.GreenSheildImpact, h.point, Quaternion.identity);
                     break;
             }
 

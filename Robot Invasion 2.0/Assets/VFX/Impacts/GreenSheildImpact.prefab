@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4000656894320679829}
   - component: {fileID: 8949174556140459800}
   m_Layer: 0
-  m_Name: SheildImpact
+  m_Name: GreenSheildImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,7 +57,7 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 327.01355, y: 136.25565, z: 0, w: 1}
+      - m_Value: {x: 0.38189164, y: 25.68894, z: 0, w: 1}
         m_Name: Color01
         m_Overridden: 1
       - m_Value: {x: 0, y: 12.800049, z: 1024, w: 1}

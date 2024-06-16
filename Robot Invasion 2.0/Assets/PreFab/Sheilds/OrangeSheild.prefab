@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8516332343575210418}
   - component: {fileID: 4319858724770837064}
   m_Layer: 18
-  m_Name: Sheild
+  m_Name: OrangeSheild
   m_TagString: Sheild
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,10 @@ VisualEffect:
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0, y: 0.1676288, z: 2.1213202, w: 1}
+        m_Name: BackFace
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -68,7 +71,71 @@ VisualEffect:
     m_AnimationCurve:
       m_Array: []
     m_Gradient:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 0, g: 17.066835, b: 1023.9965, a: 1}
+          key1: {r: 0.5, g: 0.5, b: 0.5, a: 0.8}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 6554
+          atime1: 52428
+          atime2: 65535
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_ColorSpace: -1
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 3
+        m_Name: FrontFace
+        m_Overridden: 1
+      - m_Value:
+          serializedVersion: 2
+          key0: {r: 327.01355, g: 136.25565, b: 0, a: 1}
+          key1: {r: 0.5, g: 0.5, b: 0.5, a: 0.8}
+          key2: {r: 0, g: 0, b: 0, a: 0}
+          key3: {r: 0, g: 0, b: 0, a: 0}
+          key4: {r: 0, g: 0, b: 0, a: 0}
+          key5: {r: 0, g: 0, b: 0, a: 0}
+          key6: {r: 0, g: 0, b: 0, a: 0}
+          key7: {r: 0, g: 0, b: 0, a: 0}
+          ctime0: 0
+          ctime1: 65535
+          ctime2: 0
+          ctime3: 0
+          ctime4: 0
+          ctime5: 0
+          ctime6: 0
+          ctime7: 0
+          atime0: 6554
+          atime1: 52428
+          atime2: 65535
+          atime3: 65535
+          atime4: 0
+          atime5: 0
+          atime6: 0
+          atime7: 0
+          m_Mode: 0
+          m_ColorSpace: -1
+          m_NumColorKeys: 2
+          m_NumAlphaKeys: 3
+        m_Name: FresnalPower
+        m_Overridden: 1
     m_NamedObject:
       m_Array: []
     m_Bool:
@@ -132,7 +199,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0

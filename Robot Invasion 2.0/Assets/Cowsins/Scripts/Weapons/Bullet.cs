@@ -60,7 +60,7 @@ namespace cowsins
                 return;
             }
             if (other.gameObject.layer == 3 || other.gameObject.layer == 8 || other.gameObject.layer == 10
-            || other.gameObject.layer == 11 || other.gameObject.layer == 12 || other.gameObject.layer == 18 || other.gameObject.layer == 13 || other.gameObject.layer == 7) DestroyProjectile(); // Whenever it touches ground / object layer
+            || other.gameObject.layer == 11 || other.gameObject.layer == 12 || other.gameObject.layer == 18 || other.gameObject.layer == 19 || other.gameObject.layer == 13 || other.gameObject.layer == 7) DestroyProjectile(); // Whenever it touches ground / object layer
         }
 
 

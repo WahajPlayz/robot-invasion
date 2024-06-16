@@ -3,11 +3,13 @@ using UnityEngine.InputSystem;
 
 public class ShieldSpawner : MonoBehaviour
 {
-    public GameObject shieldPrefab; // Assign your shield prefab in the Unity Editor
+    public GameObject[] shieldPrefabs; // Array of shield prefabs
     public float shieldDuration = 5f; // Duration in seconds the shield will exist
+    public float cooldownDuration = 1f; // Cooldown duration in seconds
 
     private GameObject currentShield;
     private PlayerActions inputActions;
+    private float nextSpawnTime = 0f; // Tracks the next time a shield can be spawned
 
     private void Awake()
     {
@@ -28,7 +30,11 @@ public class ShieldSpawner : MonoBehaviour
 
     private void OnSpawnShield(InputAction.CallbackContext context)
     {
-        SpawnShield();
+        if (Time.time >= nextSpawnTime)
+        {
+            SpawnShield();
+            nextSpawnTime = Time.time + cooldownDuration;
+        }
     }
 
     private void SpawnShield()
@@ -38,7 +44,15 @@ public class ShieldSpawner : MonoBehaviour
             Destroy(currentShield);
         }
 
-        currentShield = Instantiate(shieldPrefab, transform.position, Quaternion.identity);
-        Destroy(currentShield, shieldDuration);
+        if (shieldPrefabs.Length > 0)
+        {
+            int randomIndex = Random.Range(0, shieldPrefabs.Length);
+            currentShield = Instantiate(shieldPrefabs[randomIndex], transform.position, Quaternion.identity);
+            Destroy(currentShield, shieldDuration);
+        }
+        else
+        {
+            Debug.LogWarning("No shield prefabs assigned.");
+        }
     }
 }

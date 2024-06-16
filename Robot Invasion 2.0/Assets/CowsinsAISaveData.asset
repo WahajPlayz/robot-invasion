@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waitTimeBetweenWander: 5
   wanderRadius: 10
-  searchRadius: 10
-  searchAngle: 360
+  searchRadius: 25
+  searchAngle: 56
   obstructionMasks:
     serializedVersion: 2
     m_Bits: 277768
   targetMask:
     serializedVersion: 2
     m_Bits: 131072
-  attackRange: 5
+  attackRange: 25
   increaseSightOnAttack: 0
   timeBetweenAttacks: 0
   spreadAmount: 1
