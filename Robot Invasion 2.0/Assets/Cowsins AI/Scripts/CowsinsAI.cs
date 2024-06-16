@@ -50,13 +50,13 @@ public class CowsinsAI : MonoBehaviour
     [Serializable]
     public class Effects
     {
-        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact;
+        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact, GreensheildImpact;
     }
 
     [Serializable]
     public class ImpactEffects
     {
-        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact;
+        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact, GreensheildImpact;
     }
 
     public Effects effects;
@@ -521,6 +521,11 @@ public class CowsinsAI : MonoBehaviour
                 break;
             case int l when layer == LayerMask.NameToLayer("OrangeSheild"):
                 impact = Instantiate(effects.OrangesheildImpact, hit.point, Quaternion.identity); // OrangeSheild
+                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
+                impactBullet = Instantiate(impactEffects.OrangesheildImpact, hit.point, Quaternion.identity);
+                break;
+            case int l when layer == LayerMask.NameToLayer("GreenSheild"):
+                impact = Instantiate(effects.OrangesheildImpact, hit.point, Quaternion.identity); // GreenSheild
                 impact.transform.rotation = Quaternion.LookRotation(hit.normal);
                 impactBullet = Instantiate(impactEffects.OrangesheildImpact, hit.point, Quaternion.identity);
                 break;
