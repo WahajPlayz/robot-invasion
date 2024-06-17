@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9ce6568f03dd3143924a061bed52fce, type: 3}
-  m_Name: CowsinsAISaveData
+  m_Name: RobotInvasionAI
   m_EditorClassIdentifier: 
   waitTimeBetweenWander: 5
-  wanderRadius: 10
-  searchRadius: 25
-  searchAngle: 56
+  wanderRadius: 15
+  searchRadius: 15
+  searchAngle: 90
   obstructionMasks:
     serializedVersion: 2
-    m_Bits: 277768
+    m_Bits: 15624
   targetMask:
     serializedVersion: 2
     m_Bits: 131072
-  attackRange: 25
+  attackRange: 15
   increaseSightOnAttack: 0
   timeBetweenAttacks: 0
   spreadAmount: 1
   bulletTrail: {fileID: 7398289573723576971, guid: fdcbdd706b3dbfd4ea00464081709076, type: 3}
-  damageAmount: 1
+  damageAmount: 2.5
   timeBetweenShots: 0.25
   projectile: {fileID: 0}
-  fireClip: {fileID: 8300000, guid: ec5cd49f8987a494d96bf93339c8bfb3, type: 3}
+  fireClip: {fileID: 0}
   useRagdoll: 1
   useDeathAnimation: 0
   destroyAfterTimer: 0

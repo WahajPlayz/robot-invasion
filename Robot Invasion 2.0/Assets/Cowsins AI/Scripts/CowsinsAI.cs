@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyAI))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AudioSource))]
 public class CowsinsAI : MonoBehaviour
 {
     public bool wandering;
@@ -47,16 +48,18 @@ public class CowsinsAI : MonoBehaviour
     public GameObject projectile;
     public AudioClip fireClip;
 
+    private ObjectSoundManager objectSoundManager;
+
     [Serializable]
     public class Effects
     {
-        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact, GreensheildImpact;
+        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangeSheildImpact, GreenSheildImpact;
     }
 
     [Serializable]
     public class ImpactEffects
     {
-        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact, GreensheildImpact;
+        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangeSheildImpact, GreenSheildImpact;
     }
 
     public Effects effects;
@@ -166,6 +169,8 @@ public class CowsinsAI : MonoBehaviour
             idleStartRot = transform.rotation;
             agent.enabled = false;
         }
+
+        objectSoundManager = gameObject.AddComponent<ObjectSoundManager>();
     }
 
     #region FOV
@@ -481,7 +486,7 @@ public class CowsinsAI : MonoBehaviour
             }
         }
 
-        SoundManager.Instance.PlaySound(fireClip, 0, 0, true, 0);
+        objectSoundManager.PlaySound(fireClip, 0, 0, true, 0);
     }
 
     void CheckLayer(LayerMask layer, RaycastHit hit)
@@ -520,14 +525,14 @@ public class CowsinsAI : MonoBehaviour
                 impactBullet = Instantiate(impactEffects.enemyImpact, hit.point, Quaternion.identity);
                 break;
             case int l when layer == LayerMask.NameToLayer("OrangeSheild"):
-                impact = Instantiate(effects.OrangesheildImpact, hit.point, Quaternion.identity); // OrangeSheild
+                impact = Instantiate(effects.OrangeSheildImpact, hit.point, Quaternion.identity); // OrangeSheild
                 impact.transform.rotation = Quaternion.LookRotation(hit.normal);
-                impactBullet = Instantiate(impactEffects.OrangesheildImpact, hit.point, Quaternion.identity);
+                impactBullet = Instantiate(impactEffects.OrangeSheildImpact, hit.point, Quaternion.identity);
                 break;
             case int l when layer == LayerMask.NameToLayer("GreenSheild"):
-                impact = Instantiate(effects.OrangesheildImpact, hit.point, Quaternion.identity); // GreenSheild
+                impact = Instantiate(effects.GreenSheildImpact, hit.point, Quaternion.identity); // GreenSheild
                 impact.transform.rotation = Quaternion.LookRotation(hit.normal);
-                impactBullet = Instantiate(impactEffects.OrangesheildImpact, hit.point, Quaternion.identity);
+                impactBullet = Instantiate(impactEffects.GreenSheildImpact, hit.point, Quaternion.identity);
                 break;
         }
 
