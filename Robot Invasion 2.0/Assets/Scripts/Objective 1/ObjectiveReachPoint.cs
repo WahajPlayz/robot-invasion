@@ -1,4 +1,4 @@
-﻿using Unity.FPS.Game;
+﻿using cowsins;
 using UnityEngine;
 
 namespace Unity.FPS.Gameplay
@@ -20,8 +20,8 @@ namespace Unity.FPS.Gameplay
             if (IsCompleted)
                 return;
 
-            var player = other.GetComponent<PlayerActions>();
-            // test if the other collider contains a PlayerAction, then complete
+            var player = other.GetComponent<PlayerMovement>();
+            // test if the other collider contains a PlayerMovement, then complete
             if (player != null)
             {
                 CompleteObjective(string.Empty, string.Empty, "Objective complete : " + Title);
