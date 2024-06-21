@@ -530,7 +530,7 @@ public class CowsinsAI : MonoBehaviour
                 impactBullet = Instantiate(impactEffects.OrangeSheildImpact, hit.point, Quaternion.identity);
                 break;
             case int l when layer == LayerMask.NameToLayer("GreenSheild"):
-                impact = Instantiate(effects.GreenSheildImpact, hit.point, Quaternion.identity); // GreenSheild
+                impact = Instantiate(effects.GreenSheildImpact, hit.point, Quaternion.identity); // Enemy
                 impact.transform.rotation = Quaternion.LookRotation(hit.normal);
                 impactBullet = Instantiate(impactEffects.GreenSheildImpact, hit.point, Quaternion.identity);
                 break;
