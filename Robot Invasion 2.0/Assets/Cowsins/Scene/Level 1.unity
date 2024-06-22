@@ -23024,6 +23024,66 @@ PrefabInstance:
       propertyPath: saveSO
       value: 
       objectReference: {fileID: 11400000, guid: 94db0ea0fb7b84047a9620ab6a8969b7, type: 2}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.mudImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: ef6fbfe5d5b78464b93d7991c1e0eb23, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.woodImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 96589705573e84d4691c037c235eecf0, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.enemyImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 6d4440c5ab0057a469ae4defbbc11342, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.grassImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 34d4d141820004f42859ed965f90dc8d, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.metalImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 101d537c269e3384d937e0a538fe37ca, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.mudImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: ef6fbfe5d5b78464b93d7991c1e0eb23, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.woodImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 96589705573e84d4691c037c235eecf0, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.GreenSheildImpact
+      value: 
+      objectReference: {fileID: 8031883442971595464, guid: 26f29f868e80c2f47a8adc6e9f792f64, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.enemyImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 6d4440c5ab0057a469ae4defbbc11342, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.grassImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 34d4d141820004f42859ed965f90dc8d, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.metalImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: 101d537c269e3384d937e0a538fe37ca, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: effects.OrangeSheildImpact
+      value: 
+      objectReference: {fileID: 8031883442971595464, guid: 6618e8404c854974aa95357c46ae4757, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.defaultImpact
+      value: 
+      objectReference: {fileID: 3100432330703693254, guid: d9f40a03516c3284d9124289d8e7e25c, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.GreenSheildImpact
+      value: 
+      objectReference: {fileID: 8031883442971595464, guid: 26f29f868e80c2f47a8adc6e9f792f64, type: 3}
+    - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
+      propertyPath: impactEffects.OrangeSheildImpact
+      value: 
+      objectReference: {fileID: 8031883442971595464, guid: 6618e8404c854974aa95357c46ae4757, type: 3}
     - target: {fileID: 7043430644727311613, guid: c9627841f6234224997260372a3eeaec, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -25393,6 +25453,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3325699958858012442, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325699958858012442, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325699958858012442, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325699958858012442, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4581977458316200935, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4581977458316200935, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4581977458316200935, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4581977458316200935, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4612824603894472910, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -25483,6 +25575,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4612824605338442793, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262667046764755847, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262667046764755847, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262667046764755847, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262667046764755847, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
