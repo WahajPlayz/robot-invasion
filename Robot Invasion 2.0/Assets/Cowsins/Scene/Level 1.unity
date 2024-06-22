@@ -23075,7 +23075,11 @@ PrefabInstance:
     - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
       propertyPath: impactEffects.defaultImpact
       value: 
+<<<<<<< HEAD
       objectReference: {fileID: 1067471869909948, guid: bdc88374f61c1a24499f2d8d777a3cdc, type: 3}
+=======
+      objectReference: {fileID: 3100432330703693254, guid: d9f40a03516c3284d9124289d8e7e25c, type: 3}
+>>>>>>> cab637f0c02056e116d8484544e92e17e2021667
     - target: {fileID: 5905019987878831450, guid: c9627841f6234224997260372a3eeaec, type: 3}
       propertyPath: impactEffects.GreenSheildImpact
       value: 
