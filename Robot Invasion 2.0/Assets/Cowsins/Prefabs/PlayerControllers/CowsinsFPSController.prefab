@@ -5419,7 +5419,7 @@ MonoBehaviour:
   mainCamera: {fileID: 4612824605049336406}
   cameraPivot: {fileID: 4835873352967447369}
   weaponHolder: {fileID: 4612824604429259958}
-  inventorySize: 3
+  inventorySize: 2
   isAiming: 0
   autoReload: 1
   alternateAiming: 0
