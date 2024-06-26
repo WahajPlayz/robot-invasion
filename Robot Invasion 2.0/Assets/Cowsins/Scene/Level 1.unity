@@ -16523,22 +16523,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3278011380733243903, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
-      propertyPath: m_Antialiasing
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3278011380733243903, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
-      propertyPath: m_Cameras.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3278011380733243903, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
-      propertyPath: m_Cameras.Array.data[1]
-      value: 
-      objectReference: {fileID: 1128980892}
-    - target: {fileID: 6597791020383281486, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6984220702179017675, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -16603,10 +16587,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6984220702744321820, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
-      propertyPath: m_HDR
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6984220703194656847, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -16627,8 +16607,7 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6763975567852635345, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -18998,11 +18977,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2103655327}
   m_SourcePrefab: {fileID: 100100000, guid: c7db5eb50ec302540b5a3378b518abf0, type: 3}
---- !u!20 &1128980892 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 6984220702744321820, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
-  m_PrefabInstance: {fileID: 959609131}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1130511017
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28086,6 +28060,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1811263549, guid: a5e57422b1d4cd7418d7bd6037f5a604, type: 3}
+      propertyPath: PickupVfxPrefab
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2210585487228328151, guid: a5e57422b1d4cd7418d7bd6037f5a604, type: 3}
       propertyPath: ItemToPickup
       value: 
