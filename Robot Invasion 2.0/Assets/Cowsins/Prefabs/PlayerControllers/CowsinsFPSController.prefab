@@ -4863,55 +4863,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!1 &2683579679834091787
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 707743822767630242}
-  - component: {fileID: 6720874505605908349}
-  m_Layer: 17
-  m_Name: SheildSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &707743822767630242
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2683579679834091787}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.971, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4612824603642630896}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6720874505605908349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2683579679834091787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2e9b4fad0008cc44a478bcb13fd9985, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shieldPrefabs:
-  - {fileID: 5255322177916407513, guid: b8fc2640a7a435245be71681fb6bfed8, type: 3}
-  - {fileID: 4942445244732486082, guid: b9bfe253ba407dc47a6aab566171c013, type: 3}
-  shieldDuration: 20
-  cooldownDuration: 20
 --- !u!1 &2998051602686989831
 GameObject:
   m_ObjectHideFlags: 0
@@ -6951,6 +6902,68 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1001 &6380854999488248601
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4612824603642630896}
+    m_Modifications:
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.971
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9056919517119253010, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: m_Name
+      value: SheildSpawner
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+--- !u!4 &707743822767630242 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+  m_PrefabInstance: {fileID: 6380854999488248601}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7065836482285865960
 PrefabInstance:
   m_ObjectHideFlags: 0
