@@ -31,22 +31,22 @@ namespace cowsins
             public AudioClip[] defaultStep, grassStep, metalStep, mudStep, woodStep;
         }
         [System.Serializable]
-        public enum CrouchCancelMethod // Different methods to dettermine how crouch should stop
+        public enum CrouchCancelMethod // Different methods to determine how crouch should stop
         {
             Smooth, FullStop
         }
         [System.Serializable]
-        public enum CancelWallRunMethod // Different methods to dettermine when wallrun should stop
+        public enum CancelWallRunMethod // Different methods to determine when wallrun should stop
         {
             None, Timer
         }
         [System.Serializable]
-        public enum DirectionalJumpMethod // Different methods to dettermine the jump method to apply
+        public enum DirectionalJumpMethod // Different methods to determine the jump method to apply
         {
             None, InputBased, ForwardMovement
         }
         [System.Serializable]
-        public enum DashMethod // Different methods to dettermine the jump method to apply
+        public enum DashMethod // Different methods to determine the jump method to apply
         {
             ForwardAlways, InputBased, Free
         }
@@ -54,7 +54,7 @@ namespace cowsins
 
         #region variables
         //Assignables
-        [Tooltip("Find your camera parent, this is where it should be attached.")]
+        [Tooltip("This is where the parent of your camera should be attached.")]
         public Transform playerCam;
 
         [Tooltip("Object with the same height as your camera, used to orientate the player.")]
@@ -80,6 +80,7 @@ namespace cowsins
        "       if false: Speed while shooting = walkSpeed")]
         public bool canRunWhileShooting;
 
+        [Tooltip(" Allow the player to jump mid-air")]
         public bool canJumpWhileCrouching;
 
         [Tooltip("Player deceleration from running speed to walking"), SerializeField]
@@ -126,7 +127,7 @@ namespace cowsins
         [Tooltip("Counter movement."), SerializeField]
         private float frictionForceAmount = 0.175f;
 
-        private float threshold = 0.01f;
+        private readonly float threshold = 0.01f;
 
         [Tooltip("Maximum slope angle that you can walk through."), SerializeField, Range(10, 80)]
         private float maxSlopeAngle = 35f;
@@ -151,9 +152,9 @@ namespace cowsins
 
 
         //Jumping
-        private bool canJump = true;
+        private bool enoughStaminaToJump = true;
 
-        public bool CanJump { get { return canJump; } set { canJump = value; } }
+        public bool EnoughStaminaToJump { get { return enoughStaminaToJump; } set { enoughStaminaToJump = value; } }
 
         private bool readyToJump = true;
 
@@ -228,7 +229,7 @@ namespace cowsins
         [Tooltip("Amount of stamina lost on sliding."), SerializeField]
         private float staminaLossOnSlide;
 
-        [SerializeField] private bool canRun;
+        private bool enoughStaminaToRun;
 
         [Tooltip("Our Slider UI Object. Stamina will be shown here."), SerializeField]
         private Slider staminaSlider;
@@ -284,21 +285,17 @@ namespace cowsins
         private float oppositeWallDetectionDistance = 1;
 
         // Dash
-        [Tooltip("Method to determine how the dash will work")]
-        public DashMethod dashMethod;
 
         [Tooltip("When enabled, it will allow the player to perform dashes.")]
         public bool canDash;
 
-        [Tooltip("When enabled, player will not receive damage.")]
-        public bool damageProtectionWhileDashing;
+        [Tooltip("Method to determine how the dash will work")]
+        public DashMethod dashMethod;
+
+        [Tooltip("When enabled, it will allow the player to perform dashes.")] public bool infiniteDashes;
 
         [Tooltip("When enabled, it will allow the player to perform dashes.")] public bool dashing;
 
-        [Tooltip("force applied when dashing. Note that this is a constant force, not an impulse, so it is being applied while the dash lasts.")]
-        public float dashForce;
-
-        [Tooltip("When enabled, it will allow the player to perform dashes.")] public bool infiniteDashes;
 
         [Min(1), Tooltip("maximum ( initial ) amount of dashes. Dashes will be regenerated up to “amountOfDashes”, you won´t be able to gain more dashes than this value, check dash Cooldown.")]
         public int amountOfDashes = 3;
@@ -306,7 +303,16 @@ namespace cowsins
         [SerializeField, Min(.1f), Tooltip("Time to regenerate a dash on performing a dash motion.")]
         private float dashCooldown;
 
+
+        [Tooltip("When enabled, player will not receive damage.")]
+        public bool damageProtectionWhileDashing;
+
         public int currentDashes;
+
+
+        [Tooltip("force applied when dashing. Note that this is a constant force, not an impulse, so it is being applied while the dash lasts.")]
+        public float dashForce;
+
 
         [Range(.1f, .5f), Tooltip("Duration of the ability ( dash ).")]
         public float dashDuration;
@@ -452,17 +458,19 @@ namespace cowsins
 
         [HideInInspector] public WeaponController weaponController;
 
+        private Collider playerCollider;
+
         private PlayerStates playerStates;
 
         #endregion
 
-        private void Awake() => GetAllReferences();
+        private void OnEnable() => GetAllReferences();
         private void Start()
         {
 
             playerScale = transform.localScale;
-            canRun = true;
-            canJump = true;
+            enoughStaminaToRun = true;
+            enoughStaminaToJump = true;
             jumpCount = maxJumps;
 
             if (canDash && !infiniteDashes)
@@ -473,15 +481,15 @@ namespace cowsins
 
             ResetStamina();
             events.OnSpawn.Invoke();
+
+
         }
 
 
         private void FixedUpdate()
         {
 
-
             if (rb.velocity.magnitude > maxSpeedAllowed) rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeedAllowed);
-
 
             Stamina();
 
@@ -517,7 +525,7 @@ namespace cowsins
                 return;
             }
 
-            if ((InputManager.sprinting || autoRun) && canRun)
+            if ((InputManager.sprinting || autoRun) && enoughStaminaToRun)
             {
                 bool shouldRun;
                 if (!canRunBackwards && InputManager.y < 0 || (!canRunWhileShooting && InputManager.shooting && weaponController.weapon != null) || !canRunSideways && InputManager.x != 0 && InputManager.y == 0)
@@ -553,7 +561,7 @@ namespace cowsins
         {
             if (speedLines == null) return;
             // Check if we want to use speedlines. If false, stop and return.
-            if (!useSpeedLines || PauseMenu.isPaused)
+            if (!useSpeedLines || PauseMenu.isPaused || climbing)
             {
                 speedLines.Stop();
                 return;
@@ -609,15 +617,15 @@ namespace cowsins
             // We ran out of stamina
             if (stamina <= 0)
             {
-                canRun = false;
-                canJump = false;
+                enoughStaminaToRun = false;
+                enoughStaminaToJump = false;
                 stamina = 0;
             }
 
             // Wait for stamina to regenerate up to the min value allowed to start running and jumping again
             if (stamina >= minStaminaRequiredToRun)
             {
-                canRun = true; canJump = true;
+                enoughStaminaToRun = true; enoughStaminaToJump = true;
             }
 
             // Regen stamina
@@ -629,7 +637,7 @@ namespace cowsins
             }
 
             // Lose stamina
-            if (currentSpeed == runSpeed && canRun && !wallRunning) stamina -= Time.deltaTime;
+            if (currentSpeed == runSpeed && enoughStaminaToRun && !wallRunning) stamina -= Time.deltaTime;
             if (currentSpeed < runSpeed && LoseStaminaWalking && (InputManager.x != 0 || InputManager.y != 0)) stamina -= Time.deltaTime * (walkSpeed / runSpeed);
 
             // Stamina UI not found might be a problem, it won´t be shown but you will get notified 
@@ -659,15 +667,15 @@ namespace cowsins
             rb.AddForce(Vector3.down * Time.deltaTime * 10);
 
             //Find actual velocity relative to where player is looking
-            Vector2 mag = FindVelRelativeToLook();
-            float xMag = mag.x, yMag = mag.y;
+            Vector2 relativeVelocity = FindVelRelativeToLook();
+            float xRelativeVelocity = relativeVelocity.x, yRelativeVelocity = relativeVelocity.y;
 
             //Counteract sliding and sloppy movement
-            FrictionForce(InputManager.x, InputManager.y, mag);
+            FrictionForce(InputManager.x, InputManager.y, relativeVelocity);
 
             //If speed is larger than maxspeed, cancel out the input so you don't go over max speed
-            if (InputManager.x > 0 && xMag > currentSpeed || InputManager.x < 0 && xMag < -currentSpeed) InputManager.x = 0;
-            if (InputManager.y > 0 && yMag > currentSpeed || InputManager.y < 0 && yMag < -currentSpeed) InputManager.y = 0;
+            if (InputManager.x > 0 && xRelativeVelocity > currentSpeed || InputManager.x < 0 && xRelativeVelocity < -currentSpeed) InputManager.x = 0;
+            if (InputManager.y > 0 && yRelativeVelocity > currentSpeed || InputManager.y < 0 && yRelativeVelocity < -currentSpeed) InputManager.y = 0;
 
             float multiplier = (!grounded) ? controlAirborne : 1;
             float multiplierV = (!grounded) ? controlAirborne : 1;
@@ -707,7 +715,7 @@ namespace cowsins
                 stepTimer = 1 - footstepSpeed;
                 _audio.pitch = UnityEngine.Random.Range(.7f, 1.3f); // Add variety to avoid boring and repetitive sounds while walking
                                                                     // Remember that you can also add a few more sounds to each of the layers to add even more variety to your sfx.
-                if (Physics.Raycast(playerCam.position, Vector3.down, out RaycastHit hit, playerCam.position.y + .01f, whatIsGround))
+                if (Physics.Raycast(playerCam.position, Vector3.down, out RaycastHit hit, 2.5f, whatIsGround))
                 {
 
                     int i = 0;
@@ -746,14 +754,14 @@ namespace cowsins
 
         public void Jump()
         {
-            if (!allowJump) return;
+            if (!allowJump || jumpCount <= 0) return;
 
             jumpCount--;
             readyToJump = false;
             hasJumped = true;
             cancellingGrounded = false;
 
-            if (doubleJumpResetsFallDamage) GetComponent<PlayerStats>().height = transform.position.y;
+            if (doubleJumpResetsFallDamage) stats.height = transform.position.y;
 
             //Add jump forces
             if (wallRunning) // When we wallrun, we want to add extra side forces
@@ -764,8 +772,8 @@ namespace cowsins
             }
             else
             {
-                rb.AddForce(Vector2.up * jumpForce * 1.5f);
-                rb.AddForce(normalVector * jumpForce * 0.5f);
+                rb.AddForce(Vector3.up * jumpForce * 1.5f, ForceMode.Impulse);
+                rb.AddForce(normalVector * jumpForce * 0.5f, ForceMode.Impulse);
                 // Handle directional jumping
                 if (!grounded && directionalJumpMethod != DirectionalJumpMethod.None && maxJumps > 1 && !wallOpposite)
                 {
@@ -838,7 +846,8 @@ namespace cowsins
             orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0); // the orientation
 
             // Decide wether to use aim assist or not
-            if (AimAssistHit() == null || !applyAimAssist || target == null || Vector3.Distance(target.position, transform.position) > maximumDistanceToAssistAim) return;
+            if (!applyAimAssist) return;
+            if (AimAssistHit() == null || target == null || Vector3.Distance(target.position, transform.position) > maximumDistanceToAssistAim) return;
             // Get the direction to look at
             Vector3 direction = (AimAssistHit().position - transform.position).normalized;
             Quaternion targetRotation = transform.rotation * Quaternion.FromToRotation(transform.forward, direction);
@@ -848,7 +857,7 @@ namespace cowsins
 
         public void VerticalLook()
         {
-            if (!allowVerticalLookWhileClimbing) return;
+            if (!allowVerticalLookWhileClimbing || PauseMenu.isPaused) return;
 
             int inverted = (InputManager.invertedAxis) ? -1 : 1;
 
@@ -886,22 +895,20 @@ namespace cowsins
                 rb.AddForce(acceleration * Time.deltaTime * -rb.velocity.normalized * slideCounterMovement);
                 return;
             }
-
             // Counter movement ( Friction while moving )
             // Prevent from sliding not on purpose
+
             if (Math.Abs(mag.x) > threshold && Math.Abs(x) < 0.05f || (mag.x < -threshold && x > 0) || (mag.x > threshold && x < 0))
                 rb.AddForce(acceleration * orientation.transform.right * Time.deltaTime * -mag.x * frictionForceAmount);
             if (Math.Abs(mag.y) > threshold && Math.Abs(y) < 0.05f || (mag.y < -threshold && y > 0) || (mag.y > threshold && y < 0))
                 rb.AddForce(acceleration * orientation.transform.forward * Time.deltaTime * -mag.y * frictionForceAmount);
 
-            if (Math.Abs(x) < 0.05f && Math.Abs(y) < 0.05f && grounded && floorAngle > 0) rb.AddForce(acceleration * -rb.velocity * Time.deltaTime);
-
-            //Limit diagonal running. This will also cause a full stop if sliding fast and un-crouching, so not optimal.
-            if (Mathf.Sqrt((Mathf.Pow(rb.velocity.x, 2) + Mathf.Pow(rb.velocity.z, 2))) > currentSpeed)
+            // Limit diagonal running speed without causing a full stop on landing
+            Vector3 flatVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            if (flatVelocity.magnitude > currentSpeed)
             {
-                float fallspeed = rb.velocity.y;
-                Vector3 n = rb.velocity.normalized * currentSpeed;
-                rb.velocity = new Vector3(n.x, fallspeed, n.z);
+                Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
+                rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
             }
         }
 
@@ -913,17 +920,14 @@ namespace cowsins
         public Vector2 FindVelRelativeToLook()
         {
             float lookAngle = orientation.transform.eulerAngles.y;
-            float moveAngle = Mathf.Atan2(rb.velocity.x, rb.velocity.z) * Mathf.Rad2Deg;
+            Vector3 velocity = rb.velocity;
 
-            float u = Mathf.DeltaAngle(lookAngle, moveAngle);
-            float v = 90 - u;
+            // Convert velocity to local space relative to the player's look direction
+            Vector3 localVel = Quaternion.Euler(0, -lookAngle, 0) * velocity;
 
-            float magnitue = rb.velocity.magnitude;
-            float yMag = magnitue * Mathf.Cos(u * Mathf.Deg2Rad);
-            float xMag = magnitue * Mathf.Cos(v * Mathf.Deg2Rad);
-
-            return new Vector2(xMag, yMag);
+            return new Vector2(localVel.x, localVel.z);
         }
+
         /// <summary>
         /// Determine wether this is determined as floor or not
         /// </summary>
@@ -933,11 +937,6 @@ namespace cowsins
             return angle < maxSlopeAngle;
         }
 
-        private float FloorAngle(Vector3 v)
-        {
-            float angle = Vector3.Angle(Vector3.up, v);
-            return angle;
-        }
         /// <summary>
         /// Basically find everything the script needs to work
         /// </summary>
@@ -950,29 +949,28 @@ namespace cowsins
             // in order to prevent errors regarding inputs not being received.
             if (InputManager.inputManager == null)
                 Instantiate(Resources.Load("InputManager"));
-
+            InputManager.inputManager.SetPlayer(this);
             rb = GetComponent<Rigidbody>();
             _audio = GetComponent<AudioSource>();
             weaponController = GetComponent<WeaponController>();
             playerStates = GetComponent<PlayerStates>();
             stats = GetComponent<PlayerStats>();
+            playerCollider = GetComponent<Collider>();
             if (allowGrapple)
                 grappleRenderer = GetComponent<LineRenderer>();
         }
 
         private bool cancellingGrounded;
 
-        private float floorAngle;
         /// <summary>
         /// Handle ground detection. Contributed by Chris Can. Thank you!
         /// </summary>
         private void CheckGroundedWithRaycast()
         {
             Vector3 origin = transform.position;
-            float distance = 1.5f; // Adjust based on the height of your player above ground
             bool wasGrounded = grounded; // Store the previous grounded state
 
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, distance, whatIsGround))
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, groundCheckDistance, whatIsGround))
             {
                 Vector3 normal = hit.normal;
                 // Check if the surface is considered as floor based on its normal
@@ -989,7 +987,6 @@ namespace cowsins
                     grounded = true;
                     cancellingGrounded = false;
                     normalVector = normal;
-                    floorAngle = Vector3.Angle(normal, Vector3.up); // Calculate the angle of the floor
                     CancelInvoke(nameof(StopGrounded));
                 }
             }
@@ -1032,13 +1029,13 @@ namespace cowsins
             coyoteTimer = coyoteJumpTime;
         }
 
-        void ResetStamina() => stamina = maxStamina;
+        public void ResetStamina() => stamina = maxStamina;
 
         void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Weapons"))
             {
-                Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+                Physics.IgnoreCollision(collision.collider, playerCollider);
             }
         }
         #region wallMovement
@@ -1108,6 +1105,7 @@ namespace cowsins
             if (resetJumpsOnWallrun) jumpCount = maxJumps;
         }
 
+
         private void StopWallRun()
         {
             if (wallRunning)
@@ -1166,6 +1164,11 @@ namespace cowsins
                 }
                 else StopGrapple();
             }
+        }
+
+        public void ResetDashes()
+        {
+            currentDashes = amountOfDashes;
         }
 
         private void StartGrapple()
@@ -1315,6 +1318,10 @@ namespace cowsins
         // Handles the movement while climbing
         public void HandleClimbMovement()
         {
+            if (PauseMenu.isPaused)
+            {
+                return;
+            }
             float verticalInput = InputManager.y;
 
             if (verticalInput != 0)
@@ -1334,5 +1341,15 @@ namespace cowsins
         }
 
         #endregion
+        /// <summary>
+        /// Teleport the player to the specified position and rotation.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
+        public void TeleportPlayer(Vector3 position, Quaternion rotation)
+        {
+            transform.position = position;
+            playerCam.rotation = rotation;
+        }
     }
 }

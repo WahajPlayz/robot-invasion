@@ -36,7 +36,7 @@ namespace cowsins
         }
 
         // Handle damage, have in mind that this is also IDamageable
-        public void Damage(float damage) => health -= damage;
+        public void Damage(float damage, bool isHeadshot) => health -= damage;
 
         /// <summary>
         /// Make sure to override this on your new custom class.

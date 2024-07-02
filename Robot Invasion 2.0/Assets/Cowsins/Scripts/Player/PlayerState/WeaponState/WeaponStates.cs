@@ -20,7 +20,7 @@ namespace cowsins
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             _instance = this;
 
@@ -29,14 +29,25 @@ namespace cowsins
             _currentState.EnterState();
         }
 
-        void Update()
+        private void Update()
         {
             _currentState.UpdateState();
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             _currentState.FixedUpdateState();
+        }
+
+        /// <summary>
+        /// Force to change a Weapon state by passing the desired new state.
+        /// </summary>
+        /// <param name="newState"></param>
+        public void ForceChangeState(WeaponBaseState newState)
+        {
+            _currentState.ExitState();
+            _currentState = newState;
+            _currentState.EnterState();
         }
     }
 }

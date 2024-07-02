@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 062c5d8b2f463984d971eb8770b60feb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  weapon: {fileID: 11400000, guid: c259d6fd3ab632a4980785deebd26164, type: 2}
   FirePoint:
   - {fileID: 2007576678424750671}
   aimPoint: {fileID: 6568878590965993428}
@@ -334,6 +334,7 @@ MonoBehaviour:
     lasers: []
   originalAimPointPos: {x: 0, y: 0, z: 0}
   originalAimPointRot: {x: 0, y: 0, z: 0}
+  constraint: {fileID: 0}
   heatRatio: 0
 --- !u!114 &4366474878721369573
 MonoBehaviour:

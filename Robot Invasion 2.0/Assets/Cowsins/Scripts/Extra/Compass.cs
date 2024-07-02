@@ -6,24 +6,26 @@ namespace cowsins
 {
     public class Compass : MonoBehaviour
     {
-        [SerializeField] private RawImage compass;
-        [SerializeField] private Transform player;
+        [SerializeField] private Transform camera;
         [SerializeField] private TextMeshProUGUI compassText;
 
         [SerializeField] private GameObject compassElementIcon;
 
         private List<CompassElement> compassElements = new List<CompassElement>();
+        private RawImage compass;
         public static Compass Instance { get; private set; }
         private void Awake()
         {
             if (Instance != null && Instance != this) Destroy(this);
             else Instance = this;
+
+            compass = GetComponent<RawImage>();
         }
 
         private void Update()
         {
-            compass.uvRect = new Rect(player.localEulerAngles.y / 360, 0, 1, 1);
-            compassText.text = player.localEulerAngles.y.ToString("F0");
+            compass.uvRect = new Rect(camera.localEulerAngles.y / 360, 0, 1, 1);
+            compassText.text = camera.localEulerAngles.y.ToString("F0");
 
             foreach (CompassElement el in compassElements)
             {
@@ -50,8 +52,8 @@ namespace cowsins
         // Calculates the position of the image depending on where the compass element and the players are.
         private Vector2 GetElementPositionInCompass(CompassElement element)
         {
-            Vector2 playerPosition = new Vector2(player.position.x, player.position.z);
-            Vector2 playerForward = new Vector2(player.forward.x, player.forward.z);
+            Vector2 playerPosition = new Vector2(camera.position.x, camera.position.z);
+            Vector2 playerForward = new Vector2(camera.forward.x, camera.forward.z);
             float angle = Vector2.SignedAngle(element.GetVector2Pos() - playerPosition, playerForward);
 
             return new Vector2(angle * compass.rectTransform.rect.width / 360, 0);

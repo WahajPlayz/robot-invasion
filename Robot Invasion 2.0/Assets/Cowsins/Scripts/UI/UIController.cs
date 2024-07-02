@@ -100,6 +100,8 @@ namespace cowsins
 
         [SerializeField] private TextMeshProUGUI coinsText;
 
+        [SerializeField] private Hitmarker hitmarker;
+
         public Crosshair crosshair;
 
         [SerializeField] private Image xpImage;
@@ -251,9 +253,9 @@ namespace cowsins
             killfeed.transform.GetChild(0).Find("Text").GetComponent<TextMeshProUGUI>().text = "You killed: " + name;
         }
 
-        public void Hitmarker()
+        public void Hitmarker(bool headshot)
         {
-            Instantiate(Resources.Load("Hitmarker"), transform.position, Quaternion.identity, transform);
+            hitmarker.Play(headshot);
         }
 
         // INSPECT   /////////////////////////////////////////////////////////////////////////////////////////
@@ -570,6 +572,7 @@ namespace cowsins
                     case "Others":
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("coinsUI"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("coinsText"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("hitmarker"));
                         break;
                     case "UI Events":
 

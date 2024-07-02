@@ -22,9 +22,14 @@ namespace cowsins
 
             return dir;
         }
-        public static void PlayAnim(string anim, Animator animated)
+        public static void PlayAnim(string anim, Animator animator)
         {
-            animated.SetTrigger(anim);
+            animator.SetTrigger(anim);
+        }
+
+        public static void ForcePlayAnim(string anim, Animator animator)
+        {
+            animator.Play(anim, 0, 0);
         }
         public static void StartAnim(string anim, Animator animated) => animated.SetBool(anim, true);
 

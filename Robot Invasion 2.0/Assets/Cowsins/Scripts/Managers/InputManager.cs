@@ -1,16 +1,12 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
 using UnityEngine.SceneManagement;
-
+using System;
+using TMPro;
 namespace cowsins
 {
     /// <summary>
-    /// This script receives inputs from the player and makes it accessible for any script which might require these.
-    /// This is pretty convenient regarding to organization, having all inputs in one same place may result in an easier customization later on. 
-    /// Note that this script is still subject to major changes in order to make it more adaptable for both old and new Unity input system as well as for 
-    /// a rebinding system 
+    /// Manages player inputs and broadcasts them to other scripts.
     /// </summary>
     public class InputManager : MonoBehaviour
     {
@@ -48,9 +44,7 @@ namespace cowsins
             controllerSensitivityY = 30f,
             aimingSensitivityMultiplier = .5f;
 
-        private bool toggleCrouching,
-            toggleSprinting,
-            toggleAiming;
+        private bool ToggleCrouching, ToggleSprinting, ToggleAiming;
 
         public enum curDevice
         {
@@ -62,6 +56,10 @@ namespace cowsins
         public static PlayerActions inputActions;
 
         private PlayerMovement player;
+
+        public static event Action rebindComplete;
+        public static event Action rebindCanceled;
+        public static event Action<InputAction, int> rebindStarted;
 
         private Vector2 moveInput;
 
@@ -75,34 +73,31 @@ namespace cowsins
                 DontDestroyOnLoad(this);
                 inputManager = this;
             }
-            else Destroy(this.gameObject);
+            else
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+
 
             Init();
 
         }
-
-        private void Start() => player = PlayerStates.instance.GetComponent<PlayerMovement>();
-
         private void OnEnable()
         {
-            inputActions.GameControls.Crouching.started += ctx => toggleCrouching = true;
-            inputActions.GameControls.Crouching.canceled += ctx => toggleCrouching = false;
+            inputActions.GameControls.Crouching.started += ctx => ToggleCrouching = true;
+            inputActions.GameControls.Crouching.canceled += ctx => ToggleCrouching = false;
 
-            inputActions.GameControls.Sprinting.started += ctx => toggleSprinting = true;
-            inputActions.GameControls.Sprinting.canceled += ctx => toggleSprinting = false;
+            inputActions.GameControls.Sprinting.started += ctx => ToggleSprinting = true;
+            inputActions.GameControls.Sprinting.canceled += ctx => ToggleSprinting = false;
 
-            inputActions.GameControls.Aiming.started += ctx => toggleAiming = true;
-            inputActions.GameControls.Aiming.canceled += ctx => toggleAiming = false;
+            inputActions.GameControls.Aiming.started += ctx => ToggleAiming = true;
+            inputActions.GameControls.Aiming.canceled += ctx => ToggleAiming = false;
 
             inputActions.GameControls.Grapple.started += ctx => grappling = true;
             inputActions.GameControls.Grapple.canceled += ctx => grappling = false;
 
-            inputActions.GameControls.Jumping.started += ctx => jumping = true;
-
             inputActions.GameControls.ToggleFlashLight.started += ctx => toggleFlashLight = true;
-
-            inputActions.GameControls.Dashing.started += ctx => dashing = true;
-            inputActions.GameControls.Dashing.canceled += ctx => dashing = false;
 
 
             inputActions.GameControls.Pause.started += ctx => PauseMenu.Instance.TogglePause();
@@ -116,17 +111,30 @@ namespace cowsins
         }
         private void Update()
         {
+            if (player == null) return;
             // Handle all the required inputs here
-            sensitivity_x = player.sensitivityX;
-            sensitivity_y = player.sensitivityY;
-            controllerSensitivityX = player.controllerSensitivityX;
-            controllerSensitivityY = player.controllerSensitivityY;
+            if (GameSettingsManager.instance)
+            {
+                sensitivity_x = GameSettingsManager.instance.playerSensX;
+                sensitivity_y = GameSettingsManager.instance.playerSensY;
+                controllerSensitivityX = GameSettingsManager.instance.playerControllerSensX;
+                controllerSensitivityY = GameSettingsManager.instance.playerControllerSensY;
+            }
+            else
+            {
+                sensitivity_x = player.sensitivityX;
+                sensitivity_y = player.sensitivityY;
+                controllerSensitivityX = player.controllerSensitivityX;
+                controllerSensitivityY = player.controllerSensitivityY;
+            }
+
             aimingSensitivityMultiplier = player.aimingSensitivityMultiplier;
 
             if (Mouse.current != null)
             {
                 mousex = Mouse.current.delta.x.ReadValue();
                 mousey = Mouse.current.delta.y.ReadValue();
+
             }
 
             if (Gamepad.current != null)
@@ -141,64 +149,64 @@ namespace cowsins
 
             yMovementActioned = y > 0;
 
-            reloading = inputActions.GameControls.Reloading.ReadValue<float>() > 0;
-            melee = inputActions.GameControls.Melee.ReadValue<float>() > 0;
+            reloading = inputActions.GameControls.Reloading.IsPressed();
+            melee = inputActions.GameControls.Melee.IsPressed();
 
 
             // Handle different crouching methods
             if (player.alternateCrouch)
             {
-                if (toggleCrouching)
+                if (ToggleCrouching)
                 {
                     crouching = !crouching;
                     crouchingDown = !crouchingDown;
-                    toggleCrouching = false;
+                    ToggleCrouching = false;
                 }
             }
             else
             {
-                crouching = inputActions.GameControls.Crouching.ReadValue<float>() > 0;
-                crouchingDown = inputActions.GameControls.Crouching.ReadValue<float>() > 0;
+                crouching = inputActions.GameControls.Crouching.IsPressed();
+                crouchingDown = inputActions.GameControls.Crouching.IsPressed();
             }
 
             if (player.alternateSprint)
             {
-                if (toggleSprinting)
+                if (ToggleSprinting)
                 {
                     sprinting = !sprinting;
-                    toggleSprinting = false;
+                    ToggleSprinting = false;
                 }
             }
             else
-                sprinting = inputActions.GameControls.Sprinting.ReadValue<float>() > 0;
+                sprinting = inputActions.GameControls.Sprinting.IsPressed();
 
-            shooting = inputActions.GameControls.Firing.ReadValue<float>() > 0;
+            shooting = inputActions.GameControls.Firing.IsPressed();
 
             scrolling = inputActions.GameControls.Scrolling.ReadValue<Vector2>().y + inputActions.GameControls.ChangeWeapons.ReadValue<float>();
 
             if (player != null && player.GetComponent<WeaponController>().alternateAiming && player.GetComponent<WeaponController>().weapon != null)
             {
-                if (toggleAiming) { aiming = !aiming; toggleAiming = false; }
+                if (ToggleAiming) { aiming = !aiming; ToggleAiming = false; }
             }
             else
             {
-                if (inputActions.GameControls.Aiming.ReadValue<float>() > 0) aiming = true; else aiming = false;
+                aiming = inputActions.GameControls.Aiming.IsPressed();
             }
 
-            interacting = inputActions.GameControls.Interacting.ReadValue<float>() > 0;
-            dropping = inputActions.GameControls.Drop.ReadValue<float>() > 0;
+            interacting = inputActions.GameControls.Interacting.IsPressed();
+            dropping = inputActions.GameControls.Drop.IsPressed();
 
-            inspecting = inputActions.GameControls.Inspect.ReadValue<float>() > 0;
+            inspecting = inputActions.GameControls.Inspect.IsPressed();
 
             if (toggleFlashLight) toggleFlashLight = false;
+
+            dashing = inputActions.GameControls.Dashing.WasPressedThisFrame();
+            jumping = inputActions.GameControls.Jumping.WasPressedThisFrame();
         }
 
         private void FixedUpdate()
         {
-            if (jumping) jumping = false;
             y = inputActions.GameControls.Movement.ReadValue<Vector2>().y;
-
-            if (dashing) dashing = false;
         }
 
         #region others
@@ -213,11 +221,186 @@ namespace cowsins
         private void Init()
         {
             // Initialize Inputs
-            if (inputActions == null)
+            if (inputActions == null) inputActions = new PlayerActions();
+
+            // Load saved bindings overrides
+            LoadAllBindings();
+        }
+
+        private void LoadAllBindings()
+        {
+            // Iterate through all the acction maps in the Player Actions
+            foreach (var actionMap in inputActions.asset.actionMaps)
             {
-                inputActions = new PlayerActions();
-                inputActions.Enable();
+                foreach (var action in actionMap.actions)
+                {
+                    // For each of the bindings of each of the actions, load the binding binding from PlayerPrefs
+                    for (int i = 0; i < action.bindings.Count; i++)
+                    {
+                        LoadBindingOverride(action, i);
+                    }
+                }
             }
+        }
+
+        private static void LoadBindingOverride(InputAction action, int bindingIndex)
+        {
+
+            // Gather the path from the Player Prefs
+            string overridePath = PlayerPrefs.GetString(action.actionMap + action.name + bindingIndex);
+            // If the path is valid, apply it to the action that needs to be loaded.
+            if (!string.IsNullOrEmpty(overridePath))
+            {
+                action.ApplyBindingOverride(bindingIndex, overridePath);
+            }
+        }
+
+        /// <summary>
+        /// Sets the player that the InputManager will take as a reference
+        /// </summary>
+        /// <param name="player"></param>
+        public void SetPlayer(PlayerMovement player) => this.player = player;
+
+        public static void StartRebind(string actionName, int bindingIndex, TextMeshProUGUI statusTxt, bool excludeMouse, GameObject rebindOverlay, TextMeshProUGUI rebindOverlayTitle)
+        {
+            // Find the Input Action based on its name
+            InputAction action = inputActions.asset.FindAction(actionName);
+
+            if (action == null || action.bindings.Count <= bindingIndex)
+            {
+                Debug.LogError("Action or Binding not Found");
+                return;
+            }
+
+            // If it is valid check if it is a composite
+            // Iterate through each each composite part and rebind it
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                var firstPartIndex = bindingIndex + 1;
+
+                if (firstPartIndex < action.bindings.Count && action.bindings[firstPartIndex].isComposite) PerformRebind(action, bindingIndex, statusTxt, true, excludeMouse, rebindOverlay, rebindOverlayTitle);
+            }
+            else PerformRebind(action, bindingIndex, statusTxt, false, excludeMouse, rebindOverlay, rebindOverlayTitle);
+        }
+        private static void PerformRebind(InputAction actionToRebind, int bindingIndex, TextMeshProUGUI statusTxt, bool allCompositeParts, bool excludeMouse, GameObject rebindOverlay, TextMeshProUGUI rebindOverlayTitle)
+        {
+            if (actionToRebind == null || bindingIndex < 0)
+                return;
+
+            // Update the text status
+            statusTxt.text = $"Press a {actionToRebind.expectedControlType}";
+            rebindOverlay.SetActive(true);
+            rebindOverlayTitle.text = $"Rebinding {actionToRebind.name}";
+            actionToRebind.Disable();
+
+            var rebind = actionToRebind.PerformInteractiveRebinding(bindingIndex);
+
+            // Handle rebind completion
+            rebind.OnComplete(operation =>
+            {
+                rebindOverlay.SetActive(false);
+                // Enable the rebind and stop the operation
+                actionToRebind.Enable();
+                operation.Dispose();
+
+                // Rebind for Composite
+                if (allCompositeParts)
+                {
+                    var nextBindingIndex = bindingIndex + 1;
+                    if (nextBindingIndex < actionToRebind.bindings.Count && actionToRebind.bindings[nextBindingIndex].isComposite) PerformRebind(actionToRebind, nextBindingIndex, statusTxt, allCompositeParts, excludeMouse, rebindOverlay, rebindOverlayTitle);
+                }
+
+                // Save the new rebinds
+                SaveBindingOverride(actionToRebind);
+
+                rebindComplete?.Invoke();
+            });
+
+            // Handle rebind cancel
+            rebind.OnCancel(operation =>
+            {
+                rebindOverlay.SetActive(false);
+                actionToRebind.Enable();
+                operation.Dispose();
+
+                rebindCanceled?.Invoke();
+            });
+
+            // Cancel rebind if pressing escape
+            rebind.WithCancelingThrough("<Keyboard>/escape");
+
+            // Exclude mouse
+            if (excludeMouse)
+                rebind.WithControlsExcluding("<Mouse>/escape");
+
+            rebindStarted?.Invoke(actionToRebind, bindingIndex);
+            // Actually start the rebind process
+            rebind.Start();
+        }
+
+
+        /// <summary>
+        /// Retrieve the name of a binding.
+        /// </summary>
+        /// <param name="actionName"></param>
+        /// <param name="bindingIndex"></param>
+        /// <returns></returns>
+        public static string GetBindingName(string actionName, int bindingIndex)
+        {
+            if (inputActions == null) inputActions = new PlayerActions();
+
+            InputAction action = inputActions.asset.FindAction(actionName);
+            return action.GetBindingDisplayString(bindingIndex);
+        }
+
+        // Save the bindings into player prefs for each action
+        private static void SaveBindingOverride(InputAction action)
+        {
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                PlayerPrefs.SetString(action.actionMap + action.name + i, action.bindings[i].overridePath);
+            }
+        }
+
+        public static void LoadBindingOverride(string actionName)
+        {
+            if (inputActions == null)
+                inputActions = new PlayerActions();
+            // Gather the Input Action given its name
+            InputAction action = inputActions.asset.FindAction(actionName);
+
+            // For each binding apply the binding from PlayerPrefs
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(PlayerPrefs.GetString(action.actionMap + action.name + i)))
+                    action.ApplyBindingOverride(i, PlayerPrefs.GetString(action.actionMap + action.name + i));
+            }
+        }
+
+        /// <summary>
+        /// Reset the bindings for the given action
+        /// </summary>
+        /// <param name="actionName"></param>
+        /// <param name="bindingIndex"></param>
+        public static void ResetBinding(string actionName, int bindingIndex)
+        {
+            // Gather the Input Action given its name
+            InputAction action = inputActions.asset.FindAction(actionName);
+
+            if (action == null || action.bindings.Count <= bindingIndex)
+            {
+                Debug.LogError("Action or Binding not found");
+                return;
+            }
+            if (action.bindings[bindingIndex].isComposite)
+            {
+                for (int i = bindingIndex; i < action.bindings.Count && action.bindings[i].isComposite; i++)
+                    action.RemoveBindingOverride(i);
+            }
+            else
+                action.RemoveBindingOverride(bindingIndex);
+
+            SaveBindingOverride(action);
         }
 
         #endregion

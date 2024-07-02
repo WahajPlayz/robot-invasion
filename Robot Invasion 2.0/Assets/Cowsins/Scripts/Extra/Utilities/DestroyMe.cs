@@ -8,15 +8,10 @@ namespace cowsins
     {
         public float timeToDestroy;
 
-        void Start()
-        {
-            Invoke("DestroyMeObj", timeToDestroy);
-        }
+        private void Start() => Invoke("DestroyMeObj", timeToDestroy);
 
-        // Update is called once per frame
-        void DestroyMeObj()
-        {
-            Destroy(this.gameObject);
-        }
+
+        private void DestroyMeObj() => Destroy(this.gameObject);
+
     }
 }

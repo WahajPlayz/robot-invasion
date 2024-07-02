@@ -58,10 +58,10 @@ namespace cowsins
             movementTimer = directionDuration;
         }
         // Simple damage function override
-        public override void Damage(float damage)
+        public override void Damage(float damage, bool isHeadshot)
         {
             if (isDead) return;
-            base.Damage(damage);
+            base.Damage(damage, isHeadshot);
         }
         // Simple Die function override
         public override void Die()

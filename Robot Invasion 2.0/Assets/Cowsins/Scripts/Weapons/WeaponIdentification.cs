@@ -3,7 +3,7 @@
 /// </summary>
 using UnityEngine;
 using UnityEngine.Animations;
-
+using System.Collections.Generic;
 using UnityEditor;
 namespace cowsins
 {
@@ -53,12 +53,14 @@ namespace cowsins
 
         [HideInInspector] public float heatRatio;
 
+        private void OnEnable()
+        {
+            originalAimPointPos = aimPoint.localPosition;
+            originalAimPointRot = aimPoint.localRotation.eulerAngles;
+        }
         private void Start()
         {
             totalMagazines = weapon.totalMagazines;
-            originalAimPointPos = aimPoint.localPosition;
-            originalAimPointRot = aimPoint.localRotation.eulerAngles;
-
             GetMagazineSize();
             GetComponentInChildren<Animator>().keepAnimatorStateOnDisable = true;
         }
@@ -96,6 +98,35 @@ namespace cowsins
 
             constraint.SetSource(0, newConstraintSource);
         }
+
+        public (List<AttachmentIdentifier_SO>, int) GetDefaultAttachments()
+        {
+            List<AttachmentIdentifier_SO> attachments = new List<AttachmentIdentifier_SO>();
+
+            if (defaultAttachments.defaultBarrel != null)
+                attachments.Add(defaultAttachments.defaultBarrel.attachmentIdentifier);
+            if (defaultAttachments.defaultScope != null)
+                attachments.Add(defaultAttachments.defaultScope.attachmentIdentifier);
+            if (defaultAttachments.defaultStock != null)
+                attachments.Add(defaultAttachments.defaultStock.attachmentIdentifier);
+            if (defaultAttachments.defaultGrip != null)
+                attachments.Add(defaultAttachments.defaultGrip.attachmentIdentifier);
+            if (defaultAttachments.defaultMagazine != null)
+                attachments.Add(defaultAttachments.defaultMagazine.attachmentIdentifier);
+            if (defaultAttachments.defaultFlashlight != null)
+                attachments.Add(defaultAttachments.defaultFlashlight.attachmentIdentifier);
+            if (defaultAttachments.defaultLaser != null)
+                attachments.Add(defaultAttachments.defaultLaser.attachmentIdentifier);
+
+            int magCapacityAdded = 0;
+            if (defaultAttachments.defaultMagazine is Magazine magazine)
+            {
+                magCapacityAdded = magazine.magazineCapacityAdded;
+            }
+
+            return (attachments, magCapacityAdded);
+        }
+
     }
 
 #if UNITY_EDITOR

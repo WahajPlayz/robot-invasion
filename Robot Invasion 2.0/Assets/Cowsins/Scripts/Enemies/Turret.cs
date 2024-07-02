@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace cowsins
@@ -10,13 +9,14 @@ namespace cowsins
         [SerializeField, Tooltip("The part of the turret that rotates.")] private Transform turretHead;
 
 
-        [SerializeField, Tooltip("Detection range for the player."), Header("Basic Settings")] private float detectionRange = 10f;
+        [SerializeField, Tooltip("Distance within the player is detectable. If displayGizmos is true this will be visible in the Editor."), Header("Basic Settings")] private float detectionRange = 10f;
         [SerializeField, Tooltip("Enable vertical movement.")] private bool allowVerticalMovement = false;
         [SerializeField, Tooltip("Speed of rotation interpolation.")] private float lerpSpeed = 5f;
 
 
         private bool canShoot = false;
-        [SerializeField, Header("Projectile Settings")] private GameObject projectilePrefab;
+        [SerializeField, Header("Projectile Settings")] private LayerMask wallLayer;
+        [SerializeField] private GameObject projectilePrefab;
         [SerializeField, Min(0)] private float projectileSpeed, projectileDamage, projectileDuration;
         [SerializeField] private Transform firePoint;
         [SerializeField] private GameObject muzzleFlash;
@@ -49,6 +49,12 @@ namespace cowsins
             // Handle shooting if the target is within the radius or detection range.
             if (targetDirection.magnitude <= detectionRange)
             {
+                RaycastHit hit;
+                if (Physics.Raycast(firePoint.position, targetDirection, out hit, detectionRange, wallLayer))
+                {
+                    canShoot = false;
+                    return;
+                }
                 canShoot = true;
                 targetRotation = Quaternion.LookRotation(targetDirection);
                 turretHead.rotation = Quaternion.Lerp(turretHead.rotation, targetRotation, lerpSpeed * Time.deltaTime);

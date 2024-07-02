@@ -237,9 +237,9 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.1
   m_TransitionOffset: 0
-  m_ExitTime: 0.82758623
-  m_HasExitTime: 0
-  m_HasFixedDuration: 1
+  m_ExitTime: 0.75
+  m_HasExitTime: 1
+  m_HasFixedDuration: 0
   m_InterruptionSource: 1
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
@@ -623,7 +623,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: shot
+  m_Name: shooting
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -873,7 +873,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Reload
+  m_Name: reloading
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -952,7 +952,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Idle
-  m_Speed: 0
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -1492,7 +1492,7 @@ AnimatorStateMachine:
     m_Position: {x: 570, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1467577813126399300}
-    m_Position: {x: 570, y: 200, z: 0}
+    m_Position: {x: 550, y: 200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5628838592438181989}
     m_Position: {x: 790, y: 250, z: 0}
@@ -1507,7 +1507,7 @@ AnimatorStateMachine:
     m_Position: {x: 260, y: 40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1669652097317492224}
-    m_Position: {x: 260, y: -20, z: 0}
+    m_Position: {x: 180, y: -20, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 4717062766581719890}

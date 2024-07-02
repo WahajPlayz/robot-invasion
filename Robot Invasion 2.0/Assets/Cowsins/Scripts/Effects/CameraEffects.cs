@@ -4,23 +4,29 @@ namespace cowsins
 {
     public class CameraEffects : MonoBehaviour
     {
-        [SerializeField] private PlayerMovement player;
-        [SerializeField] private Rigidbody playerRigidbody;
+
+        [SerializeField] private Transform playerCamera;
 
         [SerializeField] private float tiltSpeed, tiltAmount;
-        [SerializeField] private float headBobAmplitude = 0.2f;
-        [SerializeField] private float headBobFrequency = 2f;
-        [SerializeField] private float breathingAmplitude = 0.2f;
-        [SerializeField] private float breathingFrequency = 2f;
-        [SerializeField] private bool applyBreathingRotation;
+        [SerializeField, Tooltip("Maximum Head Bob")] private float headBobAmplitude = 0.2f;
+        [SerializeField, Tooltip("Speed to reach the Maximum Head Bob ( headBobAmplitude)")] private float headBobFrequency = 2f;
+        [SerializeField, Tooltip("Maximum Breathing Amount")] private float breathingAmplitude = 0.2f;
+        [SerializeField, Tooltip("Breathing Speed")] private float breathingFrequency = 2f;
+        [SerializeField, Tooltip("Enables Rotation for the Breathing Effect")] private bool applyBreathingRotation;
+
+        private PlayerMovement player;
+        private Rigidbody playerRigidbody;
 
         private Vector3 origPos;
         private Quaternion origRot;
 
         private void Awake()
         {
-            origPos = transform.localPosition;
-            origRot = transform.localRotation;
+            origPos = playerCamera.localPosition;
+            origRot = playerCamera.localRotation;
+
+            player = GetComponent<PlayerMovement>();
+            playerRigidbody = GetComponent<Rigidbody>();
         }
 
         private void Update()
@@ -28,6 +34,7 @@ namespace cowsins
             if (!PlayerStats.Controllable) return;
 
             UpdateTilt();
+
             UpdateHeadBob();
             UpdateBreathing();
         }
@@ -37,7 +44,7 @@ namespace cowsins
             if (player.currentSpeed == 0) return;
 
             Quaternion rot = CalculateTilt();
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, rot, Time.deltaTime * tiltSpeed);
+            playerCamera.localRotation = Quaternion.Lerp(playerCamera.localRotation, rot, Time.deltaTime * tiltSpeed);
         }
 
         private Quaternion CalculateTilt()
@@ -54,8 +61,8 @@ namespace cowsins
         {
             if (playerRigidbody.velocity.magnitude < player.walkSpeed || InputManager.jumping)
             {
-                transform.localPosition = Vector3.Lerp(transform.localPosition, origPos, Time.deltaTime * 2f);
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, origRot, Time.deltaTime * 2f);
+                playerCamera.localPosition = Vector3.Lerp(playerCamera.localPosition, origPos, Time.deltaTime * 2f);
+                playerCamera.localRotation = Quaternion.Lerp(playerCamera.localRotation, origRot, Time.deltaTime * 2f);
                 return;
             }
 
@@ -63,8 +70,8 @@ namespace cowsins
             float distanceY = headBobAmplitude * Mathf.Sin(angle) / 400f;
             float distanceX = headBobAmplitude * Mathf.Cos(angle) / 100f;
 
-            transform.position = new Vector3(transform.position.x, transform.position.y + Vector3.up.y * distanceY, transform.position.z);
-            transform.Rotate(distanceX, 0, 0, Space.Self);
+            playerCamera.position = new Vector3(playerCamera.position.x, playerCamera.position.y + Vector3.up.y * distanceY, playerCamera.position.z);
+            playerCamera.Rotate(distanceX, 0, 0, Space.Self);
         }
 
         private void UpdateBreathing()
@@ -73,11 +80,11 @@ namespace cowsins
             float distance = breathingAmplitude * Mathf.Sin(angle) / 400f;
             float distanceRot = breathingAmplitude * Mathf.Cos(angle) / 100f;
 
-            transform.position = new Vector3(transform.position.x, transform.position.y + Vector3.up.y * distance, transform.position.z);
+            playerCamera.position = new Vector3(playerCamera.position.x, playerCamera.position.y + Vector3.up.y * distance, playerCamera.position.z);
 
             if (applyBreathingRotation)
             {
-                transform.Rotate(distanceRot, 0, 0, Space.Self);
+                playerCamera.Rotate(distanceRot, 0, 0, Space.Self);
             }
         }
     }

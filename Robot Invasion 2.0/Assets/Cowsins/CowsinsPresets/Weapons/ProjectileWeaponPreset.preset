@@ -25,32 +25,32 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: weaponID
-    value: 4
-    objectReference: {fileID: 0}
+    propertyPath: weaponObject
+    value: 
+    objectReference: {fileID: 4366474878721369578, guid: 746a44ab2ff89b540aef7873f223835d, type: 3}
   - target: {fileID: 0}
     propertyPath: _name
-    value: 
+    value: Rocket Launcher
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: pickUpGraphics
     value: 
-    objectReference: {fileID: 8081276312376319787, guid: f1eb5ad60d56f124698909ca088a62b7, type: 3}
+    objectReference: {fileID: 2092819957812016947, guid: 8a7fc9801d722d2438c5a61436ca30a1, type: 3}
   - target: {fileID: 0}
     propertyPath: icon
     value: 
-    objectReference: {fileID: 21300000, guid: d0588a1697e054e4f84697d51dd9e024, type: 3}
+    objectReference: {fileID: 21300000, guid: db9dd1ce0b703cb428044d1d34eadf3e, type: 3}
   - target: {fileID: 0}
     propertyPath: shootStyle
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: shootMethod
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: holdProgressSpeed
-    value: 0
+    value: 454
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: reloadStyle
@@ -59,18 +59,22 @@ Preset:
   - target: {fileID: 0}
     propertyPath: projectile
     value: 
-    objectReference: {fileID: 925777154138219767, guid: 1bab4947d6553cd49ae08d7665a640dc, type: 3}
+    objectReference: {fileID: 1524923703965971472, guid: 9771f073acaf99348baed193b81f5eb3, type: 3}
   - target: {fileID: 0}
     propertyPath: projectileUsesGravity
-    value: 1
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: bulletDuration
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: shootDelay
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletDuration
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: speed
-    value: 50
+    value: 40
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: explosionOnHit
@@ -78,7 +82,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: hurtsPlayer
-    value: 1
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: explosionRadius
@@ -86,19 +90,31 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: explosionForce
-    value: 20
+    value: 5
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: explosionVFX
     value: 
-    objectReference: {fileID: 5018994898019192216, guid: 2278c6019b8c4ec4b8f11d7d764c8d57, type: 3}
+    objectReference: {fileID: 5018994898019192216, guid: ab977a440365d1c4092c15552e5ff157, type: 3}
+  - target: {fileID: 0}
+    propertyPath: continuousFire
+    value: 0
+    objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: fireRate
-    value: 2
+    value: 0.35
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: reloadTime
-    value: 1
+    value: 2.5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: coolSpeed
+    value: 0.3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: cooledPercentageAfterOverheat
+    value: 0.6
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: infiniteBullets
@@ -114,7 +130,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: ammoCostPerFire
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: bulletRange
@@ -126,31 +142,23 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: penetrationAmount
-    value: 0
+    value: 8.81
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: penetrationDamageReduction
-    value: 0
+    value: 0.579
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: allowAim
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: aimingPosition.x
-    value: -1.5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: aimingPosition.y
-    value: 0.5
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: aimingPosition.z
-    value: 0
+    propertyPath: aimDistance
+    value: 0.2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimingRotation.x
-    value: 0
+    value: -2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimingRotation.y
@@ -158,27 +166,31 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimingRotation.z
-    value: 0
+    value: -6
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimingSpeed
-    value: 0
+    value: 6
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimingFOV
+    value: 45
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: allowAimingIfReloading
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: movementSpeedWhileAiming
-    value: 0
+    value: 6
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: setMovementSpeedWhileAiming
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: crosshairResize
-    value: 100
+    value: 40
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: crosshairPreset
@@ -190,7 +202,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: applyWeight
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: spreadAmount
@@ -198,7 +210,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimSpreadAmount
-    value: 0
+    value: 0.01
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: weightMultiplier
@@ -206,10 +218,138 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: applyRecoil
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: recoilX.m_Curve.Array.size
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].time
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].value
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].inSlope
+    value: 0.12671255
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].outSlope
+    value: 0.12671255
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].tangentMode
+    value: 34
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].weightedMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].inWeight
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[0].outWeight
+    value: 0.33333334
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].time
+    value: 0.11722936
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].value
+    value: 0.014854431
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].inSlope
+    value: 0.08717621
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].outSlope
+    value: 0.08717621
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].tangentMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].weightedMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].inWeight
+    value: 0.33333334
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[1].outWeight
+    value: 0.096715815
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].time
+    value: 0.31043607
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].value
+    value: -0.013479859
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].inSlope
+    value: 0.07768841
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].outSlope
+    value: 0.07768841
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].tangentMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].weightedMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].inWeight
+    value: 0.18840523
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[2].outWeight
+    value: 0.093630046
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].time
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].value
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].inSlope
+    value: 0.01954838
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].outSlope
+    value: 0.01954838
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].tangentMode
+    value: 34
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].weightedMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].inWeight
+    value: 0.33333334
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.data[3].outWeight
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -226,6 +366,70 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: recoilY.m_Curve.Array.size
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].time
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].value
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].inSlope
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].outSlope
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].tangentMode
+    value: 34
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].weightedMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].inWeight
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[0].outWeight
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].time
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].value
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].inSlope
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].outSlope
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].tangentMode
+    value: 34
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].weightedMode
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].inWeight
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.data[1].outWeight
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -242,31 +446,31 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: xRecoilAmount
-    value: 0
+    value: 80
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: yRecoilAmount
-    value: 0
+    value: 10
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: recoilRelaxSpeed
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: applyDifferentRecoilOnAiming
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: xRecoilAmountOnAiming
-    value: 0
+    value: 40
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: yRecoilAmountOnAiming
-    value: 0
+    value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: damagePerBullet
-    value: 50
+    value: 20
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: applyDamageReductionBasedOnDistance
@@ -274,11 +478,11 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: minimumDistanceToApplyDamageReduction
-    value: 0
+    value: 40.3
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: damageReductionMultiplier
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: criticalDamageMultiplier
@@ -294,7 +498,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: showBulletShells
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: bulletHoleImpact.defaultImpact
@@ -307,11 +511,11 @@ Preset:
   - target: {fileID: 0}
     propertyPath: bulletHoleImpact.grassImpact
     value: 
-    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    objectReference: {fileID: 2462405574108921655, guid: 96098beba501e3247b9452e9455f6189, type: 3}
   - target: {fileID: 0}
     propertyPath: bulletHoleImpact.enemyImpact
     value: 
-    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    objectReference: {fileID: 2462405574108921655, guid: 8c95f7225cf58144d86befe4ddc08efb, type: 3}
   - target: {fileID: 0}
     propertyPath: bulletHoleImpact.metalImpact
     value: 
@@ -319,19 +523,19 @@ Preset:
   - target: {fileID: 0}
     propertyPath: bulletHoleImpact.mudImpact
     value: 
-    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    objectReference: {fileID: 2462405574108921655, guid: 4445bafd3b5e24c4eb41ba27f6a44af4, type: 3}
   - target: {fileID: 0}
     propertyPath: bulletHoleImpact.woodImpact
     value: 
-    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    objectReference: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
   - target: {fileID: 0}
     propertyPath: muzzleVFX
     value: 
-    objectReference: {fileID: 0}
+    objectReference: {fileID: 1336949550903370, guid: 93a506c1d0836d24a898a865f7823b4a, type: 3}
   - target: {fileID: 0}
     propertyPath: bulletGraphics
     value: 
-    objectReference: {fileID: 0}
+    objectReference: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
   - target: {fileID: 0}
     propertyPath: useProceduralShot
     value: 0
@@ -343,54 +547,82 @@ Preset:
   - target: {fileID: 0}
     propertyPath: audioSFX.firing
     value: 
-    objectReference: {fileID: 8300000, guid: 53fa7ce979edac24dae6e30683b0b561, type: 3}
+    objectReference: {fileID: 8300000, guid: 31fe3c9004e2e0343a96a4f962909f5e, type: 3}
   - target: {fileID: 0}
     propertyPath: audioSFX.holster
     value: 
-    objectReference: {fileID: 8300000, guid: 9ec1d6550dc04d9478dda7fd8b184a95, type: 3}
+    objectReference: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
   - target: {fileID: 0}
     propertyPath: audioSFX.unholster
     value: 
-    objectReference: {fileID: 8300000, guid: 9ec1d6550dc04d9478dda7fd8b184a95, type: 3}
+    objectReference: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
   - target: {fileID: 0}
     propertyPath: audioSFX.reload
     value: 
-    objectReference: {fileID: 0}
+    objectReference: {fileID: 8300000, guid: 1f0d11e2f60ab0942af5c83cefe099f2, type: 3}
   - target: {fileID: 0}
-    propertyPath: audioSFX.emptyMag
+    propertyPath: audioSFX.emptyMagReload
     value: 
-    objectReference: {fileID: 0}
+    objectReference: {fileID: 8300000, guid: 1f0d11e2f60ab0942af5c83cefe099f2, type: 3}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.emptyMagShoot
+    value: 
+    objectReference: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
   - target: {fileID: 0}
     propertyPath: pitchVariationFiringSFX
+    value: 0.15
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grapplesFromTip
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: camShakeAmount
-    value: 0
+    value: 0.15
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: camShakeAimMultiplier
+    value: 0.8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: camShakeCrouchMultiplier
+    value: 0.8
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: applyFOVEffectOnShooting
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: FOVValueToSubtract
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: FOVValueToSubstract
+    propertyPath: AimingFOVValueToSubtract
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: AimingFOVValueToSubstract
+    propertyPath: amountOfShootAnimations
     value: 0
     objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletTrail
+    value: 
+    objectReference: {fileID: 1436881700163988445, guid: 72fbb691dea891c45a6caa10b437b857, type: 3}
   - target: {fileID: 0}
     propertyPath: damagePerHit
-    value: 0
+    value: 12
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: attackRate
+    value: 1.36
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: hitDelay
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: attackRange
-    value: 0
+    value: 1.91
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dontShowMagazine

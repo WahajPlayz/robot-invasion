@@ -21,7 +21,7 @@ namespace cowsins
         [Tooltip("Attach the text where you want the distance to be displayed"), SerializeField]
         private TextMeshProUGUI text;
 
-        [Tooltip("Select a measure unity among the following"), SerializeField]
+        [Tooltip("Select a measure unit among the following"), SerializeField]
         private MeasureType measureType;
 
         [Tooltip("number of decimals to display"), Range(0, 10), SerializeField]

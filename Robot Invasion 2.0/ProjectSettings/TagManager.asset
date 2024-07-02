@@ -11,8 +11,6 @@ TagManager:
   - Ramp
   - BodyShot
   - Ladder
-  - Bullet
-  - Sheild
   layers:
   - Default
   - TransparentFX
@@ -32,8 +30,8 @@ TagManager:
   - PostProcessing
   - Effects
   - Player
-  - OrangeSheild
-  - GreenSheild
+  - 
+  - 
   - 
   - 
   - 

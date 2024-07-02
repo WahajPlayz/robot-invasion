@@ -36,7 +36,7 @@ namespace cowsins
             if (stats.health <= 0) SwitchState(_factory.Die());
 
             // Check Jump
-            if (player.ReadyToJump && InputManager.jumping && (player.CanJump && (player.grounded || player.canCoyote) || player.wallRunning || player.jumpCount > 0 && player.maxJumps > 1 && player.CanJump))
+            if (player.ReadyToJump && InputManager.jumping && (player.EnoughStaminaToJump && (player.grounded || player.canCoyote) || player.wallRunning || player.jumpCount > 0 && player.maxJumps > 1 && player.EnoughStaminaToJump))
                 SwitchState(_factory.Jump());
 
             // Check Dash
@@ -78,22 +78,22 @@ namespace cowsins
 
         private void CheckUnCrouch()
         {
-
-            RaycastHit hitt;
-            if (!InputManager.crouching) // Prevent from uncrouching when there´s a roof and we can get hit with it
+            if (!InputManager.crouching)
             {
-                if (Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hitt, 5.5f, player.weaponController.hitLayer))
-                {
-                    canUnCrouch = false;
-                }
-                else
-                    canUnCrouch = true;
+                // Check if there is a roof above the player to prevent uncrouching
+                RaycastHit hit;
+                bool isObstacleAbove = Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hit, 5.5f, player.weaponController.hitLayer);
+
+                canUnCrouch = !isObstacleAbove;
             }
+
             if (canUnCrouch)
             {
-                player.events.OnStopCrouch.Invoke(); // Invoke your own method on the moment you are standing up NOT WHILE YOU ARE NOT CROUCHING
+                // Invoke event and stop crouching when it is safe to do so
+                player.events.OnStopCrouch.Invoke();
                 player.StopCrouch();
             }
         }
+
     }
 }

@@ -53,6 +53,10 @@ namespace cowsins
                         GUILayout.Box("", new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.Height(8) });
                         if (myScript.maxCameraAngle != 89.7f) EditorGUILayout.LabelField("WARNING: The maximum camera angle is highly recommended to be set to the maximum value, 89.7", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("maxCameraAngle"));
+
+                        EditorGUILayout.Space(10f);
+                        EditorGUILayout.HelpBox("WARNING: The Player Sensitivity (Mouse & Controller) values will be overridden if you open the scene from the Main Menu. Check GameSettingsManager.cs for more information.", MessageType.Warning);
+                        EditorGUILayout.Space(5f);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("sensitivityX"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("sensitivityY"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("controllerSensitivityX"));

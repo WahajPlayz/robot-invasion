@@ -19,8 +19,6 @@ namespace cowsins
         [Tooltip("Change the speed of the selected effect"), SerializeField]
         private float rotationSpeed, translationSpeed;
 
-        private Transform obj;
-
         private float timer = 0f;
 
         private void OnTriggerEnter(Collider other)

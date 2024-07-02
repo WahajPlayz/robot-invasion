@@ -1,68 +1,77 @@
 /// <summary>
-/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
-/// </summary>
+/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// </summary>using UnityEngine;
 using UnityEngine;
+
 namespace cowsins
 {
     public class Bullet : MonoBehaviour
     {
-        [HideInInspector] public float speed, damage;
-
+        [HideInInspector] public float speed;
+        [HideInInspector] public float damage;
         [HideInInspector] public Vector3 destination;
-
         [HideInInspector] public bool gravity;
-
         [HideInInspector] public Transform player;
-
         [HideInInspector] public bool hurtsPlayer;
-
         [HideInInspector] public bool explosionOnHit;
-
         [HideInInspector] public GameObject explosionVFX;
-
-        [HideInInspector] public float explosionRadius, explosionForce;
-
+        [HideInInspector] public float explosionRadius;
+        [HideInInspector] public float explosionForce;
         [HideInInspector] public float criticalMultiplier;
-
         [HideInInspector] public float duration;
+
+        private bool projectileHasAlreadyHit = false; // Prevent from double hitting issues
 
         private void Start()
         {
             transform.LookAt(destination);
-            Invoke("DestroyProjectile", duration);
+            Invoke(nameof(DestroyProjectile), duration);
         }
-        private void Update() => transform.Translate(0.0f, 0.0f, speed * Time.deltaTime);
 
-        private bool projectileHasAlreadyHit = false; // Prevent from double hitting issues
+        private void Update()
+        {
+            transform.Translate(0.0f, 0.0f, speed * Time.deltaTime);
+        }
 
         private void OnTriggerEnter(Collider other)
         {
             if (projectileHasAlreadyHit) return;
+
             if (other.CompareTag("Critical"))
             {
-                CowsinsUtilities.GatherDamageableParent(other.transform).Damage(damage * criticalMultiplier);
-                DestroyProjectile();
-                projectileHasAlreadyHit = true;
-                return;
+                DamageTarget(other.transform, damage * criticalMultiplier, true);
             }
             else if (other.CompareTag("BodyShot"))
             {
-                CowsinsUtilities.GatherDamageableParent(other.transform).Damage(damage);
-                DestroyProjectile();
-                projectileHasAlreadyHit = true;
-                return;
+                DamageTarget(other.transform, damage, false);
             }
             else if (other.GetComponent<IDamageable>() != null && !other.CompareTag("Player"))
             {
-                other.GetComponent<IDamageable>().Damage(damage);
-                DestroyProjectile();
-                projectileHasAlreadyHit = true;
-                return;
+                DamageTarget(other.transform, damage, false);
             }
-            if (other.gameObject.layer == 3 || other.gameObject.layer == 8 || other.gameObject.layer == 10
-            || other.gameObject.layer == 11 || other.gameObject.layer == 12 || other.gameObject.layer == 18 || other.gameObject.layer == 19 || other.gameObject.layer == 13 || other.gameObject.layer == 7) DestroyProjectile(); // Whenever it touches ground / object layer
+            else if (IsGroundOrObstacleLayer(other.gameObject.layer))
+            {
+                DestroyProjectile();
+            }
         }
 
+        private void DamageTarget(Transform target, float dmg, bool isCritical)
+        {
+            var damageable = CowsinsUtilities.GatherDamageableParent(target);
+            if (damageable != null)
+            {
+                damageable.Damage(dmg, isCritical);
+                projectileHasAlreadyHit = true;
+                DestroyProjectile();
+            }
+        }
+
+        private bool IsGroundOrObstacleLayer(int layer)
+        {
+            return layer == LayerMask.NameToLayer("Ground") || layer == LayerMask.NameToLayer("Object")
+                || layer == LayerMask.NameToLayer("Grass") || layer == LayerMask.NameToLayer("Metal") ||
+                layer == LayerMask.NameToLayer("Mud") || layer == LayerMask.NameToLayer("Wood") || layer == LayerMask.NameToLayer("Enemy");
+        }
 
         private void DestroyProjectile()
         {
@@ -70,42 +79,49 @@ namespace cowsins
             {
                 if (explosionVFX != null)
                 {
-                    Vector3 contact = GetComponent<Collider>().ClosestPoint(transform.position);
-                    GameObject impact = Instantiate(explosionVFX, contact, Quaternion.identity);
-                    impact.transform.rotation = Quaternion.LookRotation(player.position);
+                    var contact = GetComponent<Collider>().ClosestPoint(transform.position);
+                    Instantiate(explosionVFX, contact, Quaternion.identity);
                 }
-                Collider[] cols = Physics.OverlapSphere(transform.position, explosionRadius);
 
-                foreach (Collider c in cols)
+                Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+
+                foreach (var collider in colliders)
                 {
-                    IDamageable damageable = c.GetComponent<IDamageable>();
-                    PlayerMovement playerMovement = c.GetComponent<PlayerMovement>();
-                    Rigidbody rigidbody = c.GetComponent<Rigidbody>();
+                    var damageable = collider.GetComponent<IDamageable>();
+                    var playerMovement = collider.GetComponent<PlayerMovement>();
+                    var rigidbody = collider.GetComponent<Rigidbody>();
 
                     if (damageable != null)
                     {
-                        if (c.CompareTag("Player") && hurtsPlayer)
+                        // Calculate the distance ratio and damage based on the explosion radius
+                        float distanceRatio = 1 - Mathf.Clamp01(Vector3.Distance(collider.transform.position, transform.position) / explosionRadius);
+                        float dmg = damage * distanceRatio;
+
+                        // Apply damage if the collider is a player and the explosion should hurt the player
+                        if (collider.CompareTag("Player") && hurtsPlayer)
                         {
-                            float dmg = damage * Mathf.Clamp01(1 - Vector3.Distance(c.transform.position, transform.position) / explosionRadius);
-                            damageable.Damage(dmg);
+                            damageable.Damage(dmg, false);
                         }
-                        if (!c.CompareTag("Player"))
+                        // Apply damage if the collider is not a player
+                        else if (!collider.CompareTag("Player"))
                         {
-                            float dmg = damage * Mathf.Clamp01(1 - Vector3.Distance(c.transform.position, transform.position) / explosionRadius);
-                            damageable.Damage(dmg);
+                            damageable.Damage(dmg, false);
                         }
                     }
+
                     if (playerMovement != null)
                     {
                         CamShake.instance.ExplosionShake(Vector3.Distance(CamShake.instance.gameObject.transform.position, transform.position));
                     }
-                    if (rigidbody != null && c != this)
+
+                    if (rigidbody != null && collider != this)
                     {
                         rigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius, 5, ForceMode.Force);
                     }
                 }
             }
-            Destroy(this.gameObject);
+
+            Destroy(gameObject);
         }
     }
 }

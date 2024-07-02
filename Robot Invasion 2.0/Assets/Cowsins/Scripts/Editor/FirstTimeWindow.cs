@@ -1,113 +1,121 @@
 using UnityEditor;
 using UnityEngine;
 
-public class FirstTimeWindow : EditorWindow
+namespace cowsins
 {
 
-    private GUIStyle selectedStyle;
-
-    #region initLogic
-
-    [MenuItem("Tools/Cowsins/FPS Engine Startup")]
-    public static void OpenWindow()
+    public class FirstTimeWindow : EditorWindow
     {
-        FirstTimeWindow window = GetWindow<FirstTimeWindow>();
-        window.titleContent = new GUIContent("FPS Engine Startup");
-        window.minSize = new Vector2(420, 600); // Set minimum width and height for the window
-        window.maxSize = new Vector2(420, 600); // Set maximum width and height for the window
-        window.Show();
-    }
 
-    #endregion
+        private GUIStyle selectedStyle;
 
-    #region content
-    private Vector2 scrollPosition = Vector2.zero;
+        #region initLogic
 
-    private void OnGUI()
-    {
-        DefineSelectedStyle();
-
-        float scrollViewWidth = 420f; // Width of the scroll view
-        GUILayout.BeginArea(new Rect((Screen.width - scrollViewWidth) / 2, 20, scrollViewWidth, Screen.height - 40));
-        scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(scrollViewWidth));
-
-
-        GUILayout.BeginVertical();
-
-        // FPS Engine Logo
-        GUILayout.Label(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/Logo/FPS_Engine_Logo_White.png"), GUILayout.Width(400), GUILayout.Height(100));
-
-        // Header Label
-        GUIStyle headerStyle = new GUIStyle(GUI.skin.label);
-        headerStyle.fontSize = 20;
-        headerStyle.fontStyle = FontStyle.Bold;
-        GUIStyle subHeaderStyle = new GUIStyle(GUI.skin.label);
-        subHeaderStyle.fontSize = 16;
-        subHeaderStyle.fontStyle = FontStyle.Bold;
-        GUILayout.Label("Welcome to FPS Engine!", headerStyle, GUILayout.Width(400));
-
-        // Description Label
-        GUIStyle descriptionStyle = new GUIStyle(GUI.skin.label);
-        descriptionStyle.wordWrap = true; // Allow wrapping for the description
-        GUILayout.Label("Hey! Thanks for purchasing the FPS Engine! At Cowsins, we love helping game developers make their dreams come true, so we can't wait to see the masterpiece you create with our tool!", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Space(10);
-        GUILayout.Label("Additionally, please consider leaving a review on the Unity Asset Store to help us provide Free Support and Free Updates to FPS Engine!", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        if (GUILayout.Button("Leave a Review"))
+        [MenuItem("Cowsins/FPS Engine Startup")]
+        public static void OpenWindow()
         {
-            Application.OpenURL("https://assetstore.unity.com/packages/templates/systems/fps-engine-218594");
-        }
-        GUILayout.Space(20);
-        GUILayout.Label("Tutorials, Support & Documentation", headerStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        GUILayout.Label("Documentation", subHeaderStyle, GUILayout.Width(400));
-        GUILayout.Label("FPS Engine documentation can be found under 'Assets/Cowsins' as a PDF file.", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        GUILayout.Label("Tutorials", subHeaderStyle, GUILayout.Width(400));
-        GUILayout.Label("FPS Engine Tutorials can be found in our Discord Server!", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        GUILayout.Label("Support", subHeaderStyle, GUILayout.Width(400));
-        GUILayout.Label("Get access to support by Cowsins on our Discord Server!", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        if (GUILayout.Button("Join Discord Server"))
-        {
-            Application.OpenURL("https://discord.gg/759gSeTT9m");
+            FirstTimeWindow window = GetWindow<FirstTimeWindow>();
+            window.titleContent = new GUIContent("FPS Engine Startup");
+            window.minSize = new Vector2(420, 600);
+            window.maxSize = new Vector2(420, 600);
+            window.Show();
         }
 
-        GUILayout.Space(20);
-        GUILayout.Label("First Steps", headerStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        GUILayout.Label("Make sure to include all dependencies when importing FPS Engine, as well as enabling the New Input System. ", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Space(5);
-        GUILayout.Label("We highly recommend you to navigate to Cowsins/Demo, where you will find the showrooms, which are perfect to get familiar with the engine. You will also find the blank scene, which works the best to kickstart the development of your game!", descriptionStyle, GUILayout.Width(400));
-        GUILayout.Label("Feel free to reach out on Discord if you need help!", descriptionStyle, GUILayout.Width(400));
-        GUILayout.EndVertical();
+        #endregion
 
-        GUILayout.EndScrollView();
-        GUILayout.EndArea();
-    }
+        #region content
+        private Vector2 scrollPosition = Vector2.zero;
 
-    #endregion
-
-    #region styles
-    private void DefineSelectedStyle()
-    {
-        selectedStyle = new GUIStyle(GUI.skin.button);
-        selectedStyle.normal.background = MakeTex(2, 2, new Color(0.2f, 0.2f, 0.2f, 1f));
-        selectedStyle.active.background = MakeTex(2, 2, new Color(0.4f, 0.4f, 0.4f, 1f));
-    }
-
-    private Texture2D MakeTex(int width, int height, Color color)
-    {
-        Color[] pix = new Color[width * height];
-        for (int i = 0; i < pix.Length; ++i)
+        private void OnGUI()
         {
-            pix[i] = color;
+            DefineSelectedStyle();
+
+            float scrollViewWidth = 420f; // Width of the scroll view
+            GUILayout.BeginArea(new Rect((Screen.width - scrollViewWidth) / 2, 20, scrollViewWidth, Screen.height - 40));
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(scrollViewWidth));
+
+
+            GUILayout.BeginVertical();
+
+            // FPS Engine Logo
+            GUILayout.Label(AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/Logo/FPS_Engine_Logo_White.png"), GUILayout.Width(400), GUILayout.Height(100));
+
+            // Header Label
+            GUIStyle headerStyle = new GUIStyle(GUI.skin.label);
+            headerStyle.fontSize = 20;
+            headerStyle.fontStyle = FontStyle.Bold;
+            GUIStyle subHeaderStyle = new GUIStyle(GUI.skin.label);
+            subHeaderStyle.fontSize = 16;
+            subHeaderStyle.fontStyle = FontStyle.Bold;
+            GUILayout.Label("Welcome to FPS Engine!", headerStyle, GUILayout.Width(400));
+
+            // Description Label
+            GUIStyle descriptionStyle = new GUIStyle(GUI.skin.label);
+            descriptionStyle.wordWrap = true; // Allow wrapping for the description
+            GUILayout.Label("Hey! Thanks for purchasing the FPS Engine! At Cowsins, we love helping game developers make their dreams come true, so we can't wait to see the masterpiece you create with our tool!", descriptionStyle, GUILayout.Width(400));
+            GUILayout.Space(10);
+            GUILayout.Label("Additionally, please consider leaving a review on the Unity Asset Store to help us provide Free Support and Free Updates to FPS Engine!", descriptionStyle, GUILayout.Width(400));
+            GUILayout.Space(5);
+            if (GUILayout.Button("Leave a Review"))
+            {
+                Application.OpenURL("https://assetstore.unity.com/packages/templates/systems/fps-engine-218594");
+            }
+            GUILayout.Space(20);
+            GUILayout.Label("Tutorials, Support & Documentation", headerStyle, GUILayout.Width(400));
+            GUILayout.Space(5);
+            GUILayout.Label("Documentation & Tutorials", subHeaderStyle, GUILayout.Width(400));
+            GUILayout.Label("FPS Engine documentation and tutorials can be found at: ", descriptionStyle, GUILayout.Width(400));
+
+            if (GUILayout.Button("Documentation"))
+            {
+                Application.OpenURL("https://cowsinss-organization.gitbook.io/fps-engine-documentation");
+            }
+            GUILayout.Space(5);
+            GUILayout.Label("Support", subHeaderStyle, GUILayout.Width(400));
+            GUILayout.Label("Get access to support by Cowsins on our Discord Server!", descriptionStyle, GUILayout.Width(400));
+            GUILayout.Space(5);
+            if (GUILayout.Button("Join Discord Server"))
+            {
+                Application.OpenURL("https://discord.gg/759gSeTT9m");
+            }
+
+            GUILayout.Space(20);
+            GUILayout.Label("First Steps", headerStyle, GUILayout.Width(400));
+            GUILayout.Space(5);
+            GUILayout.Label("Make sure to include all dependencies when importing FPS Engine, as well as enabling the New Input System. ", descriptionStyle, GUILayout.Width(400));
+            GUILayout.Space(5);
+            GUILayout.Label("We highly recommend you to navigate to Cowsins/Demo, where you will find the showrooms, which are perfect to get familiar with the engine. You will also find the blank scene, which works the best to kickstart the development of your game!", descriptionStyle, GUILayout.Width(400));
+            GUILayout.Label("Feel free to reach out on Discord if you need help!", descriptionStyle, GUILayout.Width(400));
+            GUILayout.Space(50);
+            GUILayout.EndVertical();
+
+            GUILayout.EndScrollView();
+            GUILayout.EndArea();
         }
-        Texture2D result = new Texture2D(width, height);
-        result.SetPixels(pix);
-        result.Apply();
-        return result;
+
+        #endregion
+
+        #region styles
+        private void DefineSelectedStyle()
+        {
+            selectedStyle = new GUIStyle(GUI.skin.button);
+            selectedStyle.normal.background = MakeTex(2, 2, new Color(0.2f, 0.2f, 0.2f, 1f));
+            selectedStyle.active.background = MakeTex(2, 2, new Color(0.4f, 0.4f, 0.4f, 1f));
+        }
+
+        private Texture2D MakeTex(int width, int height, Color color)
+        {
+            Color[] pix = new Color[width * height];
+            for (int i = 0; i < pix.Length; ++i)
+            {
+                pix[i] = color;
+            }
+            Texture2D result = new Texture2D(width, height);
+            result.SetPixels(pix);
+            result.Apply();
+            return result;
+        }
+        #endregion
     }
-    #endregion
+
 }

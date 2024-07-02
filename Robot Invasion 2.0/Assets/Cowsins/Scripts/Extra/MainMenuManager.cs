@@ -1,34 +1,63 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 namespace cowsins
 {
     public class MainMenuManager : MonoBehaviour
     {
-        [SerializeField] private CanvasGroup introMenu;
+        public static MainMenuManager Instance { get; private set; }
 
-        private bool canLerp = false, waitToLerp;
+        [SerializeField, Header("Main")] private CanvasGroup introMenu, mainMenu;
 
-        private CanvasGroup from, to;
+        private CanvasGroup objectToLerp;
+
+        private AudioSource audioSource;
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private void Start()
+        {
+            introMenu.gameObject.SetActive(true);
+            introMenu.alpha = 1;
+
+            mainMenu.gameObject.SetActive(false);
+            mainMenu.alpha = 0;
+
+            audioSource = GetComponent<AudioSource>();
+        }
 
         private void Update()
         {
-            if (!canLerp) return;
-
-            to.gameObject.SetActive(true);
-            from.alpha -= Time.deltaTime;
-            if (from.alpha <= .2f && waitToLerp || !waitToLerp) to.alpha += Time.deltaTime;
-
-            if (introMenu.alpha == 0)
-                from.gameObject.SetActive(false);
+            if (!objectToLerp) return;
+            objectToLerp.gameObject.SetActive(true);
+            objectToLerp.alpha += Time.deltaTime * 3;
         }
-        public void ChangeMenu() => canLerp = true;
 
-        public void SetFrom(CanvasGroup From) => from = From;
 
-        public void SetTo(CanvasGroup To) => to = To;
-
-        public void WaitToLerp(bool boolean) => waitToLerp = boolean;
+        public void SetObjectToLerp(CanvasGroup To) => objectToLerp = To;
 
         public void ChangeScene(int scene) => SceneManager.LoadScene(scene);
+
+        public void PlaySound(AudioClip clickSFX)
+        {
+            audioSource.clip = clickSFX;
+            audioSource.Play();
+        }
+
+        public void LoadScene(int sceneIndex)
+        {
+            SceneManager.LoadSceneAsync(sceneIndex);
+        }
+
     }
 }

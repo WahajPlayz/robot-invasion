@@ -9,9 +9,11 @@ namespace cowsins
 
         private bool turnedOn;
 
+        public bool TurnedOn { get { return turnedOn; } }
+
         private void Start()
         {
-            turnedOn = false; 
+            turnedOn = false;
         }
 
         public void CheckIfCanTurnOn(bool cond)
@@ -27,6 +29,10 @@ namespace cowsins
             turnedOn = true;
         }
 
+        /// <summary>
+        /// Forces the flashlight to turn on.
+        /// </summary>
+        /// <param name="cond"></param>
         public void EnableFlashLight(bool cond)
         {
             // If the condition is met, enable the flashlight light, if not, disable it and turn it off.

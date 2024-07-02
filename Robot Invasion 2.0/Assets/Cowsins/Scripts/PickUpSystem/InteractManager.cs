@@ -11,7 +11,7 @@ namespace cowsins
     public class InteractManager : MonoBehaviour
     {
         [System.Serializable]
-        public class Events { public UnityEvent OnFinishedInteraction; }
+        public class Events { public UnityEvent OnFinishedInteraction, onDrop; }
 
         [Tooltip("Attach your main camera"), SerializeField] private Camera mainCamera; // Attach your main camera
 
@@ -19,7 +19,7 @@ namespace cowsins
 
         private PlayerMovement playerMovement;
 
-        [Tooltip("Object with the same height as your camera, used to orientate the player."), SerializeField] private LayerMask mask;
+        [Tooltip("Bitmask that defines the interactable layer"), SerializeField] private LayerMask mask;
 
         private GameObject lookingAt;
 
@@ -128,7 +128,11 @@ namespace cowsins
 
         private void EnableInteractionUI(Interactable interactable)
         {
-            if (interactable == null) return;
+            if (interactable == null)
+            {
+                DisableInteractionUI();
+                return;
+            }
             interactable.interactable = true;
             // Current interactable is equal to the passed interactable value
             if (lookingAt == interactable.gameObject) return;
@@ -204,7 +208,7 @@ namespace cowsins
             pick.Drop(wcon, orientation);
             WeaponIdentification wp = wcon.inventory[wcon.currentWeapon];
             pick.SetPickeableAttachments(wp.barrel, wp.scope, wp.stock, wp.grip, wp.magazine, wp.flashlight, wp.laser);
-
+            events.onDrop?.Invoke();
             wcon.ReleaseCurrentWeapon();
         }
         private void ResetInteractTimer() => alreadyInteracted = false;

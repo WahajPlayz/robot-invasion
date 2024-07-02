@@ -222,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 7097825521097756987}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 0.007, y: -1.9071398, z: 0.8100655}
+  m_LocalPosition: {x: 0.05, y: 1.048, z: 1.102}
   m_LocalScale: {x: 0.18418358, y: 0.53541267, z: 0.18418357}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -270,7 +270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6958156521910562369}
   - component: {fileID: 2615528448425272525}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CrouchTilt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,9 +305,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2fd88dda50bec849a28778a065615da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiltRot: {x: 0, y: 0, z: 0}
-  tiltPosOffset: {x: 0, y: 0, z: 0}
-  tiltSpeed: 0
+  tiltRot: {x: 0, y: 0, z: 5}
+  tiltPosOffset: {x: 0, y: 0, z: -0.04}
+  tiltSpeed: 10
   player: {fileID: 0}
   wp: {fileID: 0}
 --- !u!1001 &2992106833416150243
@@ -566,10 +566,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 4832457426861400185, guid: e42198d0b28f538459719962814f4862, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f73e7d7eae1cb074cb4f1ad84299a1c8, type: 2}
     - target: {fileID: 5703791337414633652, guid: e42198d0b28f538459719962814f4862, type: 3}
       propertyPath: m_Layer
       value: 6

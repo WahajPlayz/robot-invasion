@@ -20,106 +20,123 @@ namespace cowsins
         {
             base.Start();
             if (dropped) return;
+            Initialize();
+        }
+        private void Initialize()
+        {
             GetVisuals();
-            currentBullets = weapon.magazineSize;
-            totalBullets = weapon.totalMagazines * weapon.magazineSize;
-            SetDefaultAttachments();
+            CalculateBulletCounts();
+        }
+
+        private void CalculateBulletCounts()
+        {
+            currentBullets = weapon.magazineSize + SetDefaultAttachments();
+            totalBullets = weapon.totalMagazines * currentBullets;
         }
 
         public override void Interact()
         {
             base.Interact();
-            WeaponController inv = player.GetComponent<WeaponController>();
+            WeaponController weaponController = player.GetComponent<WeaponController>();
 
-            if (!CheckIfInventoryFull())
+            if (!CheckIfInventoryFull(weaponController))
             {
                 Destroy(gameObject);
                 return;
             }
 
-            Weapon_SO oldWeapon = inv.weapon;
-            int saveBulletsLeftInMagazine = inv.id.bulletsLeftInMagazine;
-            int saveTotalBullets = inv.id.totalBullets;
-            inv.ReleaseCurrentWeapon();
-
-            // Instantiating the selected weapon
-            var weaponPicked = Instantiate(weapon.weaponObject, inv.weaponHolder);
-            weaponPicked.transform.localPosition = weapon.weaponObject.transform.localPosition;
-            //Assign the weapon to the inventory
-            inv.inventory[inv.currentWeapon] = weaponPicked;
-
-            inv.weapon = weapon;
-            // Apply attachments to the weapon
-            ApplyAttachments(inv);
-            //Since this slot is selected, let´s unholster it
-            inv.UnHolster(inv.inventory[inv.currentWeapon].gameObject, true);
-            // Set bullets
-            WeaponIdentification curWeapon = inv.inventory[inv.currentWeapon].GetComponent<WeaponIdentification>();
-            curWeapon.bulletsLeftInMagazine = currentBullets;
-            curWeapon.totalBullets = totalBullets;
-            //UI
-            inv.slots[inv.currentWeapon].weapon = weapon;
-            inv.slots[inv.currentWeapon].GetImage();
-            //Now, let´s set the new weapon graphics on the pickeable
-            currentBullets = saveBulletsLeftInMagazine;
-            totalBullets = saveTotalBullets;
-
-#if UNITY_EDITOR
-            UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset = inv.weapon.crosshairPreset;
-            CowsinsUtilities.ApplyPreset(UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset, UIController.instance.crosshair.GetComponent<CrosshairShape>());
-#endif
-
-            weapon = oldWeapon;
-            image.sprite = weapon.icon;
-            Destroy(graphics.transform.GetChild(0).gameObject);
-            GetVisuals();
+            SwapWeapons(weaponController);
         }
 
-        private bool CheckIfInventoryFull()
+        private bool CheckIfInventoryFull(WeaponController weaponController)
         {
-            WeaponController inv = player.GetComponent<WeaponController>();
-
-            for (int i = 0; i < inv.inventorySize; i++)
+            for (int i = 0; i < weaponController.inventorySize; i++)
             {
-                if (inv.inventory[i] == null) // Inventory is, indeed, not full, so there is room for a new weapon.
+                if (weaponController.inventory[i] == null) // Inventory has room for a new weapon.
                 {
-                    // Instantiating the selected weapon
-                    var weaponPicked = Instantiate(weapon.weaponObject, inv.weaponHolder);
-                    weaponPicked.transform.localPosition = weapon.weaponObject.transform.localPosition;
-                    //Assign the weapon to the inventory
-                    inv.inventory[i] = weaponPicked;
-                    //Since this slot is selected and it was empty, let´s unholster it
-                    if (inv.inventory[inv.currentWeapon] == inv.inventory[i])
-                    {
-                        inv.inventory[i].gameObject.SetActive(true);
-                        inv.weapon = weapon;
-                        ApplyAttachments(inv);
-                        inv.UnHolster(weaponPicked.gameObject, true);
-                    }
-                    else inv.inventory[i].gameObject.SetActive(false);
-                    // Set bullets
-                    WeaponIdentification curWeapon = inv.inventory[i].GetComponent<WeaponIdentification>();
-                    curWeapon.bulletsLeftInMagazine = currentBullets;
-                    curWeapon.totalBullets = totalBullets;
-                    //UI
-                    inv.slots[i].weapon = weapon;
-                    inv.slots[i].GetImage();
-#if UNITY_EDITOR
-                    if (inv.weapon != null)
-                    {
-                        UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset = inv.weapon.crosshairPreset;
-                        CowsinsUtilities.ApplyPreset(UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset, UIController.instance.crosshair.GetComponent<CrosshairShape>());
-                    }
-#endif
-
-                    // Don´t return true
+                    AddWeaponToInventory(weaponController, i);
                     return false;
                 }
             }
-            // Inventory is full, we´ll check what to do then
+            // Inventory is full
             return true;
-
         }
+
+        private void AddWeaponToInventory(WeaponController weaponController, int slot)
+        {
+            var weaponPicked = Instantiate(weapon.weaponObject, weaponController.weaponHolder);
+            weaponPicked.transform.localPosition = weapon.weaponObject.transform.localPosition;
+
+            weaponController.inventory[slot] = weaponPicked;
+
+            if (weaponController.currentWeapon == slot)
+            {
+                weaponController.weapon = weapon;
+                ApplyAttachments(weaponController);
+                weaponController.UnHolster(weaponPicked.gameObject, true);
+                weaponPicked.gameObject.SetActive(true);
+            }
+            else
+            {
+                weaponPicked.gameObject.SetActive(false);
+            }
+
+            UpdateWeaponBullets(weaponController.inventory[slot].GetComponent<WeaponIdentification>());
+
+            UpdateWeaponUI(weaponController, slot);
+
+#if UNITY_EDITOR
+            UpdateCrosshair(weaponController);
+#endif
+        }
+
+        private void SwapWeapons(WeaponController weaponController)
+        {
+            Weapon_SO oldWeapon = weaponController.weapon;
+            int savedBulletsLeftInMagazine = weaponController.id.bulletsLeftInMagazine;
+            int savedTotalBullets = weaponController.id.totalBullets;
+            weaponController.ReleaseCurrentWeapon();
+
+            AddWeaponToInventory(weaponController, weaponController.currentWeapon);
+
+            weaponController.weapon = weapon;
+
+            UpdateWeaponBullets(weaponController.inventory[weaponController.currentWeapon].GetComponent<WeaponIdentification>());
+
+            UpdateWeaponUI(weaponController, weaponController.currentWeapon);
+
+            currentBullets = savedBulletsLeftInMagazine;
+            totalBullets = savedTotalBullets;
+
+            weapon = oldWeapon;
+            DestroyGraphics();
+            GetVisuals();
+        }
+
+        private void UpdateWeaponBullets(WeaponIdentification weaponIdentification)
+        {
+            weaponIdentification.bulletsLeftInMagazine = currentBullets;
+            weaponIdentification.totalBullets = totalBullets;
+        }
+
+        private void UpdateWeaponUI(WeaponController weaponController, int slot)
+        {
+            weaponController.slots[slot].weapon = weapon;
+            weaponController.slots[slot].GetImage();
+        }
+
+#if UNITY_EDITOR
+        private void UpdateCrosshair(WeaponController weaponController)
+        {
+            if (weaponController.weapon != null)
+            {
+                var crosshairShape = UIController.instance.crosshair.GetComponent<CrosshairShape>();
+                crosshairShape.currentPreset = weaponController.weapon.crosshairPreset;
+                CowsinsUtilities.ApplyPreset(crosshairShape.currentPreset, crosshairShape);
+            }
+        }
+#endif
+
 
         public override void Drop(WeaponController wcon, Transform orientation)
         {
@@ -132,7 +149,7 @@ namespace cowsins
         }
 
         // Applied the default attachments to the weapon
-        private void SetDefaultAttachments()
+        private int SetDefaultAttachments()
         {
             DefaultAttachment defaultAttachments = weapon.weaponObject.defaultAttachments;
             Barrel = defaultAttachments.defaultBarrel?.attachmentIdentifier;
@@ -142,6 +159,13 @@ namespace cowsins
             Flashlight = defaultAttachments.defaultFlashlight?.attachmentIdentifier;
             Magazine = defaultAttachments.defaultMagazine?.attachmentIdentifier;
             Laser = defaultAttachments.defaultLaser?.attachmentIdentifier;
+
+            if (defaultAttachments.defaultMagazine is Magazine magazine)
+            {
+                return magazine.magazineCapacityAdded;
+            }
+
+            return 0;
         }
         /// <summary>
         /// Stores the attachments on the WeaponPickeable so they can be accessed later in case the weapon is picked up.

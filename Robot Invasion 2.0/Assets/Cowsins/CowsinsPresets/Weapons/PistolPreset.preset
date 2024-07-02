@@ -25,8 +25,8 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: weaponID
-    value: 0
+    propertyPath: weaponObject
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: _name
@@ -45,6 +45,14 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: shootMethod
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: holdProgressSpeed
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: reloadStyle
     value: 0
     objectReference: {fileID: 0}
@@ -54,6 +62,10 @@ Preset:
     objectReference: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
   - target: {fileID: 0}
     propertyPath: projectileUsesGravity
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: shootDelay
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -85,6 +97,10 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: continuousFire
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: fireRate
     value: 0.3
     objectReference: {fileID: 0}
@@ -93,12 +109,28 @@ Preset:
     value: 1.2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: coolSpeed
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: cooledPercentageAfterOverheat
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: infiniteBullets
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: magazineSize
     value: 17
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: bulletsPerFire
     value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ammoCostPerFire
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: bulletRange
@@ -121,16 +153,8 @@ Preset:
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: aimingPosition.x
-    value: 0.02
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: aimingPosition.y
-    value: 0.0975
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: aimingPosition.z
-    value: -0.2
+    propertyPath: aimDistance
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: aimingRotation.x
@@ -151,6 +175,18 @@ Preset:
   - target: {fileID: 0}
     propertyPath: aimingFOV
     value: 45
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: allowAimingIfReloading
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: movementSpeedWhileAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: setMovementSpeedWhileAiming
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: crosshairResize
@@ -181,8 +217,80 @@ Preset:
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: applyRecoil
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_PreInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_PostInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_RotationOrder
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_PreInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_PostInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_RotationOrder
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: xRecoilAmount
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: yRecoilAmount
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilRelaxSpeed
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyDifferentRecoilOnAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: xRecoilAmountOnAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: yRecoilAmountOnAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: damagePerBullet
     value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyDamageReductionBasedOnDistance
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: minimumDistanceToApplyDamageReduction
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: damageReductionMultiplier
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: criticalDamageMultiplier
@@ -237,6 +345,14 @@ Preset:
     value: 
     objectReference: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
   - target: {fileID: 0}
+    propertyPath: useProceduralShot
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: proceduralShotPattern
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: audioSFX.firing
     value: 
     objectReference: {fileID: 8300000, guid: a2cb158995bb0474f8ab81cc1b820695, type: 3}
@@ -253,8 +369,48 @@ Preset:
     value: 
     objectReference: {fileID: 8300000, guid: 4e94586542321884d83c2b4d53ead6db, type: 3}
   - target: {fileID: 0}
+    propertyPath: audioSFX.emptyMagReload
+    value: 
+    objectReference: {fileID: 8300000, guid: 379ac0d7119ad4842b7cd122cfd11307, type: 3}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.emptyMagShoot
+    value: 
+    objectReference: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
+  - target: {fileID: 0}
+    propertyPath: pitchVariationFiringSFX
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grapplesFromTip
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: camShakeAmount
     value: 0.15
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: camShakeAimMultiplier
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: camShakeCrouchMultiplier
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyFOVEffectOnShooting
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: FOVValueToSubtract
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: AimingFOVValueToSubtract
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletTrail
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: damagePerHit
@@ -262,6 +418,10 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: attackRate
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: hitDelay
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}

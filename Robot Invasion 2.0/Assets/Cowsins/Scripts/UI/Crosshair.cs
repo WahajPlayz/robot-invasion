@@ -63,6 +63,10 @@ namespace cowsins
 
         [SerializeField] private GameObject hitmarkerObj;
 
+        private bool isVisible = true;
+
+        public bool IsHidden { get { return isVisible; } }
+
         #endregion
 
         private void Awake()
@@ -129,7 +133,8 @@ namespace cowsins
             if (playerStats.isDead
                 || weaponController.weapon != null && weaponController.isAiming && player.weaponController.removeCrosshairOnAiming
                 || PauseMenu.Instance != null && PauseMenu.isPaused && hideCrosshairOnPaused
-                || interactManager.inspecting && hideCrosshairOnInspecting) return;
+                || interactManager.inspecting && hideCrosshairOnInspecting
+                || !isVisible) return;
             Texture2D texture = new Texture2D(1, 1);
             texture.SetPixel(0, 0, color);
             texture.wrapMode = TextureWrapMode.Repeat;
@@ -152,6 +157,11 @@ namespace cowsins
 
                 GUI.DrawTexture(circleRect, texture);
             }
+        }
+
+        public void SetVisibility(bool visible)
+        {
+            isVisible = visible;
         }
     }
 }

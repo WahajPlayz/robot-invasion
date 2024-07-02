@@ -20,7 +20,7 @@ namespace cowsins
 
         public Sprite nullWeapon;
 
-        private void Start() => initScale = transform.localScale;
+        private void OnEnable() => initScale = transform.localScale;
 
         private void Update() => GetImage();// Get current weapon image
 

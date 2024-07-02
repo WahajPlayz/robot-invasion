@@ -14,6 +14,9 @@ namespace cowsins
 
         private float holdProgress;
 
+        private float noBulletIndicator;
+
+        private bool holdingEmpty = false;
         public WeaponDefaultState(WeaponStates currentContext, WeaponStateFactory playerStateFactory)
             : base(currentContext, playerStateFactory) { }
 
@@ -44,10 +47,6 @@ namespace cowsins
         public override void FixedUpdateState() { }
 
         public override void ExitState() { }
-
-        private float noBulletIndicator;
-
-        private bool holdingEmpty = false;
         public override void CheckSwitchState()
         {
 

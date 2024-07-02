@@ -20,13 +20,13 @@ MonoBehaviour:
   shootMethod: 1
   holdProgressSpeed: 0
   reloadStyle: 0
-  projectile: {fileID: 9168497578707421070, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
+  projectile: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
   projectileUsesGravity: 0
   shootDelay: 0
-  bulletDuration: 20
-  speed: 100
+  bulletDuration: 0
+  speed: 40
   explosionOnHit: 0
-  hurtsPlayer: 1
+  hurtsPlayer: 0
   explosionRadius: 0
   explosionForce: 0
   explosionVFX: {fileID: 0}
@@ -93,8 +93,6 @@ MonoBehaviour:
     metalImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
     mudImpact: {fileID: 2462405574108921655, guid: 4445bafd3b5e24c4eb41ba27f6a44af4, type: 3}
     woodImpact: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
-    OrangesheildImpact: {fileID: 8031883442971595464, guid: 6618e8404c854974aa95357c46ae4757, type: 3}
-    GreenSheildImpact: {fileID: 8031883442971595464, guid: 26f29f868e80c2f47a8adc6e9f792f64, type: 3}
   muzzleVFX: {fileID: 1336949550903370, guid: 679d294f11bff5d49b2fc3da2db6c3b7, type: 3}
   bulletGraphics: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
   useProceduralShot: 0
@@ -107,7 +105,6 @@ MonoBehaviour:
     emptyMagReload: {fileID: 8300000, guid: aded5749092a3ea4ab4e69754d28a5c4, type: 3}
     emptyMagShoot: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
   pitchVariationFiringSFX: 0.15
-  grapplesFromTip: 0
   camShakeAmount: 0.07
   camShakeAimMultiplier: 0.8
   camShakeCrouchMultiplier: 0.8

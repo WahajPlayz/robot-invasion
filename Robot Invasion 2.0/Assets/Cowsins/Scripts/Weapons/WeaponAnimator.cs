@@ -21,20 +21,24 @@ namespace cowsins
         void FixedUpdate()
         {
             if (wc.inventory[wc.currentWeapon] == null) return;
+
+            Animator currentAnimator = wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>();
+
             if (wc.Reloading || wc.shooting || player.isCrouching || !player.grounded || rb.velocity.magnitude < 0.1f || wc.isAiming
-                || wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Unholster")
-                || wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>().GetCurrentAnimatorStateInfo(0).IsName("shot"))
+                || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("Unholster")
+                || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("reloading")
+                || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("shooting"))
             {
-                CowsinsUtilities.StopAnim("walking", wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>());
-                CowsinsUtilities.StopAnim("running", wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>());
+                CowsinsUtilities.StopAnim("walking", currentAnimator);
+                CowsinsUtilities.StopAnim("running", currentAnimator);
                 return;
             }
 
-            if (rb.velocity.magnitude > player.crouchSpeed && !wc.shooting && player.currentSpeed < player.runSpeed && player.grounded && !interactManager.inspecting) CowsinsUtilities.PlayAnim("walking", wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>());
-            else CowsinsUtilities.StopAnim("walking", wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>());
+            if (rb.velocity.magnitude > player.crouchSpeed && !wc.shooting && player.currentSpeed < player.runSpeed && player.grounded && !interactManager.inspecting) CowsinsUtilities.PlayAnim("walking", currentAnimator);
+            else CowsinsUtilities.StopAnim("walking", currentAnimator);
 
-            if (player.currentSpeed >= player.runSpeed && player.grounded) CowsinsUtilities.PlayAnim("running", wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>());
-            else CowsinsUtilities.StopAnim("running", wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>());
+            if (player.currentSpeed >= player.runSpeed && player.grounded) CowsinsUtilities.PlayAnim("running", currentAnimator);
+            else CowsinsUtilities.StopAnim("running", currentAnimator);
         }
 
         public void StopWalkAndRunMotion()

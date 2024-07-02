@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using cowsins;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -95,7 +95,7 @@ public class EnemyAI : MonoBehaviour, IDamageable
         if (health <= 0) Die();
     }
 
-    public virtual void Damage(float dmg)
+    public virtual void Damage(float dmg, bool isHeadshot)
     {
         float damage = Mathf.Abs(dmg);
         float oldDmg = damage;
@@ -116,7 +116,7 @@ public class EnemyAI : MonoBehaviour, IDamageable
         }
 
         events.OnDamaged.Invoke();
-        UIEvents.onEnemyHit.Invoke();
+        UIEvents.onEnemyHit?.Invoke(isHeadshot);
 
         if (!showUI) return;
         GameObject popup = Instantiate(damagePopUp, transform.position, Quaternion.identity);

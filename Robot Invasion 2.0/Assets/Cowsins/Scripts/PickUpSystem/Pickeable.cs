@@ -69,5 +69,10 @@ namespace cowsins
             GetComponent<Rigidbody>().AddTorque(new Vector3(random, random, random) * 10);
         }
 
+        public virtual void DestroyGraphics()
+        {
+            Destroy(graphics.transform.GetChild(0).gameObject);
+        }
+
     }
 }

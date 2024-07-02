@@ -1,5 +1,5 @@
-/// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+ï»¿/// <summary>
+/// This script belongs to cowsinsâ„¢ as a part of the cowsinsÂ´ FPS Engine. All rights reserved. 
 /// </summary>
 #if UNITY_EDITOR
 using UnityEditor;
@@ -106,27 +106,24 @@ namespace cowsins
         /// <summary>
         /// Since it is IDamageable, it can take damage, if a shot is landed, damage the enemy
         /// </summary>
-        public virtual void Damage(float _damage)
+        public virtual void Damage(float _damage, bool isHeadshot)
         {
             float damage = Mathf.Abs(_damage);
             float oldDmg = damage;
             if (damage <= shield) // Shield will be damaged
             {
                 shield -= damage;
-                if (shieldSlider != null) shieldSlider.GetComponent<Animator>().Play("UIDamageShieldEnemy");
             }
             else
             {
                 damage = damage - shield;
                 shield = 0;
                 health -= damage;
-                if (shieldSlider != null && shieldSlider.GetComponent<Animator>()) shieldSlider.GetComponent<Animator>().Play("UIDamageShieldEnemy");
-                if (healthSlider != null && healthSlider.GetComponent<Animator>()) healthSlider.GetComponent<Animator>().Play("UIDamageEnemy");
             }
 
             // Custom event on damaged
             events.OnDamaged.Invoke();
-            UIEvents.onEnemyHit.Invoke();
+            UIEvents.onEnemyHit?.Invoke(isHeadshot);
             // If you do not want to show a damage pop up, stop, do not continue
             if (!showDamagePopUps) return;
             GameObject popup = Instantiate(damagePopUp, transform.position, Quaternion.identity) as GameObject;
@@ -173,7 +170,7 @@ namespace cowsins
             EditorGUILayout.PropertyField(serializedObject.FindProperty("maxShield"));
             if (!myScript.destroyOnDie)
             {
-                EditorGUILayout.LabelField("WARNING: destroyOnDie is set to false, this means that your object won´t be destroyed once you kill them.", EditorStyles.helpBox);
+                EditorGUILayout.LabelField("WARNING: destroyOnDie is set to false, this means that your object wonÂ´t be destroyed once you kill them.", EditorStyles.helpBox);
             }
             EditorGUILayout.PropertyField(serializedObject.FindProperty("destroyOnDie"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("deathEffect"));

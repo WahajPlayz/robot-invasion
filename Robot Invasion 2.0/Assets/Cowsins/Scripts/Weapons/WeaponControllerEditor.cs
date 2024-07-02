@@ -35,9 +35,7 @@ namespace cowsins
                         EditorGUILayout.LabelField("INVENTORY", EditorStyles.boldLabel);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("inventorySize"));
                         EditorGUILayout.Space(5);
-                        EditorGUILayout.LabelField("Attach your weapon scriptable objects here. These are not your initial weapons", EditorStyles.helpBox);
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("weapons"));
-                        EditorGUILayout.LabelField("These are your initial weapons", EditorStyles.helpBox);
+                        EditorGUILayout.LabelField("Select the weapons you want to spawn with", EditorStyles.helpBox);
                         EditorGUILayout.Space(5);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("initialWeapons"));
                         if (myScript.initialWeapons.Length > myScript.inventorySize) myScript.initialWeapons = new Weapon_SO[myScript.inventorySize];

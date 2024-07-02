@@ -1,7 +1,5 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
 namespace cowsins
 {
     public class ShowAndHide : MonoBehaviour
@@ -13,10 +11,8 @@ namespace cowsins
         private void Awake() => holding = false;
         private void Update()
         {
-#if ENABLE_INPUT_SYSTEM
             input = Keyboard.current.qKey.isPressed;
             if (!input) holding = false;
-#endif
 
             if (input && !holding)
             {

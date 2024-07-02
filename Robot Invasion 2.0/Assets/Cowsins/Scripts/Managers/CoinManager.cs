@@ -6,8 +6,8 @@ namespace cowsins
     {
         public static CoinManager Instance; // Singleton instance of the CoinManager
 
-        [Tooltip("Whether the game should use coins.")]
-        public bool useCoins; // Flag to indicate if the game uses coins
+        [Tooltip("Flag to indicate if the game uses coins.")]
+        public bool useCoins;
 
         public int coins { get; private set; } // Property to access the coin count (read-only from outside)
 

@@ -58,7 +58,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1dce60a5a7e65c4fbd88241d05e35ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairSoundEffect: {fileID: 8300000, guid: 56bc10afa2105864095db718159d1977, type: 3}
+  hitmarkerSoundEffect: {fileID: 8300000, guid: 8d377fd0e82904545b4af32b9e8f0a5d, type: 3}
+  animator: {fileID: 5488792110051587939}
+  image: {fileID: 1662225312985185649}
 --- !u!1 &6710753125069801190
 GameObject:
   m_ObjectHideFlags: 0

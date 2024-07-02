@@ -22,7 +22,7 @@ namespace cowsins
             }
 
             PlayerStats player = other.GetComponent<PlayerStats>();
-            player.Damage(damage);
+            player.Damage(damage, false);
             Destroy(this.gameObject);
 
         }

@@ -46,6 +46,7 @@ namespace cowsins
         /// </summary>
         public virtual void Interact()
         {
+            interactableEvents.OnInteract?.Invoke();
             Debug.Log("Interacted with" + this.gameObject.name);
         }
 

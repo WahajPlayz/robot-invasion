@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using cowsins;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor.Presets;
 #endif
@@ -18,7 +19,7 @@ public class Events
 [System.Serializable]
 public class Effects
 {
-    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangesheildImpact, GreenSheildImpact;
+    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact;
 }
 [System.Serializable]
 public class CustomShotMethods
@@ -32,8 +33,6 @@ namespace cowsins
     public class WeaponController : MonoBehaviour
     {
         //References
-        [Tooltip("Attach your weapon scriptable objects here.")] public Weapon_SO[] weapons;
-
         [Tooltip("An array that includes all your initial weapons.")] public Weapon_SO[] initialWeapons;
 
         public WeaponIdentification[] inventory;
@@ -178,13 +177,6 @@ namespace cowsins
             HandleHeatRatio();
         }
 
-        private void HandleInput()
-        {
-            // Handle aiming
-            if (!InputManager.aiming) isAiming = false;
-            // + stop aiming if needed 
-            if (!isAiming && weaponHolder.localPosition != Vector3.zero) StopAim();
-        }
         private float aimingSpeed;
         public void Aim()
         {
@@ -267,7 +259,16 @@ namespace cowsins
             // Determine if we want to add an effect for FOV
             if (weapon.applyFOVEffectOnShooting) mainCamera.fieldOfView = mainCamera.fieldOfView - weapon.FOVValueToSubtract;
 
-            CowsinsUtilities.PlayAnim("shooting", inventory[currentWeapon].GetComponentInChildren<Animator>());
+            int randomIndex = Random.Range(1, weapon.amountOfShootAnimations + 1);
+
+            // Generate the animation name based on the random index
+            string randomAnimation = "shooting" + (randomIndex == 1 ? "" : randomIndex.ToString());
+
+            // Get the Animator component from the current weapon
+            Animator animator = inventory[currentWeapon].GetComponentInChildren<Animator>();
+
+            // Play the selected random animation
+            CowsinsUtilities.ForcePlayAnim(randomAnimation, animator);
 
             SoundManager.Instance.PlaySound(fireSFX, 0, weapon.pitchVariationFiringSFX, true, 0);
 
@@ -352,7 +353,7 @@ namespace cowsins
                     if (muzzleVFX != null)
                         Instantiate(muzzleVFX, p.position, mainCamera.transform.rotation, mainCamera.transform); // VFX
                 }
-                CowsinsUtilities.PlayAnim("shooting", inventory[currentWeapon].GetComponentInChildren<Animator>());
+                CowsinsUtilities.ForcePlayAnim("shooting", inventory[currentWeapon].GetComponentInChildren<Animator>());
                 if (weapon.timeBetweenShots != 0) SoundManager.Instance.PlaySound(fireSFX, 0, weapon.pitchVariationFiringSFX, true, 0);
 
                 ProgressRecoil();
@@ -390,6 +391,11 @@ namespace cowsins
                 float dmg = damagePerBullet * stats.damageMultiplier;
                 Hit(hit.collider.gameObject.layer, dmg, hit, true);
                 hitObj = hit.collider.transform;
+
+                if (hit.transform.TryGetComponent<Rigidbody>(out Rigidbody rb))
+                {
+                    rb.AddForceAtPosition(ray.direction * 10, hit.point, ForceMode.Impulse);
+                }
 
                 //Handle Penetration
                 Ray newRay = new Ray(hit.point, ray.direction);
@@ -476,18 +482,18 @@ namespace cowsins
 
             Collider[] col = Physics.OverlapSphere(transform.position + mainCamera.transform.parent.forward * attackRange / 2, attackRange, hitLayer);
 
-            float dmg = damage * GetComponent<PlayerStats>().damageMultiplier;
+            float dmg = damage * stats.damageMultiplier;
 
             foreach (var c in col)
             {
                 if (c.CompareTag("Critical") || c.CompareTag("BodyShot"))
                 {
-                    CowsinsUtilities.GatherDamageableParent(c.transform).Damage(dmg);
+                    CowsinsUtilities.GatherDamageableParent(c.transform).Damage(dmg, false);
                     break;
                 }
-                else if (c.transform.GetComponent<IDamageable>() != null)
+                else if (c.GetComponent<IDamageable>() != null)
                 {
-                    c.GetComponent<IDamageable>().Damage(dmg);
+                    c.GetComponent<IDamageable>().Damage(dmg, false);
                     break;
                 }
 
@@ -564,16 +570,6 @@ namespace cowsins
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
                     break;
-                case int l when l == LayerMask.NameToLayer("OrangeSheild"):
-                    impact = Instantiate(effects.OrangesheildImpact, h.point, Quaternion.identity); // OrangeSheild
-                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.OrangesheildImpact, h.point, Quaternion.identity);
-                    break;
-                case int l when l == LayerMask.NameToLayer("GreenSheild"):
-                    impact = Instantiate(effects.GreenSheildImpact, h.point, Quaternion.identity); // OrangeSheild
-                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.GreenSheildImpact, h.point, Quaternion.identity);
-                    break;
             }
 
             if (h.collider != null && impactBullet != null)
@@ -592,17 +588,17 @@ namespace cowsins
             // Check if a head shot was landed
             if (h.collider.gameObject.CompareTag("Critical"))
             {
-                CowsinsUtilities.GatherDamageableParent(h.collider.transform).Damage(finalDamage * weapon.criticalDamageMultiplier);
+                CowsinsUtilities.GatherDamageableParent(h.collider.transform).Damage(finalDamage * weapon.criticalDamageMultiplier, true);
             }
             // Check if a body shot was landed ( for children colliders )
             else if (h.collider.gameObject.CompareTag("BodyShot"))
             {
-                CowsinsUtilities.GatherDamageableParent(h.collider.transform).Damage(finalDamage);
+                CowsinsUtilities.GatherDamageableParent(h.collider.transform).Damage(finalDamage, false);
             }
             // Check if the collision just comes from the parent
             else if (h.collider.GetComponent<IDamageable>() != null)
             {
-                h.collider.GetComponent<IDamageable>().Damage(finalDamage);
+                h.collider.GetComponent<IDamageable>().Damage(finalDamage, false);
             }
         }
 
@@ -618,8 +614,7 @@ namespace cowsins
         /// </summary>
         private IEnumerator DefaultReload()
         {
-            // Run custom event
-            events.OnReload.Invoke();
+
             // Play reload sound
             SoundManager.Instance.PlaySound(id.bulletsLeftInMagazine == 0 ? weapon.audioSFX.emptyMagReload : weapon.audioSFX.reload, .1f, 0, true, 0);
             reloading = true;
@@ -634,8 +629,13 @@ namespace cowsins
             // Reload has finished
             events.OnFinishReload.Invoke();
 
-            reloading = false;
             canShoot = true;
+            if (!reloading) yield break;
+
+            // Run custom event
+            events.OnReload.Invoke();
+
+            reloading = false;
 
             // Set the proper amount of bullets, depending on magazine type.
             if (!weapon.limitedMagazines) id.bulletsLeftInMagazine = id.magazineSize;
@@ -835,6 +835,8 @@ namespace cowsins
             // We require to unholster the weapons for every setting to work properly.
             UnHolster(inventory[currentWeapon].gameObject, false);
         }
+
+
 
         // Assigns a new attachment.
         // if there is an attachment currently, it will be disabled and dropped.
@@ -1059,16 +1061,28 @@ namespace cowsins
 
                 if (i == currentWeapon)
                 {
-                    weapon = weapons[i];
+                    weapon = initialWeapons[i];
                     SelectWeapon();
                 }
                 else weaponPicked.gameObject.SetActive(false);
                 weapon = initialWeapons[i];
 
-                inventory[i].GetComponent<WeaponIdentification>().bulletsLeftInMagazine = initialWeapons[i].magazineSize;
+                List<AttachmentIdentifier_SO> attachments = null;
+                int magCapacityAdded = 0;
+
+                (attachments, magCapacityAdded) = weaponPicked.GetDefaultAttachments();
+
+                foreach (AttachmentIdentifier_SO attachment in attachments)
+                {
+                    (Attachment atc, int id) = GetAttachmentID(attachment, inventory[i].GetComponent<WeaponIdentification>());
+                    AssignNewAttachment(atc, id);
+                }
+
+                inventory[i].GetComponent<WeaponIdentification>().bulletsLeftInMagazine = initialWeapons[i].magazineSize + magCapacityAdded;
                 if (initialWeapons[i].limitedMagazines)
                     inventory[i].GetComponent<WeaponIdentification>().totalBullets = initialWeapons[i].magazineSize * initialWeapons[i].totalMagazines;
                 else inventory[i].GetComponent<WeaponIdentification>().totalBullets = initialWeapons[i].magazineSize;
+
 
                 //UI
                 slots[i].weapon = weapon;
@@ -1083,6 +1097,48 @@ namespace cowsins
 
             if (weapon.shootStyle == ShootStyle.Custom) SelectCustomShotMethod();
             else customMethod = null;
+        }
+
+        /// <summary>
+        /// Grabs the attachment object and the id given an attachment identifier
+        /// </summary>
+        /// <param name="atcToCheck">Attachment object to get information about returned.</param>
+        /// <param name="wID">Weapon Identification that holds the attachments</param>
+        /// <returns></returns>
+        private (Attachment, int) GetAttachmentID(AttachmentIdentifier_SO atcToCheck, WeaponIdentification wID)
+        {
+            // Check for compatibility
+            for (int i = 0; i < wID.compatibleAttachments.barrels.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.barrels[i].attachmentIdentifier) return (wID.compatibleAttachments.barrels[i], i);
+            }
+            for (int i = 0; i < wID.compatibleAttachments.scopes.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.scopes[i].attachmentIdentifier) return (wID.compatibleAttachments.scopes[i], i);
+            }
+            for (int i = 0; i < wID.compatibleAttachments.stocks.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.stocks[i].attachmentIdentifier) return (wID.compatibleAttachments.stocks[i], i);
+            }
+            for (int i = 0; i < wID.compatibleAttachments.grips.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.grips[i].attachmentIdentifier) return (wID.compatibleAttachments.grips[i], i);
+            }
+            for (int i = 0; i < wID.compatibleAttachments.magazines.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.magazines[i].attachmentIdentifier) return (wID.compatibleAttachments.magazines[i], i);
+            }
+            for (int i = 0; i < wID.compatibleAttachments.flashlights.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.flashlights[i].attachmentIdentifier) return (wID.compatibleAttachments.flashlights[i], i);
+            }
+            for (int i = 0; i < wID.compatibleAttachments.lasers.Length; i++)
+            {
+                if (atcToCheck == wID.compatibleAttachments.lasers[i].attachmentIdentifier) return (wID.compatibleAttachments.lasers[i], i);
+            }
+
+            // Return an error
+            return (null, -1);
         }
 
         public void ReleaseCurrentWeapon()

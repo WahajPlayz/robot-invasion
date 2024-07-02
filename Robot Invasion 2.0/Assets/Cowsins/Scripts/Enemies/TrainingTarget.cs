@@ -5,10 +5,10 @@ namespace cowsins
     {
         [SerializeField] private float timeToRevive;
 
-        public override void Damage(float damage)
+        public override void Damage(float damage, bool isHeadshot)
         {
             if (isDead) return;
-            base.Damage(damage);
+            base.Damage(damage, isHeadshot);
             GetComponent<Animator>().Play("Target_Hit");
         }
         public override void Die()

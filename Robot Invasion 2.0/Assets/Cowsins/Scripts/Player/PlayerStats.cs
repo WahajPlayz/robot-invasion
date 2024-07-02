@@ -51,6 +51,8 @@ namespace cowsins
 
         private PlayerStats stats;
 
+        private PlayerStates states;
+
         public Events events;
 
         #endregion
@@ -81,30 +83,42 @@ namespace cowsins
             if (health <= 0) Die(); // Die in case we ran out of health   
 
             // Manage fall damage
-            if (!takesFallDamage) return;
+            if (!takesFallDamage || player.Climbing) return;
             ManageFallDamage();
         }
         /// <summary>
         /// Our Player Stats is IDamageable, which means it can be damaged
         /// If so, call this method to damage the player
         /// </summary>
-        public void Damage(float _damage)
+        public void Damage(float _damage, bool isHeadshot)
         {
-            if (player.canDash && player.dashing && player.damageProtectionWhileDashing) return;
+            // Early return if player is dashing with damage protection
+            if (player.canDash && player.dashing && player.damageProtectionWhileDashing)
+                return;
 
+            // Ensure damage is a positive value
             float damage = Mathf.Abs(_damage);
-            events.OnDamage.Invoke(); // Invoke the custom event
 
+            // Trigger damage event
+            events.OnDamage.Invoke();
+
+            // Apply damage to shield first
             if (damage <= shield)
+            {
                 shield -= damage;
+            }
             else
             {
-                damage = damage - shield;
+                // Apply remaining damage to health
+                damage -= shield;
                 shield = 0;
                 health -= damage;
             }
-            // Effect on damage
+
+            // Notify UI about the health change
             UIEvents.onHealthChanged?.Invoke(health, shield, true);
+
+            // Handle auto-healing
             if (enableAutoHeal && restartAutoHealAfterBeingDamaged)
             {
                 CancelInvoke(nameof(AutoHeal));
@@ -112,32 +126,37 @@ namespace cowsins
             }
         }
 
-        public void Heal(float healAmount_)
+
+        public void Heal(float healAmount)
         {
-            float healAmount = Mathf.Abs(healAmount_ * healMultiplier);
-            // If we are full health do not heal 
-            // Also checks if we have an initial shield or not
-            if (maxShield != 0 && shield == maxShield || maxShield == 0 && health == maxHealth) return;
+            float adjustedHealAmount = Mathf.Abs(healAmount * healMultiplier);
 
-            events.OnHeal.Invoke(); // Invoke our custom event
-
-            if (health + healAmount > maxHealth) // Check if heal exceeds health 
+            // If we are at full health and shield, do not heal
+            if ((maxShield > 0 && shield == maxShield) || (maxShield == 0 && health == maxHealth))
             {
-                float remaining = maxHealth - health + healAmount;
-                health = maxHealth;
-
-                // Check if we have a shield to be healed
-                if (maxShield != 0)
-                {
-                    if (shield + remaining > maxShield) shield = maxShield; // Then we have to apply the remaining heal to our shield 
-                    else shield += remaining;
-                }
+                return;
             }
-            else health += healAmount; // If not just apply your heal
 
-            // effect on heal 
+            // Trigger heal event
+            events.OnHeal.Invoke();
+
+            // Calculate effective healing for health
+            float effectiveHealForHealth = Mathf.Min(adjustedHealAmount, maxHealth - health);
+            health += effectiveHealForHealth;
+
+            // Calculate remaining heal amount after health is full
+            float remainingHeal = adjustedHealAmount - effectiveHealForHealth;
+
+            // Apply remaining heal to shield if applicable
+            if (remainingHeal > 0 && maxShield > 0)
+            {
+                shield = Mathf.Min(shield + remainingHeal, maxShield);
+            }
+
+            // Notify UI about the health change
             UIEvents.onHealthChanged?.Invoke(health, shield, false);
         }
+
         /// <summary>
         /// Perform any actions On death
         /// </summary>
@@ -152,6 +171,7 @@ namespace cowsins
         private void GetAllReferences()
         {
             stats = GetComponent<PlayerStats>();
+            states = GetComponent<PlayerStates>();
             player = GetComponent<PlayerMovement>();
 
             if (PauseMenu.Instance == null) return;
@@ -177,7 +197,7 @@ namespace cowsins
                 float heightDifference = noNullHeight - currentHeight;
 
                 // If the height difference is enough, apply damage
-                if (heightDifference > minimumHeightDifferenceToApplyDamage) Damage(heightDifference * fallDamageMultiplier);
+                if (heightDifference > minimumHeightDifferenceToApplyDamage) Damage(heightDifference * fallDamageMultiplier, false);
 
                 // Reset height
                 height = null;
@@ -211,6 +231,17 @@ namespace cowsins
         {
             if (PauseMenu.isPaused || isDead) return;
             GrantControl();
+        }
+
+        public void Respawn(Vector3 respawnPosition)
+        {
+            isDead = false;
+            states.ForceChangeState(states._States.Default());
+            health = maxHealth;
+            shield = maxShield;
+            transform.position = respawnPosition;
+            player.ResetStamina();
+            player.ResetDashes();
         }
     }
 }

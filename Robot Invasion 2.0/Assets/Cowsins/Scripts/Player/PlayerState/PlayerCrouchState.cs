@@ -51,7 +51,7 @@ namespace cowsins
         public override void CheckSwitchState()
         {
 
-            if (player.ReadyToJump && InputManager.jumping && player.canJumpWhileCrouching && (player.CanJump && player.grounded || player.wallRunning || player.jumpCount > 0 && player.maxJumps > 1 && player.CanJump))
+            if (player.ReadyToJump && InputManager.jumping && player.canJumpWhileCrouching && (player.EnoughStaminaToJump && player.grounded || player.wallRunning || player.jumpCount > 0 && player.maxJumps > 1 && player.EnoughStaminaToJump))
                 SwitchState(_factory.Jump());
 
             if (_ctx.GetComponent<PlayerStats>().health <= 0) SwitchState(_factory.Die());
@@ -76,16 +76,12 @@ namespace cowsins
 
         void CheckUnCrouch()
         {
-
-            RaycastHit hitt;
             if (!InputManager.crouching) // Prevent from uncrouching when there´s a roof and we can get hit with it
             {
-                if (Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hitt, 5.5f, player.weaponController.hitLayer))
-                {
-                    canUnCrouch = false;
-                }
-                else
-                    canUnCrouch = true;
+                RaycastHit hit;
+                bool isObstacleAbove = Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hit, 5.5f, player.weaponController.hitLayer);
+
+                canUnCrouch = !isObstacleAbove;
             }
             if (canUnCrouch)
             {

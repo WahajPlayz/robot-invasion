@@ -26,6 +26,8 @@ namespace cowsins
         {
             player.HandleClimbMovement();
             player.VerticalLook();
+            // Prevents speedlines from showing up
+            player.HandleSpeedLines();
             CheckSwitchState();
         }
 

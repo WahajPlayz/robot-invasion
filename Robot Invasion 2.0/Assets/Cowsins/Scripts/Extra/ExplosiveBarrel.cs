@@ -45,12 +45,12 @@ namespace cowsins
                 float dmg = damage / Vector3.Distance(c.transform.position, transform.position);
                 if (c.CompareTag("BodyShot"))
                 {
-                    CowsinsUtilities.GatherDamageableParent(c.transform).Damage(dmg);
+                    CowsinsUtilities.GatherDamageableParent(c.transform).Damage(dmg, false);
                     continue;
                 }
                 else if (c.GetComponent<IDamageable>() != null)
                 {
-                    c.GetComponent<IDamageable>().Damage(dmg);
+                    c.GetComponent<IDamageable>().Damage(dmg, false);
                     continue;
                 }
                 if (c.GetComponent<PlayerMovement>() != null)

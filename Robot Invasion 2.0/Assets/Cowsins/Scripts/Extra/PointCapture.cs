@@ -126,6 +126,7 @@ namespace cowsins
             {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("losingProgressCaptureSpeed"));
             }
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("events"));
             serializedObject.ApplyModifiedProperties();
         }
     }

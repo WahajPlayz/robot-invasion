@@ -162,10 +162,10 @@ MonoBehaviour:
   maxTiltAmount: 5
   smoothTiltAmount: 12
   pivot: {fileID: 0}
-  swaySpeed: 0
-  swayMovementAmount: {x: 0, y: 0}
-  swayRotationAmount: {x: 0, y: 0}
-  swayTiltAmount: 0
+  swaySpeed: 2
+  swayMovementAmount: {x: 2, y: 2}
+  swayRotationAmount: {x: 2, y: 2}
+  swayTiltAmount: 2
 --- !u!1 &5097141792010842297
 GameObject:
   m_ObjectHideFlags: 0

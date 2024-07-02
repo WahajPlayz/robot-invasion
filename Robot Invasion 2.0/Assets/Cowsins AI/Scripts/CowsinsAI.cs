@@ -53,13 +53,13 @@ public class CowsinsAI : MonoBehaviour
     [Serializable]
     public class Effects
     {
-        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangeSheildImpact, GreenSheildImpact;
+        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact;
     }
 
     [Serializable]
     public class ImpactEffects
     {
-        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangeSheildImpact, GreenSheildImpact;
+        public GameObject defaultImpact, grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact;
     }
 
     public Effects effects;
@@ -422,7 +422,7 @@ public class CowsinsAI : MonoBehaviour
     {
         if (enemyType == EnemyType.Melee && inRange)
         {
-            player.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount);
+            player.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount, false);
         }
     }
 
@@ -473,7 +473,7 @@ public class CowsinsAI : MonoBehaviour
 
             if (hit.transform.gameObject.CompareTag("Player"))
             {
-                hit.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount);
+                hit.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount,false);
             }
         }
         else
@@ -523,16 +523,6 @@ public class CowsinsAI : MonoBehaviour
                 impact = Instantiate(effects.enemyImpact, hit.point, Quaternion.identity); // Enemy
                 impact.transform.rotation = Quaternion.LookRotation(hit.normal);
                 impactBullet = Instantiate(impactEffects.enemyImpact, hit.point, Quaternion.identity);
-                break;
-            case int l when layer == LayerMask.NameToLayer("OrangeSheild"):
-                impact = Instantiate(effects.OrangeSheildImpact, hit.point, Quaternion.identity); // OrangeSheild
-                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
-                impactBullet = Instantiate(impactEffects.OrangeSheildImpact, hit.point, Quaternion.identity);
-                break;
-            case int l when layer == LayerMask.NameToLayer("GreenSheild"):
-                impact = Instantiate(effects.GreenSheildImpact, hit.point, Quaternion.identity); // Enemy
-                impact.transform.rotation = Quaternion.LookRotation(hit.normal);
-                impactBullet = Instantiate(impactEffects.GreenSheildImpact, hit.point, Quaternion.identity);
                 break;
         }
 

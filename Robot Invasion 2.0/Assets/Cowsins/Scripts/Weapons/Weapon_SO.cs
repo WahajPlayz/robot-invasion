@@ -54,7 +54,7 @@ namespace cowsins
     [System.Serializable]
     public class BulletHoleImpact
     {
-        public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact, OrangesheildImpact, GreenSheildImpact;
+        public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact;
     }
     #endregion
 
@@ -62,7 +62,7 @@ namespace cowsins
     [CreateAssetMenu(fileName = "NewWeapon", menuName = "COWSINS/New Weapon", order = 1)]
     public class Weapon_SO : ScriptableObject
     {
-        [Tooltip("Attach your weapon prefab here. This weapon prefab will be instantiated on your screen when you own this weapon.")] public WeaponIdentification weaponObject;
+        [Tooltip("Attach your weapon prefab here. This weapon prefab will be instantiated on your screen when you equip this weapon.")] public WeaponIdentification weaponObject;
 
         [Tooltip("You weapon�s name. Ex: Glock")] public string _name;
 
@@ -82,7 +82,7 @@ namespace cowsins
 
         //[Tooltip("Type of ammunation weapon will use. Set it now for future updates. ")] public AmmoStyle ammoStyle;
 
-        [Tooltip("The way the weapon reloads. Set it now for future updates")] public ReloadingStyle reloadStyle;
+        [Tooltip("The way the weapon reloads.")] public ReloadingStyle reloadStyle;
 
         [Tooltip("Your bullet objects")] public Bullet projectile;
 
@@ -137,7 +137,7 @@ namespace cowsins
 
         [Tooltip("How much the bullet is able to penetrate an object")] [Range(0, 10)] public float penetrationAmount;
 
-        [Tooltip("Damage reduction multiplier. %/100. .8f means 80%")] [Range(0, 1)] public float penetrationDamageReduction;
+        [Tooltip("Damage reduction multiplier. From 0 to 1 ( 0% to 100% )")] [Range(0, 1)] public float penetrationDamageReduction;
 
         [Tooltip("While true it grants the possibility of aiming the weapon")] public bool allowAim;
 
@@ -228,12 +228,14 @@ namespace cowsins
 
         [Tooltip("FOV amount subtracted from the current fov on shooting"), Range(0, 180)] public float AimingFOVValueToSubtract;
 
+        [Tooltip("Amount of animations available to be played. A random shoot animation will be picked up each time"), Min(1)] public int amountOfShootAnimations;
+
         public TrailRenderer bulletTrail;
 
         //Melee Exclusive
         [Tooltip("Damage the melee weapon deals per hit")] [Range(0, 1000)] public float damagePerHit;
 
-        [Range(0, 6), Tooltip("Attacking rythm")] public float attackRate;
+        [Range(0, 6), Tooltip("Attacking pace. The lower, the faster.")] public float attackRate;
 
         [Range(0, 2), Tooltip("Time to delay the melee hit")] public float hitDelay;
 
@@ -383,6 +385,7 @@ namespace cowsins
                                 var attackRateProperty = serializedObject.FindProperty("attackRate");
                                 EditorGUILayout.PropertyField(attackRateProperty);
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("hitDelay"));
+
                                 break;
                             case 3:
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("continuousFire"));
@@ -463,6 +466,9 @@ namespace cowsins
                                     EditorGUILayout.PropertyField(serializedObject.FindProperty("FOVValueToSubtract"));
                                     EditorGUI.indentLevel--;
                                 }
+                                EditorGUILayout.Space(5f);
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty("amountOfShootAnimations"));
+                                EditorGUILayout.Space(5f);
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("bulletHoleImpact"));
 
                                 EditorGUILayout.Space(10f);
@@ -866,7 +872,11 @@ namespace cowsins
 
             return (missingReferences.Count > 0, missingReferences);
         }
+
+
     }
+
+
     #endregion
 #endif
 }
