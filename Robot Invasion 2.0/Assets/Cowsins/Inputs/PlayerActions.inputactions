@@ -157,6 +157,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SheildSpawner",
+                    "type": "Button",
+                    "id": "716b1ce4-1c8b-457f-915b-794a51b7e394",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -588,32 +597,15 @@
                     "action": "ToggleFlashLight",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "SheidSpawner",
-            "id": "666a88ce-0e34-4642-ad22-7fe1faf1b312",
-            "actions": [
-                {
-                    "name": "SheildSpawn",
-                    "type": "Button",
-                    "id": "47238a94-a28d-4c0d-bbd1-c224101d80bc",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "a66b0846-c1d4-44ed-a1cd-7bcfceda904b",
+                    "id": "00174836-00bf-425d-8787-f36276ef400d",
                     "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SheildSpawn",
+                    "action": "SheildSpawner",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

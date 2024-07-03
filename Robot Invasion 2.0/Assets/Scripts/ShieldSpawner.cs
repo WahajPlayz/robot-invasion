@@ -18,13 +18,13 @@ public class ShieldSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        inputActions.SheidSpawner.Enable();
-        inputActions.SheidSpawner.SheildSpawn.performed += OnSpawnShield;
+        inputActions.GameControls.Enable();
+        inputActions.GameControls.SheildSpawn.performed += OnSpawnShield;
     }
 
     private void OnDisable()
     {
-        inputActions.SheidSpawner.SheildSpawn.performed -= OnSpawnShield;
+        inputActions.GameControls.SheildSpawn.performed -= OnSpawnShield;
         inputActions.Disable();
     }
 

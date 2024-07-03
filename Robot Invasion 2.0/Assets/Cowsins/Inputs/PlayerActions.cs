@@ -179,6 +179,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SheildSpawner"",
+                    ""type"": ""Button"",
+                    ""id"": ""716b1ce4-1c8b-457f-915b-794a51b7e394"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -610,32 +619,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""ToggleFlashLight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""SheidSpawner"",
-            ""id"": ""666a88ce-0e34-4642-ad22-7fe1faf1b312"",
-            ""actions"": [
-                {
-                    ""name"": ""SheildSpawn"",
-                    ""type"": ""Button"",
-                    ""id"": ""47238a94-a28d-4c0d-bbd1-c224101d80bc"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""a66b0846-c1d4-44ed-a1cd-7bcfceda904b"",
+                    ""id"": ""00174836-00bf-425d-8787-f36276ef400d"",
                     ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SheildSpawn"",
+                    ""action"": ""SheildSpawner"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -691,9 +683,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_GameControls_Pause = m_GameControls.FindAction("Pause", throwIfNotFound: true);
         m_GameControls_Movement = m_GameControls.FindAction("Movement", throwIfNotFound: true);
         m_GameControls_ToggleFlashLight = m_GameControls.FindAction("ToggleFlashLight", throwIfNotFound: true);
-        // SheidSpawner
-        m_SheidSpawner = asset.FindActionMap("SheidSpawner", throwIfNotFound: true);
-        m_SheidSpawner_SheildSpawn = m_SheidSpawner.FindAction("SheildSpawn", throwIfNotFound: true);
+        m_GameControls_SheildSpawner = m_GameControls.FindAction("SheildSpawner", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -772,6 +762,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameControls_Pause;
     private readonly InputAction m_GameControls_Movement;
     private readonly InputAction m_GameControls_ToggleFlashLight;
+    private readonly InputAction m_GameControls_SheildSpawner;
     public struct GameControlsActions
     {
         private @PlayerActions m_Wrapper;
@@ -793,6 +784,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Pause => m_Wrapper.m_GameControls_Pause;
         public InputAction @Movement => m_Wrapper.m_GameControls_Movement;
         public InputAction @ToggleFlashLight => m_Wrapper.m_GameControls_ToggleFlashLight;
+        public InputAction @SheildSpawner => m_Wrapper.m_GameControls_SheildSpawner;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -853,6 +845,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ToggleFlashLight.started += instance.OnToggleFlashLight;
             @ToggleFlashLight.performed += instance.OnToggleFlashLight;
             @ToggleFlashLight.canceled += instance.OnToggleFlashLight;
+            @SheildSpawner.started += instance.OnSheildSpawner;
+            @SheildSpawner.performed += instance.OnSheildSpawner;
+            @SheildSpawner.canceled += instance.OnSheildSpawner;
         }
 
         private void UnregisterCallbacks(IGameControlsActions instance)
@@ -908,6 +903,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ToggleFlashLight.started -= instance.OnToggleFlashLight;
             @ToggleFlashLight.performed -= instance.OnToggleFlashLight;
             @ToggleFlashLight.canceled -= instance.OnToggleFlashLight;
+            @SheildSpawner.started -= instance.OnSheildSpawner;
+            @SheildSpawner.performed -= instance.OnSheildSpawner;
+            @SheildSpawner.canceled -= instance.OnSheildSpawner;
         }
 
         public void RemoveCallbacks(IGameControlsActions instance)
@@ -925,52 +923,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         }
     }
     public GameControlsActions @GameControls => new GameControlsActions(this);
-
-    // SheidSpawner
-    private readonly InputActionMap m_SheidSpawner;
-    private List<ISheidSpawnerActions> m_SheidSpawnerActionsCallbackInterfaces = new List<ISheidSpawnerActions>();
-    private readonly InputAction m_SheidSpawner_SheildSpawn;
-    public struct SheidSpawnerActions
-    {
-        private @PlayerActions m_Wrapper;
-        public SheidSpawnerActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @SheildSpawn => m_Wrapper.m_SheidSpawner_SheildSpawn;
-        public InputActionMap Get() { return m_Wrapper.m_SheidSpawner; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(SheidSpawnerActions set) { return set.Get(); }
-        public void AddCallbacks(ISheidSpawnerActions instance)
-        {
-            if (instance == null || m_Wrapper.m_SheidSpawnerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_SheidSpawnerActionsCallbackInterfaces.Add(instance);
-            @SheildSpawn.started += instance.OnSheildSpawn;
-            @SheildSpawn.performed += instance.OnSheildSpawn;
-            @SheildSpawn.canceled += instance.OnSheildSpawn;
-        }
-
-        private void UnregisterCallbacks(ISheidSpawnerActions instance)
-        {
-            @SheildSpawn.started -= instance.OnSheildSpawn;
-            @SheildSpawn.performed -= instance.OnSheildSpawn;
-            @SheildSpawn.canceled -= instance.OnSheildSpawn;
-        }
-
-        public void RemoveCallbacks(ISheidSpawnerActions instance)
-        {
-            if (m_Wrapper.m_SheidSpawnerActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(ISheidSpawnerActions instance)
-        {
-            foreach (var item in m_Wrapper.m_SheidSpawnerActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_SheidSpawnerActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public SheidSpawnerActions @SheidSpawner => new SheidSpawnerActions(this);
     private int m_GamepadSchemeIndex = -1;
     public InputControlScheme GamepadScheme
     {
@@ -1008,9 +960,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnToggleFlashLight(InputAction.CallbackContext context);
-    }
-    public interface ISheidSpawnerActions
-    {
-        void OnSheildSpawn(InputAction.CallbackContext context);
+        void OnSheildSpawner(InputAction.CallbackContext context);
     }
 }
