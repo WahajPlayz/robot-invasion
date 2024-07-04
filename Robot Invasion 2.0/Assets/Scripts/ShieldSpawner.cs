@@ -1,58 +1,38 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using cowsins;
+using System.Data.Common;
 
 public class ShieldSpawner : MonoBehaviour
 {
-    public GameObject[] shieldPrefabs; // Array of shield prefabs
-    public float shieldDuration = 5f; // Duration in seconds the shield will exist
-    public float cooldownDuration = 1f; // Cooldown duration in seconds
+    public GameObject prefab; // The prefab to be spawned
+    public GameObject spawnPoint; // The GameObject used for the spawn position and rotation
 
-    private GameObject currentShield;
-    private PlayerActions inputActions;
-    private float nextSpawnTime = 0f; // Tracks the next time a shield can be spawned
-
-    private void Awake()
+    // Update is called once per frame
+    void Update()
     {
-        inputActions = new PlayerActions();
-    }
-
-    private void OnEnable()
-    {
-        inputActions.GameControls.Enable();
-        inputActions.GameControls.ShieldSpawner.performed += OnSpawnShield;
-    }
-
-    private void OnDisable()
-    {
-        inputActions.GameControls.ShieldSpawner.performed -= OnSpawnShield;
-        inputActions.Disable();
-    }
-
-    private void OnSpawnShield(InputAction.CallbackContext context)
-    {
-        if (Time.time >= nextSpawnTime)
+        // Check for user input (e.g., pressing the space key) to spawn the prefab
+        if (InputManager.ShieldSpawner)
         {
-            SpawnShield();
-            nextSpawnTime = Time.time + cooldownDuration;
+            SpawnPrefab();
         }
     }
 
-    private void SpawnShield()
+    void SpawnPrefab()
     {
-        if (currentShield != null)
+        if (spawnPoint != null)
         {
-            Destroy(currentShield);
-        }
+            // Use the position and rotation of the spawnPoint GameObject
+            Vector3 spawnPosition = spawnPoint.transform.position;
+            Quaternion spawnRotation = spawnPoint.transform.rotation;
 
-        if (shieldPrefabs.Length > 0)
-        {
-            int randomIndex = Random.Range(0, shieldPrefabs.Length);
-            currentShield = Instantiate(shieldPrefabs[randomIndex], transform.position, Quaternion.identity);
-            Destroy(currentShield, shieldDuration);
+            // Instantiate the prefab at the specified position and rotation
+            Instantiate(prefab, spawnPosition, spawnRotation);
+            Debug.Log("Prefab spawned at position: " + spawnPosition);
         }
         else
         {
-            Debug.LogWarning("No shield prefabs assigned.");
+            Debug.LogWarning("Spawn point is not assigned.");
         }
     }
 }

@@ -105,12 +105,14 @@ MonoBehaviour:
     emptyMagReload: {fileID: 8300000, guid: aded5749092a3ea4ab4e69754d28a5c4, type: 3}
     emptyMagShoot: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
   pitchVariationFiringSFX: 0.15
+  grapplesFromTip: 0
   camShakeAmount: 0.07
   camShakeAimMultiplier: 0.8
   camShakeCrouchMultiplier: 0.8
   applyFOVEffectOnShooting: 1
   FOVValueToSubtract: 2
   AimingFOVValueToSubtract: 1
+  amountOfShootAnimations: 0
   bulletTrail: {fileID: 1436881700163988445, guid: 72fbb691dea891c45a6caa10b437b857, type: 3}
   damagePerHit: 0
   attackRate: 0

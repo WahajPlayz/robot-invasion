@@ -29,7 +29,7 @@ namespace cowsins
             dashing,
             invertedAxis,
             yMovementActioned,
-            toggleFlashLight, grappling;
+            toggleFlashLight, grappling, ShieldSpawner;
 
         public static float x,
             y,
@@ -151,6 +151,7 @@ namespace cowsins
 
             reloading = inputActions.GameControls.Reloading.IsPressed();
             melee = inputActions.GameControls.Melee.IsPressed();
+            ShieldSpawner = inputActions.GameControls.ShieldSpawner.WasPressedThisFrame();
 
 
             // Handle different crouching methods

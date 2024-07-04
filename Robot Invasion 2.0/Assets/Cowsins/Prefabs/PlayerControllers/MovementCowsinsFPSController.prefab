@@ -4883,6 +4883,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1195374612628124357}
     m_Modifications:
+    - target: {fileID: 416598434281897060, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 5255322177916407513, guid: b8fc2640a7a435245be71681fb6bfed8, type: 3}
+    - target: {fileID: 416598434281897060, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 3938489410170623733}
     - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4935,6 +4943,11 @@ PrefabInstance:
 --- !u!4 &1893701527582179420 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+  m_PrefabInstance: {fileID: 5411346603966045415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3938489410170623733 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9056919517119253010, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
   m_PrefabInstance: {fileID: 5411346603966045415}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5805941918662991925
@@ -6934,7 +6947,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4612824603642630890, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 354057581833398825}
+      addedObject: {fileID: 375878284010709649}
     - targetCorrespondingSourceObject: {fileID: 4612824605049336392, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2615278379836679561}
@@ -7099,7 +7112,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4612824603642630890, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
   m_PrefabInstance: {fileID: 5805941918662991925}
   m_PrefabAsset: {fileID: 0}
---- !u!120 &354057581833398825
+--- !u!120 &375878284010709649
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0

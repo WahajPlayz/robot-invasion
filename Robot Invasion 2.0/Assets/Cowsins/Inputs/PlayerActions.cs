@@ -183,7 +183,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""ShieldSpawner"",
                     ""type"": ""Button"",
-                    ""id"": ""716b1ce4-1c8b-457f-915b-794a51b7e394"",
+                    ""id"": ""9db5cce0-5aa5-4550-b602-da6eeb8ade9b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -622,7 +622,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""00174836-00bf-425d-8787-f36276ef400d"",
+                    ""id"": ""f366ee26-853b-453e-88d2-07aedcd4ad9d"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
