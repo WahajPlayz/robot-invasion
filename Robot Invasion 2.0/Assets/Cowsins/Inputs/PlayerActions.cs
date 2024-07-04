@@ -181,7 +181,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SheildSpawner"",
+                    ""name"": ""ShieldSpawner"",
                     ""type"": ""Button"",
                     ""id"": ""716b1ce4-1c8b-457f-915b-794a51b7e394"",
                     ""expectedControlType"": ""Button"",
@@ -623,11 +623,11 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""00174836-00bf-425d-8787-f36276ef400d"",
-                    ""path"": ""<Keyboard>/t"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SheildSpawner"",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""ShieldSpawner"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -683,7 +683,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_GameControls_Pause = m_GameControls.FindAction("Pause", throwIfNotFound: true);
         m_GameControls_Movement = m_GameControls.FindAction("Movement", throwIfNotFound: true);
         m_GameControls_ToggleFlashLight = m_GameControls.FindAction("ToggleFlashLight", throwIfNotFound: true);
-        m_GameControls_SheildSpawner = m_GameControls.FindAction("SheildSpawner", throwIfNotFound: true);
+        m_GameControls_ShieldSpawner = m_GameControls.FindAction("ShieldSpawner", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -762,7 +762,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameControls_Pause;
     private readonly InputAction m_GameControls_Movement;
     private readonly InputAction m_GameControls_ToggleFlashLight;
-    private readonly InputAction m_GameControls_SheildSpawner;
+    private readonly InputAction m_GameControls_ShieldSpawner;
     public struct GameControlsActions
     {
         private @PlayerActions m_Wrapper;
@@ -784,7 +784,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Pause => m_Wrapper.m_GameControls_Pause;
         public InputAction @Movement => m_Wrapper.m_GameControls_Movement;
         public InputAction @ToggleFlashLight => m_Wrapper.m_GameControls_ToggleFlashLight;
-        public InputAction @SheildSpawner => m_Wrapper.m_GameControls_SheildSpawner;
+        public InputAction @ShieldSpawner => m_Wrapper.m_GameControls_ShieldSpawner;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -845,9 +845,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ToggleFlashLight.started += instance.OnToggleFlashLight;
             @ToggleFlashLight.performed += instance.OnToggleFlashLight;
             @ToggleFlashLight.canceled += instance.OnToggleFlashLight;
-            @SheildSpawner.started += instance.OnSheildSpawner;
-            @SheildSpawner.performed += instance.OnSheildSpawner;
-            @SheildSpawner.canceled += instance.OnSheildSpawner;
+            @ShieldSpawner.started += instance.OnShieldSpawner;
+            @ShieldSpawner.performed += instance.OnShieldSpawner;
+            @ShieldSpawner.canceled += instance.OnShieldSpawner;
         }
 
         private void UnregisterCallbacks(IGameControlsActions instance)
@@ -903,9 +903,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ToggleFlashLight.started -= instance.OnToggleFlashLight;
             @ToggleFlashLight.performed -= instance.OnToggleFlashLight;
             @ToggleFlashLight.canceled -= instance.OnToggleFlashLight;
-            @SheildSpawner.started -= instance.OnSheildSpawner;
-            @SheildSpawner.performed -= instance.OnSheildSpawner;
-            @SheildSpawner.canceled -= instance.OnSheildSpawner;
+            @ShieldSpawner.started -= instance.OnShieldSpawner;
+            @ShieldSpawner.performed -= instance.OnShieldSpawner;
+            @ShieldSpawner.canceled -= instance.OnShieldSpawner;
         }
 
         public void RemoveCallbacks(IGameControlsActions instance)
@@ -960,6 +960,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnToggleFlashLight(InputAction.CallbackContext context);
-        void OnSheildSpawner(InputAction.CallbackContext context);
+        void OnShieldSpawner(InputAction.CallbackContext context);
     }
 }

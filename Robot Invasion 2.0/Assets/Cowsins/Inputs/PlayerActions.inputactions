@@ -159,7 +159,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SheildSpawner",
+                    "name": "ShieldSpawner",
                     "type": "Button",
                     "id": "716b1ce4-1c8b-457f-915b-794a51b7e394",
                     "expectedControlType": "Button",
@@ -601,11 +601,11 @@
                 {
                     "name": "",
                     "id": "00174836-00bf-425d-8787-f36276ef400d",
-                    "path": "<Keyboard>/t",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "SheildSpawner",
+                    "groups": "Keyboard",
+                    "action": "ShieldSpawner",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

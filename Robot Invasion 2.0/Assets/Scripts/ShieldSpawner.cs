@@ -19,12 +19,12 @@ public class ShieldSpawner : MonoBehaviour
     private void OnEnable()
     {
         inputActions.GameControls.Enable();
-        inputActions.GameControls.SheildSpawn.performed += OnSpawnShield;
+        inputActions.GameControls.ShieldSpawner.performed += OnSpawnShield;
     }
 
     private void OnDisable()
     {
-        inputActions.GameControls.SheildSpawn.performed -= OnSpawnShield;
+        inputActions.GameControls.ShieldSpawner.performed -= OnSpawnShield;
         inputActions.Disable();
     }
 
