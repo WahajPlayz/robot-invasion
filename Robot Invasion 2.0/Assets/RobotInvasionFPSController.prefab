@@ -5065,6 +5065,22 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 7869437498381560916}
+    - target: {fileID: 416598434281897060, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: cooldownTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 416598434281897060, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: prefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 416598434281897060, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: prefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 5255322177916407513, guid: b8fc2640a7a435245be71681fb6bfed8, type: 3}
+    - target: {fileID: 416598434281897060, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
+      propertyPath: prefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 4942445244732486082, guid: b9bfe253ba407dc47a6aab566171c013, type: 3}
     - target: {fileID: 5863458640728366267, guid: 4917b2c495c8d7a418ad55a87be53f96, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5829,6 +5845,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4612824603642630899, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: hitLayer.m_Bits
+      value: 802184
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612824603642630899, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: weapons.Array.size
       value: 6
       objectReference: {fileID: 0}
@@ -5861,9 +5881,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4612824603642630899, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: effects.GreenShieldImpact
+      value: 
+      objectReference: {fileID: 8031883442971595464, guid: 26f29f868e80c2f47a8adc6e9f792f64, type: 3}
+    - target: {fileID: 4612824603642630899, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: initialWeapons.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4612824603642630899, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: effects.OrangeShieldImpact
+      value: 
+      objectReference: {fileID: 8031883442971595464, guid: 6618e8404c854974aa95357c46ae4757, type: 3}
     - target: {fileID: 4612824603642630899, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: initialWeapons.Array.data[0]
       value: 
@@ -6500,21 +6528,37 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 44
       objectReference: {fileID: 0}
+    - target: {fileID: 4612824605291298980, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_margin.x
+      value: -62.778454
+      objectReference: {fileID: 0}
     - target: {fileID: 4612824605291298983, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_Pivot.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4612824605291298983, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.49999982
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612824605291298983, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 62.3574
       objectReference: {fileID: 0}
     - target: {fileID: 4612824605291298983, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -190.21649
+      value: -77
       objectReference: {fileID: 0}
     - target: {fileID: 4612824605291298983, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 54.455566
+      value: 106
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612824605302835773, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -77
+      objectReference: {fileID: 0}
+    - target: {fileID: 4612824605302835773, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 4612824605331426340, guid: fa4cc848e07107e459dce4ea99d04302, type: 3}
       propertyPath: m_Alpha
