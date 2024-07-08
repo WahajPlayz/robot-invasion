@@ -73,7 +73,7 @@ namespace cowsins
             if (menu.alpha <= 0)
                 menu.gameObject.SetActive(false);
 
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
             playerUI.SetActive(true);
@@ -83,7 +83,7 @@ namespace cowsins
         {
             isPaused = false;
             stats.CheckIfCanGrantControl();
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             playerUI.SetActive(true);
         }
@@ -108,7 +108,7 @@ namespace cowsins
             else
             {
                 stats.CheckIfCanGrantControl();
-                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 playerUI.SetActive(true);
             }
