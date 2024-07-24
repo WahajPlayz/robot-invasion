@@ -225,6 +225,7 @@ namespace cowsins
 
             other.GetComponent<IDamageable>().Damage(10, false);
             GetComponent<Rigidbody>().velocity = Vector3.zero;
+            print(other.name);
         }
 
         /// <summary>
