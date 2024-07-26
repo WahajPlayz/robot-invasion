@@ -364,6 +364,7 @@ MonoBehaviour:
   image: {fileID: 39021869542353376}
   graphics: {fileID: 39021869995313711}
   dropped: 0
+  damageDrop: 80
   weapon: {fileID: 11400000, guid: 6553d6d464f4c3d489647f8005b06c2e, type: 2}
   currentBullets: 0
   totalBullets: 0
