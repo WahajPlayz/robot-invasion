@@ -3374,6 +3374,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2880725131863697381, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
+      propertyPath: applyBreathingRotation
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5927308677844604897, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3482,7 +3486,8 @@ PrefabInstance:
       propertyPath: minSpeedToUseSpeedLines
       value: 16
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5300233698583657957, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
