@@ -11,7 +11,6 @@ TagManager:
   - Ramp
   - BodyShot
   - Ladder
-  - Sheild
   layers:
   - Default
   - TransparentFX
@@ -31,7 +30,7 @@ TagManager:
   - PostProcessing
   - Effects
   - Player
-  - Weapon Volume
+  - 
   - 
   - 
   - 
