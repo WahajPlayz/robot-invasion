@@ -473,7 +473,7 @@ public class CowsinsAI : MonoBehaviour
 
             if (hit.transform.gameObject.CompareTag("Player"))
             {
-                hit.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount,false);
+                hit.transform.gameObject.GetComponent<PlayerStats>().Damage(damageAmount, false);
             }
         }
         else
