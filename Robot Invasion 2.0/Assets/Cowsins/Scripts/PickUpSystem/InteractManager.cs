@@ -205,7 +205,7 @@ namespace cowsins
             if (!InputManager.dropping || wcon.weapon == null || wcon.Reloading || !canDrop) return;
 
             WeaponPickeable pick = Instantiate(weaponGenericPickeable, orientation.position + orientation.forward * droppingDistance, orientation.rotation) as WeaponPickeable;
-            pick.GetComponent<Rigidbody>().AddForce(orientation.forward * 10, ForceMode.Impulse);
+            pick.GetComponent<Rigidbody>().AddForce(orientation.forward * 50, ForceMode.Impulse);
             pick.Drop(wcon, orientation);
             WeaponIdentification wp = wcon.inventory[wcon.currentWeapon];
             pick.SetPickeableAttachments(wp.barrel, wp.scope, wp.stock, wp.grip, wp.magazine, wp.flashlight, wp.laser);
@@ -219,14 +219,7 @@ namespace cowsins
             UIEvents.onGenerateInspectionUI?.Invoke(wcon);
         }
         
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag("Enemy")) return;
-
-            other.GetComponent<IDamageable>().Damage(10, false);
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
-            print(other.name);
-        }
+        
 
         /// <summary>
         /// Drops the current attachment to the ground ( generates a new attachment pickeable )
