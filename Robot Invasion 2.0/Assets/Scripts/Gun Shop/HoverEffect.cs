@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using cowsins;
 
 public class HoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -18,7 +19,13 @@ public class HoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
 
 // Clicked
- public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
+ if (!CoinManager.Instance.CheckIfEnoughCoinsAndPurchase(100))
+        {
+            Debug.Log("Not enough coins");
+            return;
+        }
+// Buy the weapon here, the coins have already been reduced
     }
 }
