@@ -73,8 +73,7 @@ namespace cowsins
             if (menu.alpha <= 0)
                 menu.gameObject.SetActive(false);
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            
 
             playerUI.SetActive(true);
         }

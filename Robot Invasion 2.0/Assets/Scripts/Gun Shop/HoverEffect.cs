@@ -21,11 +21,13 @@ public class HoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 // Clicked
     public void OnPointerClick(PointerEventData eventData)
     {
- if (!CoinManager.Instance.CheckIfEnoughCoinsAndPurchase(100))
+  if (!CoinManager.Instance.CheckIfEnoughCoins(100))
         {
             Debug.Log("Not enough coins");
             return;
         }
+
+CoinManager.Instance.RemoveCoins(100);
 // Buy the weapon here, the coins have already been reduced
     }
 }
