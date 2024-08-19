@@ -2283,6 +2283,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4438916500089732643, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
+      propertyPath: m_Antialiasing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5300233698583657957, guid: 38d09bd4aad7a374aa0f00ee0eb16ba1, type: 3}
       propertyPath: PlayerMovement
       value: 
