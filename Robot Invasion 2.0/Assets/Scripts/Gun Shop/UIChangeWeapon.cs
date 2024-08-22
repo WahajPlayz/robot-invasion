@@ -21,8 +21,7 @@ public class UIChangeWeapon : MonoBehaviour
         totalBullets = weapon.totalMagazines * currentBullets;
         if (!CheckIfInventoryFull(weaponController))
         {
-            Destroy(gameObject);
-            return;
+            
         }
 
         SwapWeapons(weaponController);
