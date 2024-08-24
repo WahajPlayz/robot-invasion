@@ -18,6 +18,9 @@ namespace Unity.FPS.Game
         [Tooltip("Delay before the objective becomes visible")]
         public float DelayVisible;
 
+        [Tooltip("You can assign a reward for the player on complete quest")]
+        public Reward[] Rewards;
+
         public bool IsCompleted { get; private set; }
         public bool IsBlocking() => !(IsOptional || IsCompleted);
 
@@ -53,6 +56,14 @@ namespace Unity.FPS.Game
         public void CompleteObjective(string descriptionText, string counterText, string notificationText)
         {
             IsCompleted = true;
+
+            if (Rewards.Length > 0)
+            {
+                foreach (Reward reward in Rewards)
+                {
+                    reward.GiveReward();
+                }
+            }
 
             ObjectiveUpdateEvent evt = Events.ObjectiveUpdateEvent;
             evt.Objective = this;

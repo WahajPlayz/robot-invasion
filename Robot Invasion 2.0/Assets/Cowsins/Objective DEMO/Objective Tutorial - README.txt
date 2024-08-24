@@ -28,4 +28,14 @@ They are NEEDED for the correct behaviour of the EnemyKillObjective
 In case you have some other question, becuase i may missed something or wrote something that is not easy to understand.
 Contact me on Cowsins Discord.
 
- 
+v 1.1 Added Reward system
+in this version you are able to add to every quest all the rewards you want, for now they can be only a coin and exp
+When you put a quest or create a quest in the scene you can see that as a variable you have an array that is called "REWARDS"
+this mean that you can add and assign the rewards
+
+Q - How can i create a reward?
+A- Is pretty simple, in your project, everywhere you want you can create a reward by just left click Create -> COWSINS -> Reward
+
+Q - How can i modify it
+A - You have 3 variables the first two are the min and max amount you want to set for the coin and the experience to be given as reward
+    and the third variable is just an audioClip you can assign when you complete the quest

@@ -17,13 +17,15 @@ public class UIChangeWeapon : MonoBehaviour
     [HideInInspector] public int currentBullets, totalBullets;
     public void Interact()
     {
+        if (!CoinManager.Instance.CheckIfEnoughCoins(100))
+        {
+            Debug.Log("Not enough coins");
+            return;
+        }
         currentBullets = weapon.magazineSize + SetDefaultAttachments();
         totalBullets = weapon.totalMagazines * currentBullets;
-        if (!CheckIfInventoryFull(weaponController))
-        {
-            
-        }
 
+        CoinManager.Instance.RemoveCoins(100);
         SwapWeapons(weaponController);
     }
 
