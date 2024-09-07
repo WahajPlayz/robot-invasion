@@ -10,4 +10,9 @@ public class GunshopMouseShow : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
+    public void Hide()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
+    }
 }
