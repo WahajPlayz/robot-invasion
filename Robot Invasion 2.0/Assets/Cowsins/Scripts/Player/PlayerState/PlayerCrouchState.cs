@@ -76,10 +76,10 @@ namespace cowsins
 
         void CheckUnCrouch()
         {
-            if (!InputManager.crouching) // Prevent from uncrouching when there´s a roof and we can get hit with it
+            if (!InputManager.crouching) // Prevent from uncrouching when thereï¿½s a roof and we can get hit with it
             {
                 RaycastHit hit;
-                bool isObstacleAbove = Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hit, 5.5f, player.weaponController.hitLayer);
+                bool isObstacleAbove = Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hit, 2.5f, player.weaponController.hitLayer);
 
                 canUnCrouch = !isObstacleAbove;
             }

@@ -38,7 +38,7 @@ MonoBehaviour:
   infiniteBullets: 0
   magazineSize: 15
   bulletsPerFire: 3
-  ammoCostPerFire: 3
+  ammoCostPerFire: 0
   bulletRange: 100
   timeBetweenShots: 0.1
   penetrationAmount: 10
@@ -149,7 +149,7 @@ MonoBehaviour:
   applyDifferentRecoilOnAiming: 0
   xRecoilAmountOnAiming: 0
   yRecoilAmountOnAiming: 0
-  damagePerBullet: 3
+  damagePerBullet: 10
   applyDamageReductionBasedOnDistance: 0
   minimumDistanceToApplyDamageReduction: 0
   damageReductionMultiplier: 0
