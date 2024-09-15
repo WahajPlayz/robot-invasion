@@ -3,10 +3,8 @@ using UnityEditor;
 
 namespace cowsins
 {
-
     public class WeaponPickeable : Pickeable
     {
-        public float damageDrop;
         [Tooltip("Which weapon are we grabbing")] public Weapon_SO weapon;
 
         [HideInInspector] public int currentBullets, totalBullets;
@@ -36,10 +34,24 @@ namespace cowsins
             totalBullets = weapon.totalMagazines * currentBullets;
         }
 
-        public override void Interact()
+        public override void Interact(Transform player)
         {
-            base.Interact();
+            base.Interact(player);
             WeaponController weaponController = player.GetComponent<WeaponController>();
+            InteractManager interactManager = player.GetComponent<InteractManager>();
+
+            if (interactManager.DuplicateWeaponAddsBullets)
+            {
+                for (int i = 0; i < weaponController.inventory.Length; i++)
+                {
+                    if (weaponController.inventory[i] && weaponController.inventory[i].weapon == weapon && weapon.limitedMagazines)
+                    {
+                        weaponController.id.totalBullets += 10;
+                        Destroy(this.gameObject);
+                        return;
+                    }
+                }
+            }
 
             if (!CheckIfInventoryFull(weaponController))
             {
@@ -246,13 +258,6 @@ namespace cowsins
             // Return an error
             return (null, -1);
         }
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag("Enemy")) return;
-
-            other.GetComponent<IDamageable>().Damage(damageDrop, false);
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
-        }
     }
 
 #if UNITY_EDITOR
@@ -286,7 +291,7 @@ namespace cowsins
                         EditorGUILayout.LabelField("CUSTOMIZE YOUR WEAPON PICKEABLE", EditorStyles.boldLabel);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weapon"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("interactText"));
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("damageDrop"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("instantInteraction"));
                         break;
                     case "References":
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("image"));

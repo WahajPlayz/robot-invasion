@@ -19,7 +19,7 @@ public class Events
 [System.Serializable]
 public class Effects
 {
-    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact, OrangeShieldImpact, GreenShieldImpact;
+    public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact;
 }
 [System.Serializable]
 public class CustomShotMethods
@@ -199,26 +199,34 @@ namespace cowsins
 
         public void StopAim()
         {
-            if (id == null)
-
-                if (weapon != null && weapon.applyBulletSpread) spread = weapon.spreadAmount;
+            if (weapon != null && weapon.applyBulletSpread) spread = weapon.spreadAmount;
 
             if (isAiming) events.OnStopAim.Invoke(); // Invoke your custom method on stop aiming
 
             isAiming = false;
             aimingCamShakeMultiplier = 1;
 
-            Vector3 newPos = Vector3.zero;
-
             if (id == null) return;
             // Change the position and FOV
             id.aimPoint.localPosition = Vector3.Lerp(id.aimPoint.localPosition, id.originalAimPointPos, aimingSpeed * Time.deltaTime);
             id.aimPoint.localRotation = Quaternion.Lerp(id.aimPoint.localRotation, Quaternion.Euler(id.originalAimPointRot), aimingOutSpeed * Time.deltaTime);
 
-            weaponHolder.localRotation = Quaternion.Lerp(weaponHolder.transform.localRotation, Quaternion.Euler(newPos), aimingOutSpeed * Time.deltaTime);
+            weaponHolder.localRotation = Quaternion.Lerp(weaponHolder.transform.localRotation, Quaternion.Euler(Vector3.zero), aimingOutSpeed * Time.deltaTime);
         }
 
-
+        /// <summary>
+        /// Forces the Weapon to go back to its initial position 
+        /// </summary>
+        public void ForceAimReset()
+        {
+            isAiming = false;
+            if (id?.aimPoint)
+            {
+                id.aimPoint.localPosition = id.originalAimPointPos;
+                id.aimPoint.localRotation = Quaternion.Euler(id.originalAimPointRot);
+            }
+            weaponHolder.localRotation = Quaternion.Euler(Vector3.zero);
+        }
 
         public void SetCrouchCamShakeMultiplier()
         {
@@ -570,16 +578,6 @@ namespace cowsins
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
                     break;
-                case int l when l == LayerMask.NameToLayer("OrangeShield"):
-                    impact = Instantiate(effects.OrangeShieldImpact, h.point, Quaternion.identity); // Enemy
-                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.OrangeShieldImpact, h.point, Quaternion.identity);
-                    break;
-                case int l when l == LayerMask.NameToLayer("GreenShield"):
-                    impact = Instantiate(effects.GreenShieldImpact, h.point, Quaternion.identity); // Enemy
-                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
-                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.GreenShieldImpact, h.point, Quaternion.identity);
-                    break;
             }
 
             if (h.collider != null && impactBullet != null)
@@ -705,8 +703,15 @@ namespace cowsins
         private void ReduceDefaultAmmo()
         {
             if (!weapon.infiniteBullets)
+            {
                 id.bulletsLeftInMagazine -= weapon.ammoCostPerFire;
+                if (id.bulletsLeftInMagazine < 0)
+                {
+                    id.bulletsLeftInMagazine = 0;
+                }
+            }
         }
+
 
         // On shooting overheat reloading weapons, increase the heat ratio.
         private void ReduceOverheatAmmo()
@@ -792,13 +797,35 @@ namespace cowsins
         }
 
         /// <summary>
+        /// Equips the passed attachment.
+        /// </summary>
+        /// <param name="attachment">Attachment to equip.</param>
+        /// <param name="attachmentID">Order ID of the attachment in the WeaponIdentification's compatible attachment array.</param>
+        public void AssignNewAttachment(Attachment attachment, int attachmentID)
+        {
+            AssignAttachmentToWeapon(attachment, attachmentID, currentWeapon);
+        }
+
+        /// <summary>
+        /// Equips the passed attachment on a specific weapon.
+        /// </summary>
+        /// <param name="attachment">Attachment to equip.</param>
+        /// <param name="attachmentID">Order ID of the attachment in the WeaponIdentification's compatible attachment array.</param>
+        /// <param name="index">Inventory index of the weapon to equip the attachment on.</param>
+        public void AssignNewAttachmentOnSpecificWeapon(Attachment attachment, int attachmentID, int index)
+        {
+            AssignAttachmentToWeapon(attachment, attachmentID, index);
+        }
+
+
+        /// <summary>
         /// Equips the passed attachment. 
         /// </summary>
         /// <param name="attachment">Attachment to equip</param>
         /// <param name="attachmentID">Order ID of the attachment to equip in the WeaponIdentification compatible attachment array.</param>
-        public void AssignNewAttachment(Attachment attachment, int attachmentID)
+        public void AssignAttachmentToWeapon(Attachment attachment, int attachmentID, int index)
         {
-            WeaponIdentification curWeapon = inventory[currentWeapon];
+            WeaponIdentification curWeapon = inventory[index];
 
             // Depending on what type of attachment it is:
             // Swap attachment if there is an existing equipped attachment, otherwise just equip it.
@@ -997,18 +1024,23 @@ namespace cowsins
             if (InputManager.reloading) return; // Do not change weapons while reloading
                                                 // Change slot
             if (InputManager.scrolling > 0 || InputManager.previousweapon)
+            {
+                ForceAimReset(); // Move Weapon back to the original position
                 if (currentWeapon < inventorySize - 1)
                 {
                     currentWeapon++;
                     SelectWeapon();
                 }
+            }
             if (InputManager.scrolling < 0 || InputManager.nextweapon)
+            {
+                ForceAimReset(); // Move Weapon back to the original position
                 if (currentWeapon > 0)
                 {
                     currentWeapon--;
                     SelectWeapon();
                 }
-
+            }
         }
 
         [HideInInspector] public bool selectingWeapon;
@@ -1064,46 +1096,56 @@ namespace cowsins
             int i = 0;
             while (i < initialWeapons.Length)
             {
-                var weaponPicked = Instantiate(initialWeapons[i].weaponObject, weaponHolder);
-                weaponPicked.transform.localPosition = initialWeapons[i].weaponObject.transform.localPosition;
-
-                inventory[i] = weaponPicked;
-
-                if (i == currentWeapon)
-                {
-                    weapon = initialWeapons[i];
-                    SelectWeapon();
-                }
-                else weaponPicked.gameObject.SetActive(false);
-                weapon = initialWeapons[i];
-
-                List<AttachmentIdentifier_SO> attachments = null;
-                int magCapacityAdded = 0;
-
-                (attachments, magCapacityAdded) = weaponPicked.GetDefaultAttachments();
-
-                foreach (AttachmentIdentifier_SO attachment in attachments)
-                {
-                    (Attachment atc, int id) = GetAttachmentID(attachment, inventory[i].GetComponent<WeaponIdentification>());
-                    AssignNewAttachment(atc, id);
-                }
-
-                inventory[i].GetComponent<WeaponIdentification>().bulletsLeftInMagazine = initialWeapons[i].magazineSize + magCapacityAdded;
-                if (initialWeapons[i].limitedMagazines)
-                    inventory[i].GetComponent<WeaponIdentification>().totalBullets = initialWeapons[i].magazineSize * initialWeapons[i].totalMagazines;
-                else inventory[i].GetComponent<WeaponIdentification>().totalBullets = initialWeapons[i].magazineSize;
-
-
-                //UI
-                slots[i].weapon = weapon;
-                slots[i].GetImage();
-#if UNITY_EDITOR
-                UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset = weapon.crosshairPreset;
-                CowsinsUtilities.ApplyPreset(UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset, UIController.instance.crosshair.GetComponent<CrosshairShape>());
-#endif
+                InstantiateWeapon(initialWeapons[i], i, null, null);
                 i++;
             }
             weapon = initialWeapons[0];
+        }
+
+        public void InstantiateWeapon(Weapon_SO newWeapon, int inventoryIndex, int? _bulletsLeftInMagazine, int? _totalBullets)
+        {
+            // Instantiate Weapon
+            var weaponPicked = Instantiate(newWeapon.weaponObject, weaponHolder);
+            weaponPicked.transform.localPosition = newWeapon.weaponObject.transform.localPosition;
+
+            // Destroy the Weapon if it already exists in the same slot
+            if (inventory[inventoryIndex] != null) Destroy(inventory[inventoryIndex].gameObject);
+
+            // Set the Weapon
+            inventory[inventoryIndex] = weaponPicked;
+
+            // Select weapon if it is the current Weapon
+            if (inventoryIndex == currentWeapon)
+            {
+                weapon = newWeapon;
+                SelectWeapon();
+            }
+            else weaponPicked.gameObject.SetActive(false);
+
+            List<AttachmentIdentifier_SO> attachments = null;
+            int magCapacityAdded = 0;
+
+            (attachments, magCapacityAdded) = weaponPicked.GetDefaultAttachments();
+
+            foreach (AttachmentIdentifier_SO attachment in attachments)
+            {
+                (Attachment atc, int id) = GetAttachmentID(attachment, inventory[inventoryIndex]);
+                AssignNewAttachment(atc, id);
+            }
+            // if _bulletsLeftInMagazine is null, calculate magazine size. If not, simply assign _bulletsLeftInMagazine
+            inventory[inventoryIndex].bulletsLeftInMagazine = _bulletsLeftInMagazine ?? (newWeapon.magazineSize + magCapacityAdded);
+            inventory[inventoryIndex].totalBullets = _totalBullets ??
+            (newWeapon.limitedMagazines
+                ? newWeapon.magazineSize * newWeapon.totalMagazines
+                : newWeapon.magazineSize);
+
+            //UI
+            slots[inventoryIndex].weapon = newWeapon;
+            slots[inventoryIndex].GetImage();
+#if UNITY_EDITOR
+            UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset = weapon.crosshairPreset;
+            CowsinsUtilities.ApplyPreset(UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset, UIController.instance.crosshair.GetComponent<CrosshairShape>());
+#endif
 
             if (weapon.shootStyle == ShootStyle.Custom) SelectCustomShotMethod();
             else customMethod = null;

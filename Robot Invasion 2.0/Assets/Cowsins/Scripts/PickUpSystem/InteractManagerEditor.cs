@@ -43,6 +43,13 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("detectInteractionDistance"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("progressRequiredToInteract"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("interactInterval"));
+                        if (myScript.DuplicateWeaponAddsBullets)
+                        {
+                            EditorGUILayout.Space(10);
+                            EditorGUILayout.LabelField("This feature is only applicable to weapons with limited magazines.", EditorStyles.helpBox);
+                            EditorGUILayout.Space(5);
+                        }
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("duplicateWeaponAddsBullets"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("canDrop"));
                         if (myScript.canDrop)
                         {

@@ -11,19 +11,27 @@ namespace cowsins
         [SerializeField] private float fadeSpeed;
 
         public static PauseMenu Instance { get; private set; }
+
+        /// <summary>
+        /// Returns the Pause State of the game
+        /// </summary>
         public static bool isPaused { get; private set; }
 
         [HideInInspector] public PlayerStats stats;
 
-        public Action OnPause, OnUnpause;
+        public event Action OnPause;
+        public event Action OnUnpause;
 
         private void Awake()
         {
             if (Instance != null && Instance != this)
+            {
                 Destroy(gameObject);
-            else
-                Instance = this;
+                return;
+            }
+            Instance = this;
 
+            // Initially, the game is not paused
             isPaused = false;
             menu.gameObject.SetActive(false);
             menu.alpha = 0;
@@ -32,7 +40,6 @@ namespace cowsins
         private void Update()
         {
             HandlePauseInput();
-
             if (isPaused)
             {
                 HandlePause();
@@ -46,36 +53,41 @@ namespace cowsins
         private void HandlePauseInput()
         {
             if (InputManager.pausing)
-                isPaused = !isPaused;
+            {
+                TogglePause();
+            }
         }
 
         private void HandlePause()
         {
-            stats.LoseControl();
-
             if (!menu.gameObject.activeSelf)
             {
                 menu.gameObject.SetActive(true);
                 menu.alpha = 0;
             }
 
-            if (menu.alpha < 1)
-                menu.alpha += Time.deltaTime * fadeSpeed;
+            menu.alpha = Mathf.Min(menu.alpha + Time.deltaTime * fadeSpeed, 1);
 
             if (disablePlayerUIWhilePaused && !stats.isDead)
+            {
                 playerUI.SetActive(false);
+            }
+
+            OnPause?.Invoke();
         }
 
         private void HandleUnpause()
         {
-            menu.alpha -= Time.deltaTime * fadeSpeed;
+            menu.alpha = Mathf.Max(menu.alpha - Time.deltaTime * fadeSpeed, 0);
 
             if (menu.alpha <= 0)
+            {
                 menu.gameObject.SetActive(false);
-
-            
+            }
 
             playerUI.SetActive(true);
+
+            OnUnpause?.Invoke();
         }
 
         public void UnPause()
@@ -100,9 +112,13 @@ namespace cowsins
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-
+                stats.LoseControl();
                 if (disablePlayerUIWhilePaused && !stats.isDead)
+                {
                     playerUI.SetActive(false);
+                }
+
+                OnPause?.Invoke();
             }
             else
             {
@@ -110,6 +126,8 @@ namespace cowsins
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 playerUI.SetActive(true);
+
+                OnUnpause?.Invoke();
             }
         }
     }

@@ -103,7 +103,7 @@ namespace cowsins
             {
                 // Check if there is a roof above the player to prevent uncrouching
                 RaycastHit hit;
-                bool isObstacleAbove = Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hit, 5.5f, player.weaponController.hitLayer);
+                bool isObstacleAbove = Physics.Raycast(_ctx.transform.position, _ctx.transform.up, out hit, player.RoofCheckDistance, player.weaponController.hitLayer);
 
                 canUnCrouch = !isObstacleAbove;
             }

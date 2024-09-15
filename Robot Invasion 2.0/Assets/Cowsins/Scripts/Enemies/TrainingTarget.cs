@@ -15,7 +15,7 @@ namespace cowsins
         {
             if (isDead) return;
             isDead = true;
-            events.OnDeath.Invoke();
+            events.OnDeath?.Invoke();
             Invoke("Revive", timeToRevive);
 
             if (shieldSlider != null) shieldSlider.gameObject.SetActive(false);

@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 namespace cowsins
 {
@@ -18,40 +19,39 @@ namespace cowsins
 
         [SerializeField] private TMP_Dropdown frameRateDropdown, resolutionRateDropdown, graphicsDropdown;
         [SerializeField] private Toggle fullScreenToggle, vsyncToggle;
-        [SerializeField] private Slider masterVolumeSlider;
-        [SerializeField] private Slider playerSensXSlider, playerSensYSlider, playerControllerSensXSlider, playerControllerSensYSlider;
+        [SerializeField] private Slider masterVolumeSlider, playerSensXSlider, playerSensYSlider, playerControllerSensXSlider, playerControllerSensYSlider;
         [SerializeField] private TextMeshProUGUI playerSensXDisplay, playerSensYDisplay, playerControllerSensXDisplay, playerControllerSensYDisplay;
         [SerializeField] private AudioMixer masterMixer;
 
-        private int width = 1920, height = 1080;
+        // Stores all the supported resolutions by your monitor
+        private Resolution[] availableResolutions;
 
-        public static GameSettingsManager instance;
+        public static GameSettingsManager Instance;
 
         private void Awake()
         {
-            // We need to keep the new GameSettingsManager to keep the references
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
             }
             else
             {
-                Destroy(instance.gameObject);
-                instance = this;
+                // We need to ensure this object overrides the already existing Instance of GameSettingsManager
+                Destroy(Instance.gameObject);
+                Instance = this;
             }
+
             DontDestroyOnLoad(gameObject);
             LoadSettings();
             InitializeUI();
         }
 
-        private void Update()
-        {
-            masterMixer.SetFloat("Volume", Mathf.Log10(masterVolume) * 20);
-        }
-
         public void SetWindowedScreen() => fullScreen = 0;
         public void SetFullScreen() => fullScreen = 1;
 
+        /// <summary>
+        /// Saves the settings to PlayerPrefs
+        /// </summary>
         public void SaveSettings()
         {
             PlayerPrefs.SetInt("res", res);
@@ -66,17 +66,23 @@ namespace cowsins
             PlayerPrefs.SetFloat("playerControllerSensY", playerControllerSensY);
         }
 
+        /// <summary>
+        /// Loads, updates UI and applies all the settings
+        /// </summary>
         public void LoadSettings()
         {
+            availableResolutions = Screen.resolutions;
+
             masterVolume = PlayerPrefs.GetFloat("masterVolume", 1f);
             playerSensX = PlayerPrefs.GetFloat("playerSensX", 4f);
             playerSensY = PlayerPrefs.GetFloat("playerSensY", 4f);
             playerControllerSensX = PlayerPrefs.GetFloat("playerControllerSensX", 35f);
             playerControllerSensY = PlayerPrefs.GetFloat("playerControllerSensY", 35f);
 
-            res = PlayerPrefs.GetInt("res", 0);
+            res = PlayerPrefs.GetInt("res", availableResolutions.Length - 1);
             fullScreen = PlayerPrefs.GetInt("fullScreen", 1);
-            maxFrameRate = PlayerPrefs.GetInt("maxFrameRate", 0);
+            int savedFrameRate = PlayerPrefs.GetInt("maxFrameRate", -1);
+            maxFrameRate = (savedFrameRate >= 0 && savedFrameRate < frameRateDropdown.options.Count) ? savedFrameRate : frameRateDropdown.options.Count - 1;
             vsync = PlayerPrefs.GetInt("vsync", 0);
             graphicsQuality = PlayerPrefs.GetInt("graphicsQuality", 2);
 
@@ -86,7 +92,7 @@ namespace cowsins
 
         public void ResetSettings()
         {
-            res = 0;
+            res = availableResolutions.Length - 1;
             fullScreen = 1;
             maxFrameRate = frameRateDropdown.options.Count - 1;
             vsync = 0;
@@ -103,6 +109,8 @@ namespace cowsins
 
         private void InitializeUI()
         {
+            PopulateResolutionDropdown();
+
             frameRateDropdown.onValueChanged.AddListener(delegate { maxFrameRate = frameRateDropdown.value; });
             resolutionRateDropdown.onValueChanged.AddListener(delegate { res = resolutionRateDropdown.value; });
             graphicsDropdown.onValueChanged.AddListener(delegate { graphicsQuality = graphicsDropdown.value; });
@@ -141,38 +149,30 @@ namespace cowsins
             });
         }
 
+        private void PopulateResolutionDropdown()
+        {
+            resolutionRateDropdown.ClearOptions();
+            availableResolutions = Screen.resolutions;
+
+            List<string> options = new List<string>();
+            for (int i = 0; i < availableResolutions.Length; i++)
+            {
+                Resolution res = availableResolutions[i];
+                options.Add($"{res.width} x {res.height} @ {res.refreshRate}Hz");
+            }
+
+            resolutionRateDropdown.AddOptions(options);
+            resolutionRateDropdown.value = res;
+            resolutionRateDropdown.RefreshShownValue();
+        }
+
         private void ApplySettings()
         {
-            switch (maxFrameRate)
-            {
-                case 0: Application.targetFrameRate = 60; break;
-                case 1: Application.targetFrameRate = 120; break;
-                case 2: Application.targetFrameRate = 230; break;
-                case 3: Application.targetFrameRate = 300; break;
-                default: Application.targetFrameRate = 60; break;
-            }
+            Application.targetFrameRate = maxFrameRate == 0 ? 60 : (maxFrameRate == 1 ? 120 : (maxFrameRate == 2 ? 230 : 300));
 
-            switch (res)
-            {
-                case 0:
-                    width = 1920;
-                    height = 1080;
-                    break;
-                case 1:
-                    width = 1920;
-                    height = 720;
-                    break;
-                case 2:
-                    width = 854;
-                    height = 480;
-                    break;
-                default:
-                    width = 1920;
-                    height = 1080;
-                    break;
-            }
+            Resolution selectedResolution = availableResolutions[res];
+            Screen.SetResolution(selectedResolution.width, selectedResolution.height, fullScreen == 1);
 
-            Screen.SetResolution(width, height, fullScreen == 1);
             QualitySettings.vSyncCount = vsync;
             QualitySettings.SetQualityLevel(graphicsQuality);
         }
@@ -199,6 +199,7 @@ namespace cowsins
 
         private void OnSceneChanged(Scene current, Scene next)
         {
+            availableResolutions = Screen.resolutions;
             PlayerPrefs.Save();
         }
 

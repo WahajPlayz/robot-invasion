@@ -118,8 +118,6 @@ namespace cowsins
             EditorGUILayout.PropertyField(serializedObject.FindProperty("directionDuration"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("speed"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("timeToRevive"));
-
-            if (myScript.showUI) myScript.showUI = false;
             serializedObject.ApplyModifiedProperties();
 
         }

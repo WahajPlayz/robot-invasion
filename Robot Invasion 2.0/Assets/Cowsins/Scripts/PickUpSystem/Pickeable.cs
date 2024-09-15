@@ -8,6 +8,7 @@ namespace cowsins
 {
     public class Pickeable : Interactable
     {
+
         [System.Serializable]
         public class Events
         {
@@ -39,17 +40,17 @@ namespace cowsins
         {
             pickeable = false;
             obj = transform.Find("Graphics");
-            player = GameObject.FindGameObjectWithTag("Player").transform;
         }
         private void Update() => Movement();
 
-        public override void Interact() => events.OnPickUp.Invoke();
+        public override void Interact(Transform player) => events.OnPickUp.Invoke();
 
         /// <summary>
         /// Apply effects, usually for more cartoony, stylized, anime approaches
         /// </summary>
         private void Movement()
         {
+            GetComponent<Rigidbody>()?.AddForce(Vector3.down * 30, ForceMode.Force);
             if (!rotates && !translates) return;
             if (rotates) obj.Rotate(Vector3.up * rotationSpeed * Time.deltaTime); // Rotate over time
             if (translates) // Go up and down

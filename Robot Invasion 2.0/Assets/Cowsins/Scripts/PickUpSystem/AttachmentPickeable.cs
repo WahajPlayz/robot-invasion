@@ -17,7 +17,7 @@ namespace cowsins
             if (dropped) return;
             GetVisuals();
         }
-        public override void Interact()
+        public override void Interact(Transform player)
         {
             // Reference to WeaponController
             WeaponController wCon = player.GetComponent<WeaponController>();
@@ -34,7 +34,7 @@ namespace cowsins
 
             wCon.UnHolster(wCon.inventory[wCon.currentWeapon].gameObject, true);
 
-            base.Interact();
+            base.Interact(player);
 
             Destroy(this.gameObject);
         }

@@ -20,39 +20,39 @@ namespace cowsins
         [System.Serializable]
         public class Events
         {
-            public UnityEvent OnSpawn, OnShoot, OnDamaged, OnDeath;
+            public UnityEvent OnSpawn, OnDamaged, OnDeath;
         }
 
         [Tooltip("Name of the enemy. This will appear on the killfeed"), SerializeField]
         protected string _name;
 
         [ReadOnly] public float health;
+
+        [ReadOnly] public float shield;
+
         [Tooltip("initial enemy health "), SerializeField]
         protected float maxHealth;
 
-        [ReadOnly] public float shield;
         [Tooltip("initial enemy shield"), SerializeField]
         protected float maxShield;
 
-        [Tooltip("When the object dies, decide if it should be destroyed or not.")] public bool destroyOnDie;
+        [Tooltip("When the object dies, decide if it should be destroyed or not."), SerializeField] private bool destroyOnDie;
 
         [SerializeField] private GameObject deathEffect;
 
         [Tooltip("display enemy status via UI"), SerializeField]
-        protected Slider healthSlider, shieldSlider;
+        public Slider healthSlider, shieldSlider;
 
-        [Tooltip("If true, it will display the UI with the shield and health sliders.")]
-        public bool showUI;
+        [Tooltip("If true, it will display the UI with the shield and health sliders."), SerializeField]
+        private bool showUI;
 
         public bool showDamagePopUps;
 
-        [Tooltip("If true, it will display the KillFeed UI.")] public bool showKillFeed;
+        [Tooltip("If true, it will display the KillFeed UI."), SerializeField]
+        protected bool showKillFeed;
 
         [Tooltip("Add a pop up showing the damage that has been dealt. Recommendation: use the already made pop up included in this package. "), SerializeField]
         private GameObject damagePopUp;
-
-        [Tooltip("Colour for the specific status to be displayed in the slider"), SerializeField]
-        private Color shieldColor, healthColor;
 
         [Tooltip("Horizontal randomness variation"), SerializeField]
         private float xVariation;
@@ -60,14 +60,22 @@ namespace cowsins
         [SerializeField]
         protected AudioClip dieSFX;
 
-        [HideInInspector] public Transform player;
+        [HideInInspector] protected Transform player;
 
         public Events events;
 
         protected bool isDead;
 
+        public bool DestroyOnDie { get { return destroyOnDie; } }
 
-        // Start is called before the first frame update"
+        public bool ShowUI { get { return showUI; } }
+
+        public Slider HealthSlider { get { return healthSlider; } }
+
+        public Slider ShieldSlider { get { return shieldSlider; } }
+
+        public GameObject DamagePopUp { get { return damagePopUp; } }
+
         public virtual void Start()
         {
             // Status initial settings
@@ -78,7 +86,7 @@ namespace cowsins
             events.OnSpawn.Invoke();
 
             // Initial settings 
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+            player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
 
             // UI 
@@ -90,7 +98,6 @@ namespace cowsins
                 Destroy(healthSlider);
                 Destroy(shieldSlider);
             }
-            player = GameObject.FindGameObjectWithTag("Player").transform;
         }
 
         // Update is called once per frame
@@ -149,56 +156,189 @@ namespace cowsins
             if (deathEffect) Instantiate(deathEffect, transform.position, Quaternion.identity);
             if (destroyOnDie) Destroy(this.gameObject);
         }
+
+        public void PlayAnimation(string triggerIdentifier)
+        {
+            GetComponentInChildren<Animator>()?.SetTrigger(triggerIdentifier);
+        }
     }
 #if UNITY_EDITOR
     [System.Serializable]
     [CustomEditor(typeof(EnemyHealth))]
     public class EnemyEditor : Editor
     {
-
-        override public void OnInspectorGUI()
+        private bool showIdentity = false;
+        private bool showStats = false;
+        private bool showUI = false;
+        public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            EnemyHealth myScript = target as EnemyHealth;
+            EnemyHealth myScript = (EnemyHealth)target;
 
-            EditorGUILayout.LabelField("IDENTITY", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("_name"));
+            Texture2D myTexture = Resources.Load<Texture2D>("CustomEditor/enemyHealth_CustomEditor") as Texture2D;
+            GUILayout.Label(myTexture);
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginVertical(GUI.skin.GetStyle("HelpBox"));
+            {
+                // Identity foldout
+                showIdentity = EditorGUILayout.Foldout(showIdentity, "IDENTITY", true);
+                if (showIdentity)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("_name"));
+                    EditorGUILayout.Space(6);
+                    EditorGUI.indentLevel--;
+                }
 
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("STATS", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHealth"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxShield"));
-            if (!myScript.destroyOnDie)
-            {
-                EditorGUILayout.LabelField("WARNING: destroyOnDie is set to false, this means that your object won´t be destroyed once you kill them.", EditorStyles.helpBox);
             }
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("destroyOnDie"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("deathEffect"));
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("UI", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("showUI"));
-            if (myScript.showUI)
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space(6);
+            EditorGUILayout.BeginVertical(GUI.skin.GetStyle("HelpBox"));
             {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("healthSlider"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("shieldSlider"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("healthColor"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("shieldColor"));
-                EditorGUI.indentLevel--;
+                // Stats foldout
+                showStats = EditorGUILayout.Foldout(showStats, "STATISTICS", true);
+                if (showStats)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHealth"));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("maxShield"));
+
+                    if (!myScript.DestroyOnDie)
+                    {
+                        EditorGUILayout.HelpBox("DestroyOnDie is set to false, your object won’t be destroyed once you kill it.", MessageType.Warning);
+                    }
+
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("destroyOnDie"));
+                    if (myScript.DestroyOnDie)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("deathEffect"));
+                        EditorGUI.indentLevel--;
+                    }
+                    EditorGUILayout.Space(6);
+                    EditorGUI.indentLevel--;
+                }
+
             }
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("showDamagePopUps"));
-            if (myScript.showDamagePopUps)
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space(6);
+            EditorGUILayout.BeginVertical(GUI.skin.GetStyle("HelpBox"));
             {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("damagePopUp"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("xVariation"));
-                EditorGUI.indentLevel--;
+                showUI = EditorGUILayout.Foldout(showUI, "UI", true);
+                if (showUI)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("showUI"));
+                    if (myScript.ShowUI)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("healthSlider"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("shieldSlider"));
+                        if (!myScript.HealthSlider && !myScript.ShieldSlider)
+                        {
+                            EditorGUILayout.Space(10);
+                            EditorGUILayout.HelpBox("Your Enemy UI is null, create a new custom Canvas or Create the Default UI", MessageType.Error);
+                            EditorGUILayout.Space(5);
+                            if (GUILayout.Button("Create Default UI"))
+                            {
+                                CreateDefaultUI(myScript.transform);
+                            }
+                            EditorGUILayout.Space(10);
+                        }
+                        EditorGUI.indentLevel--;
+                    }
+
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("showDamagePopUps"));
+                    if (myScript.showDamagePopUps)
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("damagePopUp"));
+                        if (!myScript.DamagePopUp)
+                        {
+                            EditorGUILayout.Space(10);
+                            EditorGUILayout.HelpBox("Damage Pop Up is null. Do you want to automatically assign the default Prefab?", MessageType.Error);
+                            EditorGUILayout.Space(5);
+                            if (GUILayout.Button("Assign Default Damage Pop Up"))
+                            {
+                                AssignDefaultDamagePopUp();
+                            }
+                            EditorGUILayout.Space(10);
+                        }
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("xVariation"));
+                        EditorGUI.indentLevel--;
+                    }
+
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("showKillFeed"));
+                    EditorGUILayout.Space(6);
+                    EditorGUI.indentLevel--;
+                }
+
+
             }
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("showKillFeed"));
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.Space(6);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("events"));
-            serializedObject.ApplyModifiedProperties();
+            EditorGUI.indentLevel--;
 
+
+            serializedObject.ApplyModifiedProperties();
         }
+
+
+
+        private void CreateDefaultUI(Transform myTransform)
+        {
+            // Path to EnemyStatusSlider prefab
+            string prefabPath = "Assets/Cowsins/Prefabs/Others/UI/EnemyStatusSlider.prefab";
+
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+
+            if (prefab != null)
+            {
+                // Instantiate the prefab 
+                GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, myTransform);
+                instance.transform.localPosition += new Vector3(0, 5, 0);
+                Undo.RegisterCreatedObjectUndo(instance, "Create Default UI");
+
+                SerializedProperty healthSliderProperty = serializedObject.FindProperty("healthSlider");
+                SerializedProperty shieldSliderProperty = serializedObject.FindProperty("shieldSlider");
+
+                healthSliderProperty.objectReferenceValue = instance.transform.Find("HealthSlider").GetComponent<Slider>();
+                shieldSliderProperty.objectReferenceValue = instance.transform.Find("ShieldSlider").GetComponent<Slider>();
+                serializedObject.ApplyModifiedProperties();
+
+                EditorUtility.SetDirty(target);
+            }
+            else
+            {
+                Debug.LogError($"Prefab not found at path: { prefabPath }. Did you move, rename or delete EnemyStatusSlider.prefab? ");
+            }
+        }
+
+        private void AssignDefaultDamagePopUp()
+        {
+            // Path to DMGPopUp prefab
+            string prefabPath = "Assets/Cowsins/Prefabs/Others/UI/DMGPopUp.prefab";
+
+            // Load prefab
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            if (prefab != null)
+            {
+                SerializedProperty damagePopUpProperty = serializedObject.FindProperty("damagePopUp");
+
+                // Assign the prefab to the property
+                damagePopUpProperty.objectReferenceValue = prefab;
+                serializedObject.ApplyModifiedProperties();
+                // Ensure changes are saved
+                EditorUtility.SetDirty(target);
+            }
+            else
+            {
+                Debug.LogError($"Prefab at path {prefabPath} could not be found. Did you move, rename or delete DMPopUp.prefab? ");
+            }
+        }
+
     }
 #endif
 }

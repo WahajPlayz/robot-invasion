@@ -100,7 +100,7 @@ namespace cowsins
             inputActions.GameControls.ToggleFlashLight.started += ctx => toggleFlashLight = true;
 
 
-            inputActions.GameControls.Pause.started += ctx => PauseMenu.Instance.TogglePause();
+            inputActions.GameControls.Pause.started += ctx => TogglePause();
 
             SceneManager.activeSceneChanged += OnSceneChange;
         }
@@ -113,12 +113,12 @@ namespace cowsins
         {
             if (player == null) return;
             // Handle all the required inputs here
-            if (GameSettingsManager.instance)
+            if (GameSettingsManager.Instance)
             {
-                sensitivity_x = GameSettingsManager.instance.playerSensX;
-                sensitivity_y = GameSettingsManager.instance.playerSensY;
-                controllerSensitivityX = GameSettingsManager.instance.playerControllerSensX;
-                controllerSensitivityY = GameSettingsManager.instance.playerControllerSensY;
+                sensitivity_x = GameSettingsManager.Instance.playerSensX;
+                sensitivity_y = GameSettingsManager.Instance.playerSensY;
+                controllerSensitivityX = GameSettingsManager.Instance.playerControllerSensX;
+                controllerSensitivityY = GameSettingsManager.Instance.playerControllerSensY;
             }
             else
             {
@@ -151,7 +151,6 @@ namespace cowsins
 
             reloading = inputActions.GameControls.Reloading.IsPressed();
             melee = inputActions.GameControls.Melee.IsPressed();
-            ShieldSpawner = inputActions.GameControls.ShieldSpawner.WasPressedThisFrame();
 
 
             // Handle different crouching methods
@@ -183,7 +182,9 @@ namespace cowsins
 
             shooting = inputActions.GameControls.Firing.IsPressed();
 
-            scrolling = inputActions.GameControls.Scrolling.ReadValue<Vector2>().y + inputActions.GameControls.ChangeWeapons.ReadValue<float>();
+            scrolling = inputActions.GameControls.Scrolling.ReadValue<Vector2>().y;
+            nextweapon = inputActions.GameControls.ChangeWeapons.WasPressedThisFrame() && inputActions.GameControls.ChangeWeapons.ReadValue<float>() > 0;
+            previousweapon = inputActions.GameControls.ChangeWeapons.WasPressedThisFrame() && inputActions.GameControls.ChangeWeapons.ReadValue<float>() < 0;
 
             if (player != null && player.GetComponent<WeaponController>().alternateAiming && player.GetComponent<WeaponController>().weapon != null)
             {
@@ -223,7 +224,7 @@ namespace cowsins
         {
             // Initialize Inputs
             if (inputActions == null) inputActions = new PlayerActions();
-
+            inputActions.Enable();
             // Load saved bindings overrides
             LoadAllBindings();
         }
@@ -404,6 +405,11 @@ namespace cowsins
             SaveBindingOverride(action);
         }
 
+        private void TogglePause()
+        {
+            if (PauseMenu.Instance)
+                PauseMenu.Instance.TogglePause();
+        }
         #endregion
     }
 

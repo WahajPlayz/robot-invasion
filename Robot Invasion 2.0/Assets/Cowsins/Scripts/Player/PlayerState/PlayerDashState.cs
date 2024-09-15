@@ -37,6 +37,10 @@ namespace cowsins
                 player.currentDashes--;
                 onDashNoInfinite?.Invoke(this, EventArgs.Empty);
             }
+
+            //staminaLoss
+            if (player.usesStamina) player.ReduceStamina(player.StaminaLossOnDash);
+
         }
 
         public override void UpdateState()

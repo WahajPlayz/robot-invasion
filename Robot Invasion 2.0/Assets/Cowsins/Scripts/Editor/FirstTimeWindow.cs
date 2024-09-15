@@ -91,6 +91,25 @@ namespace cowsins
 
             GUILayout.EndScrollView();
             GUILayout.EndArea();
+
+            // Footer
+            Rect footerRect = new Rect(0, position.height - 20, position.width, 50);
+
+            EditorGUI.DrawRect(footerRect, new Color(0.15f, 0.15f, 0.15f));
+            GUILayout.BeginArea(footerRect);
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+
+            // Draggable Button visibility toggle
+            bool newToggleValue = GUILayout.Toggle(DraggableButtonInSceneView.showDraggableButton, "Show Draggable Button in Scene View");
+            if (newToggleValue != DraggableButtonInSceneView.showDraggableButton)
+            {
+                DraggableButtonInSceneView.SetShowDraggableButton(newToggleValue);
+            }
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.EndArea();
         }
 
         #endregion

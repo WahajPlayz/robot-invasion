@@ -16,8 +16,8 @@ namespace cowsins
 
         private void Start() { if (addOnStart) Add(); }
 
-        public void Add() => Compass.Instance.AddCompassElement(this);
+        public void Add() => Compass.Instance?.AddCompassElement(this);
 
-        public void Remove() => Compass.Instance.RemoveCompassElement(this);
+        public void Remove() => Compass.Instance?.RemoveCompassElement(this);
     }
 }

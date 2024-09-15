@@ -54,7 +54,7 @@ namespace cowsins
     [System.Serializable]
     public class BulletHoleImpact
     {
-        public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact, OrangeShieldImpact, GreenShieldImpact;
+        public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact;
     }
     #endregion
 
@@ -116,7 +116,7 @@ namespace cowsins
 
         [Tooltip("Turn it off to set a magazine size")] public bool infiniteBullets;
 
-        [Tooltip("How many bullets you can have per magazine")] public int magazineSize;
+        [Tooltip("How many bullets you can have per magazine"), Min(1)] public int magazineSize = 1;
 
         [Tooltip("Bullets instantiated per each shot. Grants the possibility of making shotguns, burstguns etc. Amount of bullets spawned every shot.")]
 

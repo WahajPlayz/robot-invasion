@@ -23,8 +23,8 @@ namespace cowsins
 
         public void Repaint()
         {
-            string device = DeviceDetection.Instance.mode == DeviceDetection.InputMode.Keyboard ? "Keyboard" : "Controller";
-            txt.text = inputActions.GameControls.Interacting.GetBindingDisplayString(InputBinding.MaskByGroup(device));
+            string deviceGroup = DeviceDetection.Instance.mode == DeviceDetection.InputMode.Keyboard ? "Keyboard" : "Gamepad";
+            txt.text = inputActions.GameControls.Interacting.GetBindingDisplayString(InputBinding.MaskByGroup(deviceGroup));
         }
     }
 }

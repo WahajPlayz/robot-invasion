@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
+/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,7 +21,9 @@ namespace cowsins
 
         [Tooltip("Bitmask that defines the interactable layer"), SerializeField] private LayerMask mask;
 
-        private GameObject lookingAt;
+        private Interactable highlightedInteractable;
+
+        public Interactable HighlightedInteractable { get { return highlightedInteractable; } }
 
         [Tooltip("Enable this toggle if you want to be able to drop your weapons")] public bool canDrop;
 
@@ -41,6 +43,10 @@ namespace cowsins
 
         [Tooltip("Adjust the interaction interval, the lower, the faster you will be able to interact"), Range(.2f, .7f), SerializeField] private float interactInterval = .4f;
 
+        [Tooltip("When picking up a duplicate weapon, if duplicateWeaponAddsBullets is true, the bullets will be added to the total count of the current weapon instead of creating a new instance of the same weapon. " +
+            "This feature is only applicable to weapons with limited magazines."), SerializeField]
+        private bool duplicateWeaponAddsBullets;
+
         [Tooltip("If true, the player will be able to inspect the current weapon.")] public bool canInspect;
 
         [Tooltip("Allows the player to equip and unequip attachments while inspecting. It also displays a custom UI for that.")] public bool realtimeAttachmentCustomization;
@@ -53,6 +59,10 @@ namespace cowsins
 
         private WeaponController wcon;
 
+        public bool DuplicateWeaponAddsBullets
+        {
+            get { return duplicateWeaponAddsBullets; }
+        }
         private void OnEnable()
         {
             // Subscribe to the event
@@ -135,18 +145,18 @@ namespace cowsins
             }
             interactable.interactable = true;
             // Current interactable is equal to the passed interactable value
-            if (lookingAt == interactable.gameObject) return;
-            lookingAt = interactable.gameObject;
+            if (highlightedInteractable == interactable) return;
+            highlightedInteractable = interactable;
             interactable.Highlight();
             UIEvents.allowedInteraction?.Invoke(interactable.interactText);
         }
 
         private void DisableLookingAtInteractable()
         {
-            if (lookingAt != null)
+            if (highlightedInteractable != null)
             {
-                lookingAt.GetComponent<Interactable>().interactable = false;
-                lookingAt = null;
+                highlightedInteractable.interactable = false;
+                highlightedInteractable = null;
             }
         }
 
@@ -158,7 +168,7 @@ namespace cowsins
 
         private void DetectInput()
         {
-            if (lookingAt == null)
+            if (highlightedInteractable == null)
             {
                 progressElapsed = -.01f;
                 return;
@@ -172,14 +182,16 @@ namespace cowsins
                 {
                     UIEvents.onInteractionProgressChanged?.Invoke(progressElapsed / progressRequiredToInteract);
                 }
+
+                // Interact
+                if (progressElapsed >= progressRequiredToInteract || highlightedInteractable.InstantInteraction && progressElapsed > 0) PerformInteraction();
             }
             else
             {
                 progressElapsed = -.01f;
                 UIEvents.onFinishInteractionProgress?.Invoke();
             }
-            // Interact
-            if (progressElapsed >= progressRequiredToInteract) PerformInteraction();
+
         }
 
         private void PerformInteraction()
@@ -189,11 +201,11 @@ namespace cowsins
             alreadyInteracted = true;
             // Perform any interaction you may like
             // Please note that classes that inherit from interactable can override the virtual void Interact()
-            lookingAt.GetComponent<Interactable>().Interact();
+            highlightedInteractable.Interact(this.transform);
             // Prevent from spamming but let the user interact again
             Invoke("ResetInteractTimer", interactInterval);
             // Manage UI
-            lookingAt = null;
+            highlightedInteractable = null;
 
             UIEvents.disableInteractionUI?.Invoke();
             UIEvents.onFinishInteractionProgress?.Invoke();
@@ -205,11 +217,12 @@ namespace cowsins
             if (!InputManager.dropping || wcon.weapon == null || wcon.Reloading || !canDrop) return;
 
             WeaponPickeable pick = Instantiate(weaponGenericPickeable, orientation.position + orientation.forward * droppingDistance, orientation.rotation) as WeaponPickeable;
-            pick.GetComponent<Rigidbody>().AddForce(orientation.forward * 50, ForceMode.Impulse);
             pick.Drop(wcon, orientation);
             WeaponIdentification wp = wcon.inventory[wcon.currentWeapon];
             pick.SetPickeableAttachments(wp.barrel, wp.scope, wp.stock, wp.grip, wp.magazine, wp.flashlight, wp.laser);
             events.onDrop?.Invoke();
+
+            wcon.ForceAimReset();
             wcon.ReleaseCurrentWeapon();
         }
         private void ResetInteractTimer() => alreadyInteracted = false;
@@ -218,8 +231,6 @@ namespace cowsins
         {
             UIEvents.onGenerateInspectionUI?.Invoke(wcon);
         }
-        
-        
 
         /// <summary>
         /// Drops the current attachment to the ground ( generates a new attachment pickeable )

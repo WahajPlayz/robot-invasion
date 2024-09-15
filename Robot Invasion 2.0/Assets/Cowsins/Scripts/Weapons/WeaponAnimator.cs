@@ -24,6 +24,12 @@ namespace cowsins
 
             Animator currentAnimator = wc.inventory[wc.currentWeapon].GetComponentInChildren<Animator>();
 
+            if (player.wallRunning && !wc.Reloading)
+            {
+                CowsinsUtilities.PlayAnim("walking", currentAnimator);
+                return;
+
+            }
             if (wc.Reloading || wc.shooting || player.isCrouching || !player.grounded || rb.velocity.magnitude < 0.1f || wc.isAiming
                 || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("Unholster")
                 || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("reloading")

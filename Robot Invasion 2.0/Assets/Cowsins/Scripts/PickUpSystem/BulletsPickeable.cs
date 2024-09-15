@@ -18,10 +18,10 @@ namespace cowsins
             Instantiate(bulletsGraphics, graphics);
             base.Start();
         }
-        public override void Interact()
+        public override void Interact(Transform player)
         {
             if (player.GetComponent<WeaponController>().weapon == null) return;
-            base.Interact();
+            base.Interact(player);
             player.GetComponent<WeaponController>().id.totalBullets += amountOfBullets;
             Destroy(this.gameObject);
         }

@@ -1,13 +1,20 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 namespace cowsins
 {
     public class MainMenuManager : MonoBehaviour
     {
+        [System.Serializable]
+        public class MainMenuSection
+        {
+            public string sectionName;
+            public CanvasGroup section;
+        }
         public static MainMenuManager Instance { get; private set; }
 
-        [SerializeField, Header("Main")] private CanvasGroup introMenu, mainMenu;
+        [SerializeField, Header("Sections")] private MainMenuSection[] mainMenuSections;
 
         private CanvasGroup objectToLerp;
 
@@ -27,18 +34,22 @@ namespace cowsins
 
         private void Start()
         {
-            introMenu.gameObject.SetActive(true);
-            introMenu.alpha = 1;
+            mainMenuSections[0].section.gameObject.SetActive(true);
+            mainMenuSections[0].section.alpha = 1;
 
-            mainMenu.gameObject.SetActive(false);
-            mainMenu.alpha = 0;
+            // We want to skip the first item
+            for (int i = 1; i < mainMenuSections.Length; i++)
+            {
+                mainMenuSections[i].section.gameObject.SetActive(false);
+                mainMenuSections[i].section.alpha = 0;
+            }
 
             audioSource = GetComponent<AudioSource>();
         }
 
         private void Update()
         {
-            if (!objectToLerp) return;
+            if (!objectToLerp || objectToLerp?.alpha >= 1) return;
             objectToLerp.gameObject.SetActive(true);
             objectToLerp.alpha += Time.deltaTime * 3;
         }
@@ -50,8 +61,11 @@ namespace cowsins
 
         public void PlaySound(AudioClip clickSFX)
         {
-            audioSource.clip = clickSFX;
-            audioSource.Play();
+            if (audioSource)
+            {
+                audioSource.clip = clickSFX;
+                audioSource.Play();
+            }
         }
 
         public void LoadScene(int sceneIndex)

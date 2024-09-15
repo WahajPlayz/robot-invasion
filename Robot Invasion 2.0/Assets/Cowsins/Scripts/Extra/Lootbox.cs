@@ -37,13 +37,13 @@ namespace cowsins
 
 
         }
-        public override void Interact()
+        public override void Interact(Transform player)
         {
             if (price != 0 && CoinManager.Instance.useCoins && CoinManager.Instance.CheckIfEnoughCoins(price) || price == 0)
-                StartCoroutine(GetLoot());
+                StartCoroutine(GetLoot(player));
         }
 
-        private IEnumerator GetLoot()
+        private IEnumerator GetLoot(Transform player)
         {
             if (price != 0)
             {
@@ -55,7 +55,7 @@ namespace cowsins
 
             lootObject = loot[Random.Range(0, loot.Length)];
 
-            SpawnSelectedLoot(lootObject);
+            SpawnSelectedLoot(lootObject, player);
 
             anim.Play();
             audioSource.Play();
@@ -65,7 +65,7 @@ namespace cowsins
             StopAllCoroutines();
         }
 
-        private void SpawnSelectedLoot(GameObject loot)
+        private void SpawnSelectedLoot(GameObject loot, Transform player)
         {
             float spawnAngle = Random.Range(minSpawnAngle, maxSpawnAngle);
             Quaternion spawnRotation = Quaternion.Euler(0f, spawnAngle, 0f); // Rotate around the y-axis

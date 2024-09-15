@@ -52,7 +52,9 @@ namespace cowsins
 
             if (InputManager.inspecting && _ctx.inspectionUI.alpha <= 0 && interact.canInspect) SwitchState(_factory.Inspect());
 
-            if (controller.canShoot && controller.id.bulletsLeftInMagazine > 0 && !controller.selectingWeapon
+            if (controller.canShoot &&
+                (controller.id.bulletsLeftInMagazine > 0 || controller.weapon.shootStyle == ShootStyle.Melee) // Melee weapons dont use bullets 
+                && !controller.selectingWeapon
                 && (movement.canShootWhileDashing && movement.dashing || !movement.dashing))
             {
                 switch (controller.weapon.shootMethod)
@@ -109,14 +111,14 @@ namespace cowsins
 
             if (controller.weapon.reloadStyle == ReloadingStyle.defaultReload && !controller.shooting)
             {
-                if (InputManager.reloading && (int)controller.weapon.shootStyle != 2 && controller.id.bulletsLeftInMagazine < controller.id.magazineSize && controller.id.totalBullets > 0
-                || controller.id.bulletsLeftInMagazine <= 0 && controller.autoReload && (int)controller.weapon.shootStyle != 2 && controller.id.bulletsLeftInMagazine < controller.id.magazineSize && controller.id.totalBullets > 0)
+                if (CheckIfReloadSwitch(controller))
                     SwitchState(_factory.Reload());
             }
             else
             {
                 if (controller.id.heatRatio >= 1) SwitchState(_factory.Reload());
             }
+
         }
 
         public override void InitializeSubState() { }
@@ -134,6 +136,11 @@ namespace cowsins
         private void FlashlightAttachmentBehaviour()
         {
             if (controller.inventory[controller.currentWeapon].flashlight != null && InputManager.toggleFlashLight) controller.ToggleFlashLight();
+        }
+        private bool CheckIfReloadSwitch(WeaponController controller)
+        {
+            return InputManager.reloading && (int)controller.weapon.shootStyle != 2 && controller.id.bulletsLeftInMagazine < controller.id.magazineSize && controller.id.totalBullets > 0
+                        || controller.id.bulletsLeftInMagazine <= 0 && controller.autoReload && (int)controller.weapon.shootStyle != 2 && controller.id.bulletsLeftInMagazine < controller.id.magazineSize && controller.id.totalBullets > 0;
         }
     }
 }

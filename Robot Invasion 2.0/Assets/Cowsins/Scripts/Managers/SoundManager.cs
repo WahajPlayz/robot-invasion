@@ -13,7 +13,6 @@ namespace cowsins
             {
                 Instance = this;
                 transform.parent = null;
-                DontDestroyOnLoad(gameObject);
             }
             else Destroy(this.gameObject);
 

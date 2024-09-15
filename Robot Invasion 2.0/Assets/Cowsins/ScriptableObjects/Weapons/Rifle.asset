@@ -149,7 +149,7 @@ MonoBehaviour:
   applyDifferentRecoilOnAiming: 0
   xRecoilAmountOnAiming: 0
   yRecoilAmountOnAiming: 0
-  damagePerBullet: 30
+  damagePerBullet: 2.8
   applyDamageReductionBasedOnDistance: 0
   minimumDistanceToApplyDamageReduction: 0
   damageReductionMultiplier: 0
@@ -165,8 +165,6 @@ MonoBehaviour:
     metalImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
     mudImpact: {fileID: 2462405574108921655, guid: 4445bafd3b5e24c4eb41ba27f6a44af4, type: 3}
     woodImpact: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
-    OrangeShieldImpact: {fileID: 8031883442971595464, guid: 6618e8404c854974aa95357c46ae4757, type: 3}
-    GreenShieldImpact: {fileID: 8031883442971595464, guid: 26f29f868e80c2f47a8adc6e9f792f64, type: 3}
   muzzleVFX: {fileID: 1336949550903370, guid: 679d294f11bff5d49b2fc3da2db6c3b7, type: 3}
   bulletGraphics: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
   useProceduralShot: 0

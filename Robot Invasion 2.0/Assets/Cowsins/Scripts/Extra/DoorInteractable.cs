@@ -22,6 +22,8 @@ namespace cowsins
         [Tooltip("The pivot point for the door"), SerializeField]
         private Transform doorPivot;
 
+        [Tooltip("The Vector3 to add to the door on opened"), SerializeField] private Vector3 offsetPosition;
+
         [Tooltip("How much you want to rotate the door"), SerializeField]
         private float openedDoorRotation;
 
@@ -34,6 +36,8 @@ namespace cowsins
 
         private Quaternion closedRot;
 
+        private Vector3 initialPos;
+
         private PlayerMovement pl;
 
         private int side;
@@ -42,6 +46,7 @@ namespace cowsins
         private void Start()
         {
             // Initial settings
+            initialPos = doorPivot.position;
             closedRot = doorPivot.rotation;
             pl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
             interactText = openInteractionText;
@@ -50,16 +55,24 @@ namespace cowsins
         {
             if (isLocked) interactText = lockedInteractionText;
             // if we are trying to it, open it
-            if (isOpened) doorPivot.localRotation = Quaternion.Lerp(doorPivot.localRotation,
+            if (isOpened)
+            {
+                doorPivot.position = Vector3.Lerp(doorPivot.position, initialPos + offsetPosition, Time.deltaTime * speed);
+                doorPivot.localRotation = Quaternion.Lerp(doorPivot.localRotation,
                  Quaternion.Euler(new Vector3(doorPivot.localRotation.x, openedDoorRotation * side, doorPivot.localRotation.z)),
                      Time.deltaTime * speed);
+            }
             // If we closed it, close it
-            if (!isOpened) doorPivot.rotation = Quaternion.Lerp(doorPivot.rotation, closedRot, Time.deltaTime * speed);
+            if (!isOpened)
+            {
+                doorPivot.position = Vector3.Lerp(doorPivot.position, initialPos, Time.deltaTime * speed);
+                doorPivot.rotation = Quaternion.Lerp(doorPivot.rotation, closedRot, Time.deltaTime * speed);
+            }
         }
         /// <summary>
         /// Check for interaction. Overriding from Interactable.cs
         /// </summary>
-        public override void Interact()
+        public override void Interact(Transform player)
         {
             // Check if its locked
             if (isLocked)

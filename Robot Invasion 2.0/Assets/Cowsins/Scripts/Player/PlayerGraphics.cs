@@ -4,6 +4,12 @@ namespace cowsins
     public class PlayerGraphics : MonoBehaviour
     {
         [SerializeField] private Transform player;
-        private void Update() => transform.position = player.position;
+
+        [SerializeField] private Transform orientation; 
+        private void Update()
+        {
+            transform.position = player.position;
+            transform.rotation = orientation.rotation;
+        }
     }
 }

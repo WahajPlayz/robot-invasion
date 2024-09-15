@@ -10,7 +10,7 @@ namespace cowsins
     [CustomEditor(typeof(PlayerStats))]
     public class PlayerStatsEditor : Editor
     {
-        private string[] tabs = { "Player States", "Fall Damage", "Auto Heal", "Events" };
+        private string[] tabs = { "Player Stats", "Fall Damage", "Auto Heal", "Events" };
         private int currentTab = 0;
 
         override public void OnInspectorGUI()
@@ -31,7 +31,7 @@ namespace cowsins
             {
                 switch (tabs[currentTab])
                 {
-                    case "Player States":
+                    case "Player Stats":
                         EditorGUILayout.LabelField("PLAYER STATES", EditorStyles.boldLabel);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("health"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("shield"));

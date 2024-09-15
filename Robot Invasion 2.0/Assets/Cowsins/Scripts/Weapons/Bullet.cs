@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
+/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
 /// </summary>using UnityEngine;
 using UnityEngine;
 
@@ -70,8 +70,7 @@ namespace cowsins
         {
             return layer == LayerMask.NameToLayer("Ground") || layer == LayerMask.NameToLayer("Object")
                 || layer == LayerMask.NameToLayer("Grass") || layer == LayerMask.NameToLayer("Metal") ||
-                layer == LayerMask.NameToLayer("Mud") || layer == LayerMask.NameToLayer("Wood") || layer == LayerMask.NameToLayer("Enemy") || layer == LayerMask.NameToLayer("OrangeShield")
-                || layer == LayerMask.NameToLayer("GreenShield");
+                layer == LayerMask.NameToLayer("Mud") || layer == LayerMask.NameToLayer("Wood") || layer == LayerMask.NameToLayer("Enemy");
         }
 
         private void DestroyProjectile()

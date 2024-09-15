@@ -55,6 +55,10 @@ namespace cowsins
 
         [SerializeField] private float aimingMultiplier;
 
+        // New variables for inclination multipliers
+        [SerializeField] private float horizontalInclineMultiplier = 1f;
+        [SerializeField] private float forwardInclineMultiplier = 1f;
+
         private float bobSin { get => Mathf.Sin(bobSpeed); }
         private float bobCos { get => Mathf.Cos(bobSpeed); }
 
@@ -88,6 +92,8 @@ namespace cowsins
 
             PlayerMovement = GetComponent<PlayerMovement>();
             rb = GetComponent<Rigidbody>();
+
+            PlayerMovement.events.OnJump.AddListener(JumpMotion);
         }
 
         private void Update()
@@ -111,6 +117,11 @@ namespace cowsins
             bob?.Invoke();
         }
 
+        private void JumpMotion()
+        {
+            motion2 = 0;
+            motion = 0;
+        }
         private void OriginalBob()
         {
             _distance = distance * rb.velocity.magnitude / 1.5f * Time.deltaTime * aimingMultiplier;
@@ -165,7 +176,17 @@ namespace cowsins
 
             bobRot.x = InputManager.x != 0 ? rotationMultiplier.x * Mathf.Sin(2 * bobSpeed) : rotationMultiplier.x * Mathf.Sin(2 * bobSpeed) / 2;
             bobRot.y = InputManager.x != 0 ? rotationMultiplier.y * bobCos : 0;
-            bobRot.x = InputManager.x != 0 ? rotationMultiplier.z * bobCos * InputManager.x : 0;
+            bobRot.z = InputManager.x != 0 ? rotationMultiplier.z * bobCos * InputManager.x : 0;
+
+            // New rotation adjustments for horizontal and forward/backward inclines
+            if (InputManager.x != 0)
+            {
+                bobRot.z += horizontalInclineMultiplier * InputManager.x;  // Horizontal incline
+            }
+            if (InputManager.y != 0)
+            {
+                bobRot.x += forwardInclineMultiplier * InputManager.y;  // Forward/backward incline
+            }
 
             gunsEffectsTransform.localRotation = Quaternion.Slerp(gunsEffectsTransform.localRotation, Quaternion.Euler(bobRot * mult), Time.deltaTime * rotationSpeed);
         }
@@ -201,6 +222,11 @@ namespace cowsins
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("movementLimit"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("bobLimit"));
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("aimingMultiplier"));
+
+                // Add fields for the new inclination multipliers
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("horizontalInclineMultiplier"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("forwardInclineMultiplier"));
+
                 EditorGUI.indentLevel--;
 
             }
@@ -217,7 +243,23 @@ namespace cowsins
             EditorGUILayout.LabelField("WEAPON SWAY SETTINGS", EditorStyles.boldLabel);
             EditorGUILayout.LabelField("Weapon Sway can be modified in each Weapon Prefab ( Root of the Weapon Prefab )", EditorStyles.helpBox);
             EditorGUILayout.Space(5f);
-
+            if (GUILayout.Button("Go to Weapon Prefabs Folder"))
+            {
+                string folderPath = "Assets/Cowsins/ScriptableObjects/Weapons";
+                EditorUtility.FocusProjectWindow();
+                Object folder = AssetDatabase.LoadAssetAtPath<Object>(folderPath);
+                if (folder != null)
+                {
+                    EditorGUIUtility.PingObject(folder);
+                    Selection.activeObject = folder;
+                    EditorUtility.FocusProjectWindow();
+                }
+                else
+                {
+                    Debug.LogError($"Folder is empty or not found: {folderPath}. Did you remove or rename the Weapons Folder?");
+                }
+            }
+            EditorGUILayout.Space(5f);
             serializedObject.ApplyModifiedProperties();
 
         }

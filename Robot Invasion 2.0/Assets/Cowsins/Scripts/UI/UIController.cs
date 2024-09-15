@@ -159,7 +159,7 @@ namespace cowsins
             }
 
             //Inventory
-            if (InputManager.scrolling != 0 && !InputManager.reloading) inventoryContainer.alpha = 1;
+            if ((InputManager.scrolling != 0 || InputManager.nextweapon || InputManager.previousweapon) && !InputManager.reloading) inventoryContainer.alpha = 1;
             else if (inventoryContainer.alpha > 0) inventoryContainer.alpha -= Time.deltaTime;
         }
 
@@ -209,7 +209,9 @@ namespace cowsins
         private void NumericHealthDisplayMethod(float health, float shield)
         {
             if (healthTextDisplay != null)
-                healthTextDisplay.text = health.ToString("F0");
+            {
+                healthTextDisplay.text = health > 0 && health <= 1 ? 1.ToString("F0") : health.ToString("F0");
+            }
 
             if (shieldTextDisplay != null)
                 shieldTextDisplay.text = shield.ToString("F0");
@@ -223,6 +225,11 @@ namespace cowsins
             interactText.text = displayText;
             interactUI.GetComponent<Animation>().Play();
             interactUI.GetComponent<AudioSource>().Play();
+
+            // Adjust the width of the background based on the length of the displayText
+            RectTransform imageRect = interactUI.GetComponentInChildren<Image>().GetComponent<RectTransform>();
+            float textLength = displayText.Length;
+            imageRect.sizeDelta = new Vector2(100 + textLength * 10, imageRect.sizeDelta.y);
         }
 
         private void ForbiddenInteraction()

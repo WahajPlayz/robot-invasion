@@ -7,7 +7,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using System.Collections;
+
 namespace cowsins
 {
     // Add a rigidbody if needed, PlayerMovement.cs requires a rigidbody to work 
@@ -113,6 +113,10 @@ namespace cowsins
 
         [Tooltip("If false, hold to crouch, and release to uncrouch.")] public bool alternateCrouch;
 
+        [SerializeField, Tooltip("Distance to detect a roof. If an obstacle is detected within this distance, the player will not be able to uncrouch")] private float roofCheckDistance = 3.5f;
+
+        public float RoofCheckDistance { get { return roofCheckDistance; } }
+
         [Min(0.01f)]
         [Tooltip("Max speed the player can reach. Velocity is clamped by this value.")] public float maxSpeedAllowed = 40;
 
@@ -123,7 +127,7 @@ namespace cowsins
 
         [Tooltip("Distance from the bottom of the player to detect ground"), SerializeField, Min(0)] private float groundCheckDistance;
 
-        [Range(0, .5f)]
+        [Range(0, 1f)]
         [Tooltip("Counter movement."), SerializeField]
         private float frictionForceAmount = 0.175f;
 
@@ -131,6 +135,8 @@ namespace cowsins
 
         [Tooltip("Maximum slope angle that you can walk through."), SerializeField, Range(10, 80)]
         private float maxSlopeAngle = 35f;
+
+        private RaycastHit slopeHit;
 
 
         //Crouch & Slide
@@ -147,6 +153,8 @@ namespace cowsins
 
         [Tooltip("Slide Friction Amount."), SerializeField]
         private float slideCounterMovement = 0.2f;
+        [Tooltip("If true, the player will be able to move while sliding."), SerializeField]
+        private bool allowMoveWhileSliding;
 
         private Vector3 normalVector = Vector3.up;
 
@@ -202,8 +210,6 @@ namespace cowsins
         [Tooltip("size of the aim assist range."), SerializeField]
         private float aimAssistSensitivity = 3f;
 
-        private RaycastHit hit;
-
         private Transform target;
 
 
@@ -228,6 +234,11 @@ namespace cowsins
 
         [Tooltip("Amount of stamina lost on sliding."), SerializeField]
         private float staminaLossOnSlide;
+
+        [Tooltip("Amount of stamina lost on dashing."), SerializeField]
+        private float staminaLossOnDash;
+
+        public float StaminaLossOnDash { get { return staminaLossOnDash; } }
 
         private bool enoughStaminaToRun;
 
@@ -354,6 +365,8 @@ namespace cowsins
 
         [Range(.1f, 1f), Tooltip("Sensitivity will be multiplied by this value when aiming")] public float aimingSensitivityMultiplier = .4f;
 
+        [Tooltip("Height of the camera. This serves the same utility as MoveCamera.cs in previous versions"), Range(.1f, 3), SerializeField] private float cameraHeight = 1.6f;
+
         [Tooltip("Default field of view of your camera"), Range(1, 179)] public float normalFOV;
 
         [Tooltip("Running field of view of your camera"), Range(1, 179)] public float runningFOV;
@@ -408,12 +421,12 @@ namespace cowsins
 
         [Tooltip("If true, allows the player to use a customizable grappling hook.")] public bool canClimb = true;
 
-        private bool climbing;
+        private bool isClimbing;
 
         public bool Climbing
         {
-            get { return climbing; }
-            set { climbing = value; }
+            get { return isClimbing; }
+            set { isClimbing = value; }
         }
 
         [SerializeField, Min(0)]
@@ -481,13 +494,14 @@ namespace cowsins
 
             ResetStamina();
             events.OnSpawn.Invoke();
-
-
         }
 
 
         private void FixedUpdate()
         {
+            // Added Gravity
+            // Gravity is added only if we are not on a slope or climbing to prevent unvoluntary sliding
+            if ((!IsPlayerOnSlope() || (IsPlayerOnSlope() && rb.velocity.y < 0)) && !isClimbing) rb.AddForce(Vector3.down * 30.19f, ForceMode.Acceleration);
 
             if (rb.velocity.magnitude > maxSpeedAllowed) rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeedAllowed);
 
@@ -506,6 +520,9 @@ namespace cowsins
         private void Update()
         {
             CheckGroundedWithRaycast();
+
+            // Ensure the camera is always properly placed.
+            playerCam.localPosition = new Vector3(transform.position.x, cameraHeight + transform.position.y, transform.position.z);
 
             if (canWallBounce) CheckOppositeWall();
 
@@ -561,7 +578,7 @@ namespace cowsins
         {
             if (speedLines == null) return;
             // Check if we want to use speedlines. If false, stop and return.
-            if (!useSpeedLines || PauseMenu.isPaused || climbing)
+            if (!useSpeedLines || PauseMenu.isPaused || isClimbing)
             {
                 speedLines.Stop();
                 return;
@@ -657,6 +674,8 @@ namespace cowsins
             staminaSlider.value = stamina;
         }
 
+        public void ReduceStamina(float amount) => stamina -= amount;
+
         /// <summary>
         /// Handle all the basics related to the movement of the player.
         /// </summary>
@@ -664,7 +683,7 @@ namespace cowsins
         {
 
             //Extra gravity
-            rb.AddForce(Vector3.down * Time.deltaTime * 10);
+            if (!IsPlayerOnSlope() || (IsPlayerOnSlope() && rb.velocity.y < 0)) rb.AddForce(Vector3.down * Time.deltaTime * 10);
 
             //Find actual velocity relative to where player is looking
             Vector2 relativeVelocity = FindVelRelativeToLook();
@@ -689,9 +708,21 @@ namespace cowsins
                 if (grounded) rb.velocity = Vector3.zero;
                 return;
             }
+            if (isCrouching && rb.velocity.magnitude >= crouchSpeed && !allowMoveWhileSliding) return;
 
-            rb.AddForce(orientation.transform.forward * InputManager.y * acceleration * Time.deltaTime * multiplier * multiplierV / multiplier2);
-            rb.AddForce(orientation.transform.right * InputManager.x * acceleration * Time.deltaTime * multiplier / multiplier2);
+            if (IsPlayerOnSlope())
+            {
+                rb.AddForce(GetSlopeDirection() * acceleration * Time.deltaTime * multiplier / multiplier2);
+
+                rb.useGravity = false;
+
+                if (rb.velocity.y > 0) rb.AddForce(Vector3.down * 70, ForceMode.Force);
+            }
+            else
+            {
+                rb.AddForce(orientation.transform.forward * InputManager.y * acceleration * Time.deltaTime * multiplier * multiplierV / multiplier2);
+                rb.AddForce(orientation.transform.right * InputManager.x * acceleration * Time.deltaTime * multiplier / multiplier2);
+            }
         }
 
         /// <summary>
@@ -741,6 +772,10 @@ namespace cowsins
                         case "Wood": // Wood
                             i = UnityEngine.Random.Range(0, footsteps.woodStep.Length);
                             _audio.PlayOneShot(footsteps.woodStep[i], footstepVolume);
+                            break;
+                        default: // Default
+                            i = UnityEngine.Random.Range(0, footsteps.defaultStep.Length);
+                            _audio.PlayOneShot(footsteps.defaultStep[i], footstepVolume);
                             break;
                     }
                 }
@@ -899,9 +934,13 @@ namespace cowsins
             // Prevent from sliding not on purpose
 
             if (Math.Abs(mag.x) > threshold && Math.Abs(x) < 0.05f || (mag.x < -threshold && x > 0) || (mag.x > threshold && x < 0))
+            {
                 rb.AddForce(acceleration * orientation.transform.right * Time.deltaTime * -mag.x * frictionForceAmount);
+            }
             if (Math.Abs(mag.y) > threshold && Math.Abs(y) < 0.05f || (mag.y < -threshold && y > 0) || (mag.y > threshold && y < 0))
+            {
                 rb.AddForce(acceleration * orientation.transform.forward * Time.deltaTime * -mag.y * frictionForceAmount);
+            }
 
             // Limit diagonal running speed without causing a full stop on landing
             Vector3 flatVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
@@ -927,14 +966,34 @@ namespace cowsins
 
             return new Vector2(localVel.x, localVel.z);
         }
-
+        float angle;
         /// <summary>
         /// Determine wether this is determined as floor or not
         /// </summary>
         private bool IsFloor(Vector3 v)
         {
-            float angle = Vector3.Angle(Vector3.up, v);
+            angle = Vector3.Angle(Vector3.up, v);
             return angle < maxSlopeAngle;
+        }
+        /// <summary>
+        /// Determine wether this is determined as slope or not
+        /// </summary>
+        private bool IsPlayerOnSlope()
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerScale.y + groundCheckDistance))
+            {
+                float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+                return angle < maxSlopeAngle && angle != 0;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Get the direction of movement in a slope
+        /// </summary>
+        /// <returns></returns>
+        private Vector3 GetSlopeDirection()
+        {
+            return Vector3.ProjectOnPlane(orientation.forward * InputManager.y + orientation.right * InputManager.x, slopeHit.normal).normalized;
         }
 
         /// <summary>
@@ -1115,7 +1174,7 @@ namespace cowsins
                 if (resetJumpsOnWallrun) jumpCount = maxJumps - 1;
             }
             wallRunning = false;
-            if (!climbing)
+            if (!isClimbing && !IsPlayerOnSlope())
                 rb.useGravity = true;
         }
 
@@ -1322,6 +1381,7 @@ namespace cowsins
             {
                 return;
             }
+
             float verticalInput = InputManager.y;
 
             if (verticalInput != 0)
@@ -1348,7 +1408,7 @@ namespace cowsins
         /// <param name="rotation"></param>
         public void TeleportPlayer(Vector3 position, Quaternion rotation)
         {
-            transform.position = position;
+            rb.position = position;
             playerCam.rotation = rotation;
         }
     }

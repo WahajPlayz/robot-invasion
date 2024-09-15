@@ -19,12 +19,14 @@ namespace cowsins
     /// </summary>
     public class Interactable : MonoBehaviour
     {
-        protected Transform player;
-
         [HideInInspector] public bool interactable = false;
 
         [Tooltip("Text that will be displayed on the Interaction UI")]
         public string interactText;
+
+        [SerializeField] private bool instantInteraction = false;
+
+        public bool InstantInteraction { get { return instantInteraction; } }
 
         [System.Serializable]
         public class InteractableEvents // Store your events
@@ -37,14 +39,13 @@ namespace cowsins
         private void Start()
         {
             interactable = false;
-            player = GameObject.FindGameObjectWithTag("Player").transform;
         }
         /// <summary>
         /// Make sure to override this on your new custom class.
         /// If you still wanna call this method, make sure to write the following line:
         /// base.Interact();
         /// </summary>
-        public virtual void Interact()
+        public virtual void Interact(Transform player)
         {
             interactableEvents.OnInteract?.Invoke();
             Debug.Log("Interacted with" + this.gameObject.name);

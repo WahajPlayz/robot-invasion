@@ -32,6 +32,8 @@ namespace cowsins
         public void AddCoins(int amount)
         {
             coins += Mathf.Abs(amount); // Add positive amount of coins
+            UIController.instance.UpdateCoinsPanel();
+            UIEvents.onCoinsChange?.Invoke(CoinManager.Instance.coins);
         }
 
         // Remove coins from the total count
@@ -43,6 +45,8 @@ namespace cowsins
             {
                 coins = 0; // Set coins to zero if they go below
             }
+            UIController.instance.UpdateCoinsPanel();
+            UIEvents.onCoinsChange?.Invoke(CoinManager.Instance.coins);
         }
 
         // Check if there are enough coins
