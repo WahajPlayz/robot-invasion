@@ -521,9 +521,6 @@ namespace cowsins
         {
             CheckGroundedWithRaycast();
 
-            // Ensure the camera is always properly placed.
-            playerCam.localPosition = new Vector3(transform.position.x, cameraHeight + transform.position.y, transform.position.z);
-
             if (canWallBounce) CheckOppositeWall();
 
             if (InputManager.jumping && wallOpposite && canWallBounce && PlayerStats.Controllable && CheckHeight()) WallBounce();
