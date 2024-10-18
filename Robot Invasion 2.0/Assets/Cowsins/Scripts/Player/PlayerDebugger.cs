@@ -34,7 +34,7 @@ namespace cowsins
             // Draw the background box
             GUI.Box(new Rect(10, topMargin, boxWidth, 110), "Player Information");
 
-            GUI.Label(new Rect(20, topMargin + 20, boxWidth - 20, 20), "Player Velocity: " + Mathf.Round(rb.velocity.magnitude));
+            GUI.Label(new Rect(20, topMargin + 20, boxWidth - 20, 20), "Player Velocity: " + Mathf.Round(rb.linearVelocity.magnitude));
 
             GUI.Label(new Rect(20, topMargin + 40, boxWidth - 20, 20), "Player Position: " + transform.position);
 

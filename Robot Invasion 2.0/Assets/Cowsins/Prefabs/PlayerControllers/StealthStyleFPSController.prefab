@@ -702,7 +702,6 @@ MonoBehaviour:
   controllerSensitivityX: 35
   controllerSensitivityY: 35
   aimingSensitivityMultiplier: 0.4
-  cameraHeight: 1.6
   normalFOV: 60
   runningFOV: 60
   wallrunningFOV: 0
@@ -2386,7 +2385,7 @@ PrefabInstance:
     - target: {fileID: 2613562278186925027, guid: 48487ed79b7a6b640af4e489a214b984, type: 3}
       propertyPath: cam
       value: 
-      objectReference: {fileID: 8933271074242387403}
+      objectReference: {fileID: 8933271074355159279}
     - target: {fileID: 2613562278186925027, guid: 48487ed79b7a6b640af4e489a214b984, type: 3}
       propertyPath: camera
       value: 

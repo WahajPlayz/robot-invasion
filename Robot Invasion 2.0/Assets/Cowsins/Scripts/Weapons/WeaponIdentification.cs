@@ -126,9 +126,47 @@ namespace cowsins
 
             return (attachments, magCapacityAdded);
         }
+#if UNITY_EDITOR
 
+        #region Gizmos
+
+        // Draws additional Weapon Information on the editor view
+        Vector3 boxSize = new Vector3(0.1841836f, 0.14f, 0.54f);
+        Vector3 boxPosition = new Vector3(0,-.2f,.6f);
+
+        private void OnDrawGizmos()
+        {
+            if (!Application.isPlaying)
+            {
+                Gizmos.color = new Color(1, 0, 0, 0.3f);
+
+                Gizmos.DrawWireCube(transform.position + boxPosition, boxSize);
+                Handles.Label(transform.position + boxPosition + Vector3.up * (boxSize.y / 2 + 0.1f), "Approximate Weapon Location");
+
+                if(aimPoint)
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawWireCube(aimPoint.position , Vector3.one * .02f);
+                    Handles.Label(aimPoint.position + Vector3.up * .05f, "Aim Point");
+
+                }
+
+                for(int i = 0; i < FirePoint.Length; i++)
+                {
+                    if (FirePoint[i] != null)
+                    {
+                        Gizmos.color = Color.green;
+                        Gizmos.DrawWireCube(FirePoint[i].position, Vector3.one * .02f);
+                        Handles.Label(FirePoint[i].position + Vector3.up * .05f, "Fire Point " + (i + 1));
+
+                    }
+                }
+            }
+        }
+        #endregion
+
+#endif
     }
-
 #if UNITY_EDITOR
 
 
@@ -138,11 +176,6 @@ namespace cowsins
 
         private string[] tabs = { "Basic", "Attachments" };
         private int currentTab = 0;
-
-
-        private void OnEnable()
-        {
-        }
 
         public override void OnInspectorGUI()
         {

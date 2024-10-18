@@ -24,7 +24,6 @@ namespace cowsins
 
         public override void CheckSwitchState() { }
 
-        public override void InitializeSubState() { }
 
     }
 }

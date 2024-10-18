@@ -31,7 +31,7 @@ namespace cowsins
             {
                 targetFOV = movement.wallrunningFOV;
             }
-            else if (movement.currentSpeed > movement.walkSpeed && player.velocity.magnitude > 0.2f)
+            else if (movement.currentSpeed > movement.walkSpeed && player.linearVelocity.magnitude > 0.2f)
             {
                 targetFOV = movement.runningFOV;
             }

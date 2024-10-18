@@ -17,7 +17,7 @@ namespace cowsins
             rb = _ctx.GetComponent<Rigidbody>();
             rb.useGravity = false;
             player.Climbing = true;
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
 
             player.events.OnSpawn.Invoke();
         }
@@ -53,8 +53,6 @@ namespace cowsins
             }
 
         }
-
-        public override void InitializeSubState() { }
 
     }
 }

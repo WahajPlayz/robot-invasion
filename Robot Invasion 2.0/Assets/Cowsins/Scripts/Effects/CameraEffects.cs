@@ -59,7 +59,7 @@ namespace cowsins
 
         private void UpdateHeadBob()
         {
-            if (playerRigidbody.velocity.magnitude < player.walkSpeed || InputManager.jumping)
+            if (playerRigidbody.linearVelocity.magnitude < player.walkSpeed || InputManager.jumping)
             {
                 playerCamera.localPosition = Vector3.Lerp(playerCamera.localPosition, origPos, Time.deltaTime * 2f);
                 playerCamera.localRotation = Quaternion.Lerp(playerCamera.localRotation, origRot, Time.deltaTime * 2f);

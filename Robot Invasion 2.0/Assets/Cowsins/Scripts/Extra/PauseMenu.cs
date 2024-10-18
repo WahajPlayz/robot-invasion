@@ -72,8 +72,6 @@ namespace cowsins
             {
                 playerUI.SetActive(false);
             }
-
-            OnPause?.Invoke();
         }
 
         private void HandleUnpause()
@@ -86,8 +84,6 @@ namespace cowsins
             }
 
             playerUI.SetActive(true);
-
-            OnUnpause?.Invoke();
         }
 
         public void UnPause()
@@ -97,6 +93,8 @@ namespace cowsins
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             playerUI.SetActive(true);
+
+            OnUnpause?.Invoke();
         }
 
         public void QuitGame()

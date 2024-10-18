@@ -32,9 +32,6 @@ namespace cowsins
         {
             if (!controller.Reloading) SwitchState(_factory.Default());
         }
-
-        public override void InitializeSubState() { }
-
         private void CheckStopAim()
         {
             if (!InputManager.aiming || !controller.weapon.allowAimingIfReloading) controller.StopAim();

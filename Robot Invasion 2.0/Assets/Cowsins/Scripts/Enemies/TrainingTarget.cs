@@ -21,7 +21,7 @@ namespace cowsins
             if (shieldSlider != null) shieldSlider.gameObject.SetActive(false);
             if (healthSlider != null) healthSlider.gameObject.SetActive(false);
 
-            if (showKillFeed) UIEvents.onEnemyKilled.Invoke(name);
+            if (showKillFeed) UIEvents.onEnemyKilled.Invoke(_name);
 
             if (transform.parent.GetComponent<CompassElement>() != null) transform.parent.GetComponent<CompassElement>().Remove();
 

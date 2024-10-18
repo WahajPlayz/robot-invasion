@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
 #if UNITY_EDITOR
@@ -124,8 +124,8 @@ namespace cowsins
         }
         private void OriginalBob()
         {
-            _distance = distance * rb.velocity.magnitude / 1.5f * Time.deltaTime * aimingMultiplier;
-            speed = rb.velocity.magnitude / 1.5f * Time.deltaTime;
+            _distance = distance * rb.linearVelocity.magnitude / 1.5f * Time.deltaTime * aimingMultiplier;
+            speed = rb.linearVelocity.magnitude / 1.5f * Time.deltaTime;
             Vector3 localPosition = gunsEffectsTransform.localPosition;
             Quaternion localRotation = gunsEffectsTransform.localRotation;
 
@@ -165,11 +165,11 @@ namespace cowsins
 
         private void DetailedBob()
         {
-            bobSpeed += Time.deltaTime * (PlayerMovement.grounded ? rb.velocity.magnitude / 2 : 1) + .01f;
+            bobSpeed += Time.deltaTime * (PlayerMovement.grounded ? rb.linearVelocity.magnitude / 2 : 1) + .01f;
             float mult = PlayerMovement.GetComponent<WeaponController>().isAiming ? aimingMultiplier : 1;
 
             bobPos.x = (bobCos * bobLimit.x * (PlayerMovement.grounded || PlayerMovement.wallRunning ? 1 : 0)) - (InputManager.x * movementLimit.x);
-            bobPos.y = (bobSin * bobLimit.y) - (rb.velocity.y * movementLimit.y);
+            bobPos.y = (bobSin * bobLimit.y) - (rb.linearVelocity.y * movementLimit.y);
             bobPos.z = -InputManager.y * movementLimit.z;
 
             gunsEffectsTransform.localPosition = Vector3.Lerp(gunsEffectsTransform.localPosition, bobPos * mult, Time.deltaTime * translationSpeed);

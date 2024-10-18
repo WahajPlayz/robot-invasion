@@ -68,7 +68,6 @@ namespace cowsins
                         GUILayout.Space(10);
                         EditorGUILayout.LabelField("CAMERA", EditorStyles.boldLabel);
                         GUILayout.Box("", new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.Height(8) });
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("cameraHeight"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("normalFOV"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("runningFOV"));
                         if (myScript.canWallRun)

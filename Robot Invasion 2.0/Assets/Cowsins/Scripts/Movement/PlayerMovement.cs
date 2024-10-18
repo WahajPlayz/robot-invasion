@@ -365,8 +365,6 @@ namespace cowsins
 
         [Range(.1f, 1f), Tooltip("Sensitivity will be multiplied by this value when aiming")] public float aimingSensitivityMultiplier = .4f;
 
-        [Tooltip("Height of the camera. This serves the same utility as MoveCamera.cs in previous versions"), Range(.1f, 3), SerializeField] private float cameraHeight = 1.6f;
-
         [Tooltip("Default field of view of your camera"), Range(1, 179)] public float normalFOV;
 
         [Tooltip("Running field of view of your camera"), Range(1, 179)] public float runningFOV;
@@ -501,9 +499,9 @@ namespace cowsins
         {
             // Added Gravity
             // Gravity is added only if we are not on a slope or climbing to prevent unvoluntary sliding
-            if ((!IsPlayerOnSlope() || (IsPlayerOnSlope() && rb.velocity.y < 0)) && !isClimbing) rb.AddForce(Vector3.down * 30.19f, ForceMode.Acceleration);
+            if ((!IsPlayerOnSlope() || (IsPlayerOnSlope() && rb.linearVelocity.y < 0)) && !isClimbing) rb.AddForce(Vector3.down * 30.19f, ForceMode.Acceleration);
 
-            if (rb.velocity.magnitude > maxSpeedAllowed) rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeedAllowed);
+            if (rb.linearVelocity.magnitude > maxSpeedAllowed) rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, maxSpeedAllowed);
 
             Stamina();
 
@@ -512,7 +510,7 @@ namespace cowsins
             if (canWallRun)
             {
                 CheckWalls();
-                if (InputManager.yMovementActioned && (wallLeft || wallRight) && CheckHeight() && rb.velocity.magnitude > walkSpeed && !grounded) WallRun();
+                if (InputManager.yMovementActioned && (wallLeft || wallRight) && CheckHeight() && rb.linearVelocity.magnitude > walkSpeed && !grounded) WallRun();
                 else StopWallRun();
             }
         }
@@ -549,7 +547,7 @@ namespace cowsins
                 }
                 else shouldRun = true;
 
-                if (shouldRun && (canRunBackwards || Vector3.Dot(orientation.forward, rb.velocity) > 0) && (canRunSideways || InputManager.x == 0 && InputManager.y != 0))
+                if (shouldRun && (canRunBackwards || Vector3.Dot(orientation.forward, rb.linearVelocity) > 0) && (canRunSideways || InputManager.x == 0 && InputManager.y != 0))
                 {
 
                     if (canRunWhileShooting || !InputManager.shooting)
@@ -564,7 +562,7 @@ namespace cowsins
                 currentSpeed = walkSpeed;
             }
 
-            if (rb.velocity.sqrMagnitude < 0.0001f)
+            if (rb.linearVelocity.sqrMagnitude < 0.0001f)
             {
                 currentSpeed = walkSpeed;
             }
@@ -581,7 +579,7 @@ namespace cowsins
                 return;
             }
 
-            if (rb.velocity.sqrMagnitude > minSpeedToUseSpeedLines * minSpeedToUseSpeedLines)
+            if (rb.linearVelocity.sqrMagnitude > minSpeedToUseSpeedLines * minSpeedToUseSpeedLines)
             {
                 speedLines.Play(); // Play speedlines
             }
@@ -592,7 +590,7 @@ namespace cowsins
 
             // HandleEmission
             var emission = speedLines.emission;
-            float emissionRate = (rb.velocity.magnitude > runSpeed) ? 200 : 70;
+            float emissionRate = (rb.linearVelocity.magnitude > runSpeed) ? 200 : 70;
             emission.rateOverTime = emissionRate * speedLinesAmount;
         }
 
@@ -605,7 +603,7 @@ namespace cowsins
             if (crouchCancelMethod == CrouchCancelMethod.FullStop)
                 currentSpeed = crouchSpeed;
 
-            if (rb.velocity.magnitude >= walkSpeed && grounded && allowSliding && !hasJumped)
+            if (rb.linearVelocity.magnitude >= walkSpeed && grounded && allowSliding && !hasJumped)
             { // Handle sliding
                 events.OnSlide.Invoke(); // Invoke your own method on the moment you slid NOT WHILE YOU ARE SLIDING
                                          // Add the force on slide
@@ -680,7 +678,7 @@ namespace cowsins
         {
 
             //Extra gravity
-            if (!IsPlayerOnSlope() || (IsPlayerOnSlope() && rb.velocity.y < 0)) rb.AddForce(Vector3.down * Time.deltaTime * 10);
+            if (!IsPlayerOnSlope() || (IsPlayerOnSlope() && rb.linearVelocity.y < 0)) rb.AddForce(Vector3.down * Time.deltaTime * 10);
 
             //Find actual velocity relative to where player is looking
             Vector2 relativeVelocity = FindVelRelativeToLook();
@@ -698,14 +696,14 @@ namespace cowsins
 
             float multiplier2 = (weaponController.weapon != null) ? weaponController.weapon.weightMultiplier : 1;
 
-            if (rb.velocity.sqrMagnitude < .02f) rb.velocity = Vector3.zero;
+            if (rb.linearVelocity.sqrMagnitude < .02f) rb.linearVelocity = Vector3.zero;
 
             if (!move)
             {
-                if (grounded) rb.velocity = Vector3.zero;
+                if (grounded) rb.linearVelocity = Vector3.zero;
                 return;
             }
-            if (isCrouching && rb.velocity.magnitude >= crouchSpeed && !allowMoveWhileSliding) return;
+            if (isCrouching && rb.linearVelocity.magnitude >= crouchSpeed && !allowMoveWhileSliding) return;
 
             if (IsPlayerOnSlope())
             {
@@ -713,7 +711,7 @@ namespace cowsins
 
                 rb.useGravity = false;
 
-                if (rb.velocity.y > 0) rb.AddForce(Vector3.down * 70, ForceMode.Force);
+                if (rb.linearVelocity.y > 0) rb.AddForce(Vector3.down * 70, ForceMode.Force);
             }
             else
             {
@@ -728,14 +726,14 @@ namespace cowsins
         public void FootSteps()
         {
             // Reset timer if conditions are met + dont play the footsteps
-            if (!grounded || rb.velocity.sqrMagnitude <= .1f)
+            if (!grounded || rb.linearVelocity.sqrMagnitude <= .1f)
             {
                 stepTimer = 1 - footstepSpeed;
                 return;
             }
 
             // Wait for the next time to play a sound
-            stepTimer -= Time.deltaTime * rb.velocity.magnitude / 15;
+            stepTimer -= Time.deltaTime * rb.linearVelocity.magnitude / 15;
 
             // Play the sound and reset
             if (stepTimer <= 0)
@@ -798,7 +796,7 @@ namespace cowsins
             //Add jump forces
             if (wallRunning) // When we wallrun, we want to add extra side forces
             {
-                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
                 rb.AddForce(transform.up * upwardsWallJumpForce);
                 rb.AddForce(wallNormal * normalWallJumpForce, ForceMode.Impulse);
             }
@@ -809,8 +807,8 @@ namespace cowsins
                 // Handle directional jumping
                 if (!grounded && directionalJumpMethod != DirectionalJumpMethod.None && maxJumps > 1 && !wallOpposite)
                 {
-                    if (Vector3.Dot(rb.velocity, new Vector3(InputManager.x, 0, InputManager.y)) > .5f)
-                        rb.velocity = rb.velocity / 2;
+                    if (Vector3.Dot(rb.linearVelocity, new Vector3(InputManager.x, 0, InputManager.y)) > .5f)
+                        rb.linearVelocity = rb.linearVelocity / 2;
                     if (directionalJumpMethod == DirectionalJumpMethod.InputBased) // Input based method for directional jumping
                     {
                         rb.AddForce(orientation.right * InputManager.x * directionalJumpForce, ForceMode.Impulse);
@@ -821,10 +819,10 @@ namespace cowsins
                 }
 
                 //If jumping while falling, reset y velocity.
-                if (rb.velocity.y < 0.5f)
-                    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-                else if (rb.velocity.y > 0)
-                    rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y / 2, rb.velocity.z);
+                if (rb.linearVelocity.y < 0.5f)
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                else if (rb.linearVelocity.y > 0)
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y / 2, rb.linearVelocity.z);
             }
 
             //staminaLoss
@@ -860,8 +858,8 @@ namespace cowsins
             float sensM = (weaponController.isAiming) ? InputManager.aimingSensitivityMultiplier : 1;
 
             //Handle the camera movement and look based on the inputs received by the user
-            float mouseX = (InputManager.mousex * InputManager.sensitivity_x * Time.fixedDeltaTime + InputManager.controllerx * InputManager.controllerSensitivityX * Time.fixedDeltaTime) * inverted * sensM;
-            float mouseY = (InputManager.mousey * InputManager.sensitivity_y * Time.fixedDeltaTime * inverted + InputManager.controllery * InputManager.controllerSensitivityY * Time.fixedDeltaTime * -inverted) * sensM;
+            float mouseX = (InputManager.mousex * InputManager.sensitivity_x * Time.fixedDeltaTime + InputManager.controllerx * Time.fixedDeltaTime * InputManager.controllerSensitivityX) * inverted * sensM;
+            float mouseY = (InputManager.mousey * InputManager.sensitivity_y * Time.fixedDeltaTime * inverted + InputManager.controllery * Time.fixedDeltaTime * InputManager.controllerSensitivityY * Time.fixedDeltaTime* -inverted) * sensM;
 
             //Find current look rotation
             Vector3 rot = playerCam.transform.localRotation.eulerAngles;
@@ -871,7 +869,7 @@ namespace cowsins
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -maxCameraAngle, maxCameraAngle); // The reason why the value is 89.7 instead of 90 is to prevent errors with the wallrun
             if (wallRunning && canWallRun) cameraTilt = wallLeft ? Mathf.Lerp(cameraTilt, -wallrunCameraTiltAmount, Time.deltaTime * cameraTiltTransationSpeed) : Mathf.Lerp(cameraTilt, wallrunCameraTiltAmount, Time.deltaTime * cameraTiltTransationSpeed);
-            else if (isCrouching && rb.velocity.magnitude >= walkSpeed && allowSliding && !hasJumped) cameraTilt = Mathf.Lerp(cameraTilt, slidingCameraTiltAmount, Time.deltaTime * cameraTiltTransationSpeed);
+            else if (isCrouching && rb.linearVelocity.magnitude >= walkSpeed && allowSliding && !hasJumped) cameraTilt = Mathf.Lerp(cameraTilt, slidingCameraTiltAmount, Time.deltaTime * cameraTiltTransationSpeed);
             else cameraTilt = Mathf.Lerp(cameraTilt, 0, Time.deltaTime * cameraTiltTransationSpeed);
             //Perform the rotations on: 
             playerCam.transform.localRotation = Quaternion.Euler(xRotation, desiredX, cameraTilt); // the camera parent
@@ -924,7 +922,7 @@ namespace cowsins
             //Slow down sliding + prevent from infinite sliding
             if (InputManager.crouching && allowCrouch)
             {
-                rb.AddForce(acceleration * Time.deltaTime * -rb.velocity.normalized * slideCounterMovement);
+                rb.AddForce(acceleration * Time.deltaTime * -rb.linearVelocity.normalized * slideCounterMovement);
                 return;
             }
             // Counter movement ( Friction while moving )
@@ -940,11 +938,11 @@ namespace cowsins
             }
 
             // Limit diagonal running speed without causing a full stop on landing
-            Vector3 flatVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            Vector3 flatVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             if (flatVelocity.magnitude > currentSpeed)
             {
                 Vector3 limitedVelocity = flatVelocity.normalized * currentSpeed;
-                rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
+                rb.linearVelocity = new Vector3(limitedVelocity.x, rb.linearVelocity.y, limitedVelocity.z);
             }
         }
 
@@ -956,7 +954,7 @@ namespace cowsins
         public Vector2 FindVelRelativeToLook()
         {
             float lookAngle = orientation.transform.eulerAngles.y;
-            Vector3 velocity = rb.velocity;
+            Vector3 velocity = rb.linearVelocity;
 
             // Convert velocity to local space relative to the player's look direction
             Vector3 localVel = Quaternion.Euler(0, -lookAngle, 0) * velocity;
@@ -1141,8 +1139,8 @@ namespace cowsins
 
             rb.useGravity = useGravity;
 
-            if (useGravity && rb.velocity.y < 0) rb.AddForce(transform.up * wallrunGravityCounterForce, ForceMode.Force);
-            rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxWallRunSpeed);
+            if (useGravity && rb.linearVelocity.y < 0) rb.AddForce(transform.up * wallrunGravityCounterForce, ForceMode.Force);
+            rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, maxWallRunSpeed);
 
             if (!(wallRight && InputManager.x < 0) && !(wallLeft && InputManager.x > 0)) rb.AddForce(-wallNormal * 100, ForceMode.Force);
 
@@ -1156,7 +1154,7 @@ namespace cowsins
             wallRunning = true;
             wallRunTimer = wallRunDuration;
             events.OnStartWallRun.Invoke();
-            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             rb.AddForce(wallDirection, ForceMode.Impulse);
             if (resetJumpsOnWallrun) jumpCount = maxJumps;
         }
@@ -1385,7 +1383,7 @@ namespace cowsins
             {
                 Vector3 targetPosition = transform.position + transform.up * verticalInput * climbSpeed * Time.deltaTime;
                 rb.MovePosition(Vector3.Lerp(transform.position, targetPosition, 0.5f));
-                rb.velocity = new Vector3(0, rb.velocity.y, 0);
+                rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
             }
         }
 

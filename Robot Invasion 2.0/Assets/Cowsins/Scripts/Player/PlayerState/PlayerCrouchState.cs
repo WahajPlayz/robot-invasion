@@ -63,8 +63,6 @@ namespace cowsins
 
         }
 
-        public override void InitializeSubState() { }
-
         private bool canUnCrouch = false;
 
         void HandleMovement()

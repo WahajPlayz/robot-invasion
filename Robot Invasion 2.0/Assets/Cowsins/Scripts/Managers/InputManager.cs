@@ -29,7 +29,7 @@ namespace cowsins
             dashing,
             invertedAxis,
             yMovementActioned,
-            toggleFlashLight, grappling, ShieldSpawner;
+            toggleFlashLight, grappling, SheildSpawner;
 
         public static float x,
             y,

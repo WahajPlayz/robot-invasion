@@ -29,7 +29,7 @@ namespace cowsins
             showDraggableButton = EditorPrefs.GetBool(ShowDraggableButtonKey, true);
             SceneView.duringSceneGui += OnSceneGUI;
 
-            logoIcon = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/DraggableButton/LogoIcon.png");
+            logoIcon = Resources.Load<Texture2D>("CustomEditor/LogoIcon");
         }
 
         private static void OnSceneGUI(SceneView sceneView)
@@ -90,10 +90,10 @@ namespace cowsins
             GUI.Box(menuRect, GUIContent.none, GUI.skin.box);
 
             // Textures for different options
-            Texture2D option1Image = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/DraggableButton/FolderWeapon.png");
-            Texture2D option2Image = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/DraggableButton/FolderSO.png");
-            Texture2D option3Image = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/DraggableButton/AddWeapon.png");
-            Texture2D option4Image = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Cowsins/UI/DraggableButton/Tutorials.png");
+            Texture2D option1Image = Resources.Load<Texture2D>("CustomEditor/FolderWeapon");
+            Texture2D option2Image = Resources.Load<Texture2D>("CustomEditor/FolderSO");
+            Texture2D option3Image = Resources.Load<Texture2D>("CustomEditor/AddWeapon");
+            Texture2D option4Image = Resources.Load<Texture2D>("CustomEditor/Tutorials");
 
 
             GUIContent option1Content = new GUIContent(option1Image);

@@ -54,7 +54,22 @@ namespace cowsins
         public static void ApplyPreset(Preset preset, Object target)
         {
             preset.ApplyTo(target);
-            Debug.Log("Preset successfully applied");
+        }
+
+        public static bool IsUsingUnity6()
+        {
+            string unityVersion = Application.unityVersion;
+
+            string[] versionParts = unityVersion.Split('.');
+
+            if (versionParts.Length > 0 && int.TryParse(versionParts[0], out int majorVersion))
+            {
+                if (majorVersion >= 6000 && !EditorPrefs.GetBool("Unity6EditorWindowDontShowAgain", false))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 #endif
         public static bool EmptyString(string string_)

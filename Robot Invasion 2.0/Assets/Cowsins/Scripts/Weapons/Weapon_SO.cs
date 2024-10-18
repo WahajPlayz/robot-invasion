@@ -49,7 +49,8 @@ namespace cowsins
     [System.Serializable]
     public class AudioClips
     {
-        public AudioClip firing, holster, unholster, reload, emptyMagReload, emptyMagShoot;
+        public AudioClip[] shooting; 
+        public AudioClip holster, unholster, reload, emptyMagReload, emptyMagShoot;
     }
     [System.Serializable]
     public class BulletHoleImpact
@@ -120,7 +121,7 @@ namespace cowsins
 
         [Tooltip("Bullets instantiated per each shot. Grants the possibility of making shotguns, burstguns etc. Amount of bullets spawned every shot.")]
 
-        public int bulletsPerFire; // Grants the possibility of making shotguns, burstguns etc. Amount of bullets spawned every shot.
+        [Range(1,8)]public int bulletsPerFire; // Grants the possibility of making shotguns, burstguns etc. Amount of bullets spawned every shot.
 
         [Tooltip("How much ammo you lose per each fire ( & per each fire point )"), Min(0)]
 
@@ -852,7 +853,7 @@ namespace cowsins
                 { "projectile [Shooting Tab]", script.shootStyle == ShootStyle.Projectile && script.projectile == null },
                 { "proceduralShotPattern [Visuals Tab]", script.useProceduralShot && script.proceduralShotPattern == null },
                 { "bulletGraphics [Visuals Tab]", script.showBulletShells && script.bulletGraphics == null },
-                { "firingSFX [Audio Tab]", script.audioSFX.firing == null },
+                { "firingSFX [Audio Tab]", script.audioSFX.shooting.Length <= 0},
                 { "holsterSFX [Audio Tab]", script.audioSFX.holster == null },
                 { "unholsterSFX [Audio Tab]", script.audioSFX.unholster == null },
                 { "reloadSFX [Audio Tab]", script.audioSFX.reload == null },

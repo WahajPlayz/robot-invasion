@@ -37,7 +37,5 @@ namespace cowsins
 
             if (timer >= controller.meleeDuration + controller.meleeDelay) SwitchState(_factory.Default());
         }
-
-        public override void InitializeSubState() { }
     }
 }

@@ -44,7 +44,7 @@ namespace cowsins
                         vForceDirection = other.transform.up;
                         break;
                     case ForceModeType.PlayerMovementDirection:
-                        hForceDirection = other.GetComponent<Rigidbody>().velocity.normalized;
+                        hForceDirection = other.GetComponent<Rigidbody>().linearVelocity.normalized;
                         vForceDirection = other.transform.up;
                         break;
                     case ForceModeType.JumpPadLocalAxis:

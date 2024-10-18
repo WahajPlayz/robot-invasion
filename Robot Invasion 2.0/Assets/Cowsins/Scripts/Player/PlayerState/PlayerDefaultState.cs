@@ -62,8 +62,6 @@ namespace cowsins
             }
         }
 
-        public override void InitializeSubState() { }
-
         void HandleMovement()
         {
             if (InputManager.x != 0 || InputManager.y != 0) player.events.OnMove.Invoke();

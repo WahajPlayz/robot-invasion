@@ -129,6 +129,8 @@ namespace cowsins
 
         private PlayerStats stats;
 
+        private WeaponAnimator weaponAnimator; 
+
         private GameObject muzzleVFX;
 
         private float fireRate;
@@ -254,6 +256,18 @@ namespace cowsins
                 canShoot = false; // since you have already shot, you will have to wait in order to being able to shoot again
                 bulletsPerFire = weapon.bulletsPerFire;
                 StartCoroutine(HandleShooting());
+
+                // Adding a layer of realism, bullet shells get instantiated and interact with the world
+                // We should  first check if we really wanna do this
+                if (weapon.showBulletShells && (int)weapon.shootStyle != 2)
+                {
+                    var bulletShell = Instantiate(weapon.bulletGraphics, p.position, mainCamera.transform.rotation);
+                    Rigidbody shellRigidbody = bulletShell.GetComponent<Rigidbody>();
+                    float torque = Random.Range(-15f, 15f);
+                    Vector3 shellForce = mainCamera.transform.right * 5 + mainCamera.transform.up * 5;
+                    shellRigidbody.AddTorque(mainCamera.transform.right * torque, ForceMode.Impulse);
+                    shellRigidbody.AddForce(shellForce, ForceMode.Impulse);
+                }
             }
             if (weapon.timeBetweenShots == 0) SoundManager.Instance.PlaySound(fireSFX, 0, weapon.pitchVariationFiringSFX, true, 0);
             Invoke(nameof(CanShoot), fireRate);
@@ -321,22 +335,8 @@ namespace cowsins
             /// Determine wether we are sending a raycast, aka hitscan weapon, we are spawning a projectile or melee attacking
             int style = (int)weapon.shootStyle;
 
-            GetComponent<WeaponAnimator>().StopWalkAndRunMotion();
+            weaponAnimator.StopWalkAndRunMotion();
 
-            // Adding a layer of realism, bullet shells get instantiated and interact with the world
-            // We should obviously first check if we really wanna do this
-            if (weapon.showBulletShells && style != 2)
-            {
-                foreach (var p in firePoint)
-                {
-                    var bulletShell = Instantiate(weapon.bulletGraphics, p.position, mainCamera.transform.rotation);
-                    Rigidbody shellRigidbody = bulletShell.GetComponent<Rigidbody>();
-                    float torque = Random.Range(-15f, 15f);
-                    Vector3 shellForce = mainCamera.transform.right * 5 + mainCamera.transform.up * 5;
-                    shellRigidbody.AddTorque(mainCamera.transform.right * torque, ForceMode.Impulse);
-                    shellRigidbody.AddForce(shellForce, ForceMode.Impulse);
-                }
-            }
             // Rest the bullets that have just been shot
             reduceAmmo?.Invoke();
 
@@ -488,7 +488,8 @@ namespace cowsins
         {
             events.OnShoot.Invoke();
 
-            Collider[] col = Physics.OverlapSphere(transform.position + mainCamera.transform.parent.forward * attackRange / 2, attackRange, hitLayer);
+            Vector3 basePosition = id != null ? id.transform.position : transform.position;
+           Collider[] col = Physics.OverlapSphere(basePosition + mainCamera.transform.parent.forward * attackRange / 2, attackRange, hitLayer);
 
             float dmg = damage * stats.damageMultiplier;
 
@@ -577,6 +578,11 @@ namespace cowsins
                     impact = Instantiate(effects.enemyImpact, h.point, Quaternion.identity); // Enemy
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
+                    break;
+                default:
+                    impact = Instantiate(effects.metalImpact, h.point, Quaternion.identity);
+                    impact.transform.rotation = Quaternion.LookRotation(h.normal);
+                    if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.groundIMpact, h.point, Quaternion.identity);
                     break;
             }
 
@@ -764,7 +770,7 @@ namespace cowsins
             // Grab the modifiers for the custom set of attachments.
             GetAttachmentsModifiers();
 
-            GetComponent<WeaponAnimator>().StopWalkAndRunMotion();
+            weaponAnimator.StopWalkAndRunMotion();
 
             // Define reloading method
             if (weapon.reloadStyle == ReloadingStyle.defaultReload)
@@ -779,7 +785,7 @@ namespace cowsins
                 coolSpeed = weapon.coolSpeed;
             }
 
-            firePoint = inventory[currentWeapon].GetComponent<WeaponIdentification>().FirePoint;
+            firePoint = inventory[currentWeapon].FirePoint;
 
             // UI & OTHERS
             if (weapon.infiniteBullets || weapon.reloadStyle == ReloadingStyle.Overheat)
@@ -891,7 +897,7 @@ namespace cowsins
         {
             // Grab references for the variables in case their respective attachments are null or not.
 
-            fireSFX = id.barrel != null ? id.barrel.GetComponent<Barrel>().supressedFireSFX : weapon.audioSFX.firing;
+            fireSFX = id.barrel != null ? id.barrel.GetComponent<Barrel>().supressedFireSFX : weapon.audioSFX.shooting[Random.Range(0, weapon.audioSFX.shooting.Length - 1)];
 
             aimRot = id.scope != null && id.scope != id.defaultAttachments.defaultScope
                 ? id.scope.GetComponent<Scope>().aimingRotation
@@ -1118,7 +1124,6 @@ namespace cowsins
             if (inventoryIndex == currentWeapon)
             {
                 weapon = newWeapon;
-                SelectWeapon();
             }
             else weaponPicked.gameObject.SetActive(false);
 
@@ -1143,12 +1148,16 @@ namespace cowsins
             slots[inventoryIndex].weapon = newWeapon;
             slots[inventoryIndex].GetImage();
 #if UNITY_EDITOR
-            UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset = weapon.crosshairPreset;
-            CowsinsUtilities.ApplyPreset(UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset, UIController.instance.crosshair.GetComponent<CrosshairShape>());
+            UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset = weapon?.crosshairPreset;
+            if (UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset)
+                CowsinsUtilities.ApplyPreset(UIController.instance.crosshair.GetComponent<CrosshairShape>().currentPreset, UIController.instance.crosshair.GetComponent<CrosshairShape>());
 #endif
 
-            if (weapon.shootStyle == ShootStyle.Custom) SelectCustomShotMethod();
+            if (weapon?.shootStyle == ShootStyle.Custom) SelectCustomShotMethod();
             else customMethod = null;
+
+            if (inventoryIndex == currentWeapon) SelectWeapon();
+
         }
 
         /// <summary>
@@ -1271,6 +1280,7 @@ namespace cowsins
         private void InitialSettings()
         {
             stats = GetComponent<PlayerStats>();
+            weaponAnimator = GetComponent<WeaponAnimator>();
             inventory = new WeaponIdentification[inventorySize];
             currentWeapon = 0;
             canShoot = true;

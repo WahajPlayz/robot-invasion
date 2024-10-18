@@ -30,7 +30,7 @@ namespace cowsins
                 return;
 
             }
-            if (wc.Reloading || wc.shooting || player.isCrouching || !player.grounded || rb.velocity.magnitude < 0.1f || wc.isAiming
+            if (wc.Reloading || wc.shooting || player.isCrouching || !player.grounded || rb.linearVelocity.magnitude < 0.1f || wc.isAiming
                 || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("Unholster")
                 || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("reloading")
                 || currentAnimator.GetCurrentAnimatorStateInfo(0).IsName("shooting"))
@@ -40,7 +40,7 @@ namespace cowsins
                 return;
             }
 
-            if (rb.velocity.magnitude > player.crouchSpeed && !wc.shooting && player.currentSpeed < player.runSpeed && player.grounded && !interactManager.inspecting) CowsinsUtilities.PlayAnim("walking", currentAnimator);
+            if (rb.linearVelocity.magnitude > player.crouchSpeed && !wc.shooting && player.currentSpeed < player.runSpeed && player.grounded && !interactManager.inspecting) CowsinsUtilities.PlayAnim("walking", currentAnimator);
             else CowsinsUtilities.StopAnim("walking", currentAnimator);
 
             if (player.currentSpeed >= player.runSpeed && player.grounded) CowsinsUtilities.PlayAnim("running", currentAnimator);

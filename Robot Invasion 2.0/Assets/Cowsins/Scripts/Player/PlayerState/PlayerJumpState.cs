@@ -87,8 +87,6 @@ namespace cowsins
             }
         }
 
-        public override void InitializeSubState() { }
-
         void HandleMovement()
         {
             player.Movement(stats.controllable);

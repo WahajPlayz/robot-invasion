@@ -72,8 +72,6 @@ namespace cowsins
 
         }
 
-        public override void InitializeSubState() { }
-
         private Vector3 CameraBasedInput()
         {
             Vector3 forward = player.playerCam.transform.forward;

@@ -51,7 +51,6 @@ namespace cowsins
         }
 
         public override void FixedUpdateState() { }
-        public override void InitializeSubState() { }
         public override void ExitState()
         {
 

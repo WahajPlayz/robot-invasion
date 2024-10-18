@@ -121,8 +121,6 @@ namespace cowsins
 
         }
 
-        public override void InitializeSubState() { }
-
         private void CheckAim()
         {
             if (InputManager.aiming && controller.weapon.allowAim) controller.Aim();

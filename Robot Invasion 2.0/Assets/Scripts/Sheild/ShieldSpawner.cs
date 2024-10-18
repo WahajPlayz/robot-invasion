@@ -14,7 +14,7 @@ public class ShieldSpawner : MonoBehaviour
     void Update()
     {
         // Check for user input (e.g., pressing the space key) to spawn a prefab
-        if (InputManager.ShieldSpawner && Time.time >= lastSpawnTime + cooldownTime)
+        if (InputManager.SheildSpawner && Time.time >= lastSpawnTime + cooldownTime)
         {
             SpawnPrefab();
         }

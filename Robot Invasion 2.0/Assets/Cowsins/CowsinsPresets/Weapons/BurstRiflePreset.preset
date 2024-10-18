@@ -46,7 +46,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: shootMethod
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: holdProgressSpeed
@@ -130,7 +130,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: ammoCostPerFire
-    value: 0
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: bulletRange
@@ -353,9 +353,9 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: audioSFX.firing
-    value: 
-    objectReference: {fileID: 8300000, guid: 876fbc1819bf43d42b23009fc2a37876, type: 3}
+    propertyPath: audioSFX.shooting.Array.size
+    value: 0
+    objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: audioSFX.holster
     value: 

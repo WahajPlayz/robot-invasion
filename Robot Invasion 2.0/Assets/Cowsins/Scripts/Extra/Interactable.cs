@@ -43,7 +43,7 @@ namespace cowsins
         /// <summary>
         /// Make sure to override this on your new custom class.
         /// If you still wanna call this method, make sure to write the following line:
-        /// base.Interact();
+        /// base.Interact(player);
         /// </summary>
         public virtual void Interact(Transform player)
         {

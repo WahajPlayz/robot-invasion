@@ -95,7 +95,7 @@ namespace cowsins
                 {
                     if (player.currentSpeed == player.walkSpeed)
                     {
-                        if (rb.velocity.magnitude < .2f) Resize(defaultSpread);
+                        if (rb.linearVelocity.magnitude < .2f) Resize(defaultSpread);
                         else Resize(walkSpread);
                     }
 
