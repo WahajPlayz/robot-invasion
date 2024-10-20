@@ -157,15 +157,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "ShieldSpawner",
-                    "type": "Button",
-                    "id": "65148a9e-ab44-4d5a-8ccf-43d8b41bd4bf",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -595,17 +586,6 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "ToggleFlashLight",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2e83e18f-be7f-432e-8f2f-a165657a6134",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ShieldSpawner",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -130,3 +130,10 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 218594
+  packageName: FPS Engine
+  packageVersion: 1.3.2
+  assetPath: Assets/Cowsins/UI/HUD/checkpointIcon.png
+  uploadId: 700659

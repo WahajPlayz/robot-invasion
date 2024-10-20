@@ -1,6 +1,5 @@
 ﻿using Unity.FPS.Game;
 using UnityEngine;
-using cowsins;
 
 namespace Unity.FPS.Gameplay
 {

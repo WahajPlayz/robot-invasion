@@ -420,3 +420,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 218594
+  packageName: FPS Engine
+  packageVersion: 1.3.2
+  assetPath: Assets/Cowsins/Models/Weapons/MP5.fbx
+  uploadId: 700659

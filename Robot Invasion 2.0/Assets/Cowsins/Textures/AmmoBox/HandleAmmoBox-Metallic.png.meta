@@ -94,3 +94,10 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 218594
+  packageName: FPS Engine
+  packageVersion: 1.3.2
+  assetPath: Assets/Cowsins/Textures/AmmoBox/HandleAmmoBox-Metallic.png
+  uploadId: 700659

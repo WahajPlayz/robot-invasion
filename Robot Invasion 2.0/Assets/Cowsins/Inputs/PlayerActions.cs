@@ -179,15 +179,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ShieldSpawner"",
-                    ""type"": ""Button"",
-                    ""id"": ""65148a9e-ab44-4d5a-8ccf-43d8b41bd4bf"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -617,17 +608,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
                     ""action"": ""ToggleFlashLight"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2e83e18f-be7f-432e-8f2f-a165657a6134"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ShieldSpawner"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1221,7 +1201,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_GameControls_Pause = m_GameControls.FindAction("Pause", throwIfNotFound: true);
         m_GameControls_Movement = m_GameControls.FindAction("Movement", throwIfNotFound: true);
         m_GameControls_ToggleFlashLight = m_GameControls.FindAction("ToggleFlashLight", throwIfNotFound: true);
-        m_GameControls_ShieldSpawner = m_GameControls.FindAction("ShieldSpawner", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1318,7 +1297,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameControls_Pause;
     private readonly InputAction m_GameControls_Movement;
     private readonly InputAction m_GameControls_ToggleFlashLight;
-    private readonly InputAction m_GameControls_ShieldSpawner;
     public struct GameControlsActions
     {
         private @PlayerActions m_Wrapper;
@@ -1340,7 +1318,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Pause => m_Wrapper.m_GameControls_Pause;
         public InputAction @Movement => m_Wrapper.m_GameControls_Movement;
         public InputAction @ToggleFlashLight => m_Wrapper.m_GameControls_ToggleFlashLight;
-        public InputAction @ShieldSpawner => m_Wrapper.m_GameControls_ShieldSpawner;
         public InputActionMap Get() { return m_Wrapper.m_GameControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1401,9 +1378,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ToggleFlashLight.started += instance.OnToggleFlashLight;
             @ToggleFlashLight.performed += instance.OnToggleFlashLight;
             @ToggleFlashLight.canceled += instance.OnToggleFlashLight;
-            @ShieldSpawner.started += instance.OnShieldSpawner;
-            @ShieldSpawner.performed += instance.OnShieldSpawner;
-            @ShieldSpawner.canceled += instance.OnShieldSpawner;
         }
 
         private void UnregisterCallbacks(IGameControlsActions instance)
@@ -1459,9 +1433,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ToggleFlashLight.started -= instance.OnToggleFlashLight;
             @ToggleFlashLight.performed -= instance.OnToggleFlashLight;
             @ToggleFlashLight.canceled -= instance.OnToggleFlashLight;
-            @ShieldSpawner.started -= instance.OnShieldSpawner;
-            @ShieldSpawner.performed -= instance.OnShieldSpawner;
-            @ShieldSpawner.canceled -= instance.OnShieldSpawner;
         }
 
         public void RemoveCallbacks(IGameControlsActions instance)
@@ -1634,7 +1605,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnToggleFlashLight(InputAction.CallbackContext context);
-        void OnShieldSpawner(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
