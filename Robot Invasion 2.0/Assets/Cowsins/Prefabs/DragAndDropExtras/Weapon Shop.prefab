@@ -61,7 +61,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 50e64fb1feb371a4ebc8314ef780e862, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 91b482afdd77d0d4f8e5321f9fe183a0, type: 2}
     - target: {fileID: 919132149155446097, guid: 50e64fb1feb371a4ebc8314ef780e862, type: 3}
@@ -126,6 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: 0
   interactText: Weapon Shop
+  instantInteraction: 0
   interactableEvents:
     OnInteract:
       m_PersistentCalls:
