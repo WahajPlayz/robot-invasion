@@ -131,7 +131,7 @@ MonoBehaviour:
   applyDifferentRecoilOnAiming: 1
   xRecoilAmountOnAiming: 40
   yRecoilAmountOnAiming: 2
-  damagePerBullet: 5
+  damagePerBullet: 30
   applyDamageReductionBasedOnDistance: 0
   minimumDistanceToApplyDamageReduction: 40.3
   damageReductionMultiplier: 1
@@ -154,7 +154,6 @@ MonoBehaviour:
   audioSFX:
     shooting:
     - {fileID: 8300000, guid: ad694c80fef44284ebf7396fb31d059c, type: 3}
-    firing: {fileID: 8300000, guid: ad694c80fef44284ebf7396fb31d059c, type: 3}
     holster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
     unholster: {fileID: 8300000, guid: 2715072491e670e4dbefa8f3c1004c30, type: 3}
     reload: {fileID: 8300000, guid: 64f2c936c4a2e31499ea708df2383b01, type: 3}
