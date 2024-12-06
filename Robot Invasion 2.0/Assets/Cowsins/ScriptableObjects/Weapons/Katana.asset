@@ -100,7 +100,6 @@ MonoBehaviour:
   audioSFX:
     shooting:
     - {fileID: 8300000, guid: e996a527a4e727e48a73fb2abdaad31a, type: 3}
-    firing: {fileID: 8300000, guid: e996a527a4e727e48a73fb2abdaad31a, type: 3}
     holster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
     unholster: {fileID: 8300000, guid: e433732217f5a9944a24887aa41cfe99, type: 3}
     reload: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
