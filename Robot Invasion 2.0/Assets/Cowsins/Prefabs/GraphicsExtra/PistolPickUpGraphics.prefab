@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4522285223715083082}
   - component: {fileID: 3137572630252308322}
   - component: {fileID: 3337568158321355085}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: PistolSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 2092819957812016948}
   m_Layer: 0
   m_Name: PistolPickUpGraphics
-  m_TagString: Untagged
+  m_TagString: Weapons
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 3447026901432158391}
   - component: {fileID: 6811185452554412012}
   - component: {fileID: 7781690667933807190}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: PistolMagazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 4238564252186910189}
   - component: {fileID: 2303357479734923670}
   - component: {fileID: 4292093003257043762}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: PistolBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

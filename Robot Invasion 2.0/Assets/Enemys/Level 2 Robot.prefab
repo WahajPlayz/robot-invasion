@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2619533127450874761, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -31.59
+      value: -31.89721
       objectReference: {fileID: 0}
     - target: {fileID: 2619533127450874761, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.22733688
+      value: 0.2273345
       objectReference: {fileID: 0}
     - target: {fileID: 2619533127450874761, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.34
+      value: -16.009857
       objectReference: {fileID: 0}
     - target: {fileID: 2619533127450874761, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3391671406875085107, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: m_Name
-      value: Y Bot - Shooter Ragdoll Variant
+      value: Level 2 Robot
       objectReference: {fileID: 0}
     - target: {fileID: 4826624779817203501, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: m_AnchorMax.x
@@ -94,11 +94,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6572523175584059353, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: maxHealth
-      value: 20
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6572523175584059353, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: maxShield
-      value: 5
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8112542650628121066, guid: 58162f0f96eabc24c95ec4d2efaaead3, type: 3}
       propertyPath: saveSO

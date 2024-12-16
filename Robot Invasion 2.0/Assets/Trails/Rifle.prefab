@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1497323000617670052}
   - component: {fileID: 4270034975786086958}
   m_Layer: 0
-  m_Name: SciFiTrail
+  m_Name: Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7fa941072b2a53242906bf8a665017f5, type: 2}
+  - {fileID: 2100000, guid: 7445434380a78334aad29cbf7deee137, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,7 +83,7 @@ TrailRenderer:
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -197,7 +197,16 @@ VisualEffect:
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.013448207, y: 6.0628653, z: 0, w: 0}
+        m_Name: Colour
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 28.654821, z: 34.701454, w: 0}
+        m_Name: ParticleColour
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 1.260655, z: 6.0628653, w: 1}
+        m_Name: PaticleColour2
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -336,7 +345,7 @@ TrailRenderer:
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1.33
+    widthMultiplier: 1
     widthCurve:
       serializedVersion: 2
       m_Curve:

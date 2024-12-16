@@ -186,7 +186,7 @@ MonoBehaviour:
   FOVValueToSubtract: 0
   AimingFOVValueToSubtract: 0
   amountOfShootAnimations: 0
-  bulletTrail: {fileID: 1436881700163988445, guid: 72fbb691dea891c45a6caa10b437b857, type: 3}
+  bulletTrail: {fileID: 4270034975786086958, guid: 0401e19385c8ba3459a1f67b6d49f1ce, type: 3}
   damagePerHit: 0
   attackRate: 0
   hitDelay: 0
