@@ -554,33 +554,33 @@ namespace cowsins
             switch (layer)
             {
                 case int l when l == LayerMask.NameToLayer("Grass"):
-                    impact = Instantiate(effects.grassImpact, h.point, Quaternion.identity); // Grass
+                    impact = Instantiate(weapon.effects.grassImpact, h.point, Quaternion.identity); // Grass
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null)
                         impactBullet = Instantiate(weapon.bulletHoleImpact.grassImpact, h.point, Quaternion.identity);
                     break;
                 case int l when l == LayerMask.NameToLayer("Metal"):
-                    impact = Instantiate(effects.metalImpact, h.point, Quaternion.identity); // Metal
+                    impact = Instantiate(weapon.effects.metalImpact, h.point, Quaternion.identity); // Metal
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.metalImpact, h.point, Quaternion.identity);
                     break;
                 case int l when l == LayerMask.NameToLayer("Mud"):
-                    impact = Instantiate(effects.mudImpact, h.point, Quaternion.identity); // Mud
+                    impact = Instantiate(weapon.effects.mudImpact, h.point, Quaternion.identity); // Mud
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.mudImpact, h.point, Quaternion.identity);
                     break;
                 case int l when l == LayerMask.NameToLayer("Wood"):
-                    impact = Instantiate(effects.woodImpact, h.point, Quaternion.identity); // Wood
+                    impact = Instantiate(weapon.effects.woodImpact, h.point, Quaternion.identity); // Wood
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.woodImpact, h.point, Quaternion.identity);
                     break;
                 case int l when l == LayerMask.NameToLayer("Enemy"):
-                    impact = Instantiate(effects.enemyImpact, h.point, Quaternion.identity); // Enemy
+                    impact = Instantiate(weapon.effects.enemyImpact, h.point, Quaternion.identity); // Enemy
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.enemyImpact, h.point, Quaternion.identity);
                     break;
                 default:
-                    impact = Instantiate(effects.metalImpact, h.point, Quaternion.identity);
+                    impact = Instantiate(weapon.effects.metalImpact, h.point, Quaternion.identity);
                     impact.transform.rotation = Quaternion.LookRotation(h.normal);
                     if (weapon != null) impactBullet = Instantiate(weapon.bulletHoleImpact.groundIMpact, h.point, Quaternion.identity);
                     break;

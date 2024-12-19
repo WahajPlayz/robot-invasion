@@ -57,6 +57,11 @@ namespace cowsins
     {
         public GameObject defaultImpact, groundIMpact, grassImpact, enemyImpact, metalImpact, mudImpact, woodImpact;
     }
+    [System.Serializable]
+    public class Effects
+    {
+        public GameObject grassImpact, metalImpact, mudImpact, woodImpact, enemyImpact;
+    }
     #endregion
 
     #region weaponScriptableObject
@@ -78,6 +83,7 @@ namespace cowsins
 
         [Tooltip("Defines how Input is processed to shoot.")]
         public ShootingMethod shootMethod;
+
 
         [Tooltip("In order to shoot, you need to have a 100% progress value. Define how fast you want to reach 100% here.")] public float holdProgressSpeed;
 
@@ -108,6 +114,7 @@ namespace cowsins
         public bool continuousFire;
 
         [Tooltip("Time between each shot")] public float fireRate;
+        public Effects effects;
 
         [Tooltip("Time you will have to wait for the weapon to reload")] public float reloadTime;
 
@@ -423,6 +430,7 @@ namespace cowsins
                                 EditorGUILayout.Space(5f);
                                 EditorGUILayout.LabelField("Visuals", EditorStyles.boldLabel);
                                 EditorGUILayout.LabelField("Procedural Animations");
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty("effects"));
                                 GUILayout.Box("", new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.Height(8) });
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("useProceduralShot"));
                                 if (myScript.useProceduralShot)
@@ -471,7 +479,6 @@ namespace cowsins
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("amountOfShootAnimations"));
                                 EditorGUILayout.Space(5f);
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("bulletHoleImpact"));
-
                                 EditorGUILayout.Space(10f);
                                 break;
                         }

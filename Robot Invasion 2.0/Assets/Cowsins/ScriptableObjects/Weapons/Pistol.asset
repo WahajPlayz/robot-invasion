@@ -32,6 +32,12 @@ MonoBehaviour:
   explosionVFX: {fileID: 5018994898019192216, guid: ab977a440365d1c4092c15552e5ff157, type: 3}
   continuousFire: 0
   fireRate: 0.35
+  effects:
+    grassImpact: {fileID: 0}
+    metalImpact: {fileID: 3990983101132507088, guid: 72f016d3c8899644eb260de077e6f844, type: 3}
+    mudImpact: {fileID: 0}
+    woodImpact: {fileID: 0}
+    enemyImpact: {fileID: 0}
   reloadTime: 2
   coolSpeed: 0.3
   cooledPercentageAfterOverheat: 0.6
